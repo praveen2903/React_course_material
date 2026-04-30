@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import DropDownAccordin from './arraycomponents/DropDownAccordin'
-import ModalPopup from './arraycomponents/ModalPopup'
-import OtpEnter from './arraycomponents/OtpEnter'
-import StarRating from './arraycomponents/StarRating'
-import TodoListIndexing from './arraycomponents/TodoListIndexing'
-import ToDoListWithoutIndex from './arraycomponents/ToDoListWithoutIndexCauseissueWhileUpdate'
+import DropDownAccordin from './arraycomponentsandRef/DropDownAccordin'
+import ModalPopup from './arraycomponentsandRef/ModalPopup'
+import OtpEnter from './arraycomponentsandRef/OtpEnter'
+import StarRating from './arraycomponentsandRef/StarRating'
+import TodoListIndexing from './arraycomponentsandRef/TodoListIndexing'
+import ToDoListWithoutIndex from './arraycomponentsandRef/ToDoListWithoutIndexCauseissueWhileUpdate'
 import PaginationAndFilter from './paginationandprogressbar/PaginationandFilter'
 import ProgressBar from './paginationandprogressbar/Progressbar'
 import SequentialProgressBarsWithoutRef from './paginationandprogressbar/SequentialProgressBarsWithoutRef'
@@ -16,6 +16,10 @@ import PaginationAndSorting from './paginationandprogressbar/PaginationandSortin
 import DebouncedSearch from './optimisatonConcepts/DeboundedSearch'
 import ThrottleSearch from './optimisatonConcepts/ThrottleSearch'
 import RateLimitingSearch from './optimisatonConcepts/RateLimitingSearch'
+import StopWatch from './UseRefComponents/StopWatch'
+import DigitalClock from './UseRefComponents/DigitalClock'
+import TrafficLightsWithRef from './arraycomponentsandRef/TrafficLightsWithRef'
+import TrafficLights from './arraycomponentsandRef/TrafficLights'
 
 function App() {
 
@@ -26,9 +30,10 @@ function App() {
     <div style={{display:'flex', alignItems:'center',justifyContent:'center',flexDirection:'column', gap:'20px'}}>
 
       <div style={{display:'flex', gap:'24px', marginTop: '8px'}}>
-        <button onClick={()=> setTabs("array")}>Array</button>
+        <button onClick={()=> setTabs("array")}>Array and useRef</button>
         <button onClick={()=> setTabs('pagination')}>Pagination</button>
         <button onClick={()=>setTabs('optimization')}>Optimization</button>
+        <button onClick={()=>setTabs('useRefcomponents')}>UseRef</button>
       </div>
       {
         tabs==='pagination' && (
@@ -39,7 +44,6 @@ function App() {
             <DynamicArrayPagination/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <PaginationAndFilter/>  
-
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <ConcurrentProgressBars/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
@@ -62,6 +66,10 @@ function App() {
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <OtpEnter/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
+            <TrafficLights/>
+            <div>------------------------------------------------------------------------------------------------------------------</div>
+            <TrafficLightsWithRef/>
+            <div>------------------------------------------------------------------------------------------------------------------</div>
             <DropDownAccordin/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <TodoListIndexing/>
@@ -82,6 +90,17 @@ function App() {
             <ThrottleSearch/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <RateLimitingSearch/>
+          </>
+        )
+      }
+      {
+        tabs==='useRefcomponents' && (
+          <>
+           <div>------------------------------------------------------------------------------------------------------------------</div>
+           <StopWatch/>
+
+            <div>------------------------------------------------------------------------------------------------------------------</div>
+            <DigitalClock/>
           </>
         )
       }
