@@ -1,0 +1,66 @@
+import { useState } from "react";
+
+const ToDoListWithoutIndex= ()=>{
+    const [task, setTask]= useState("");
+    const [taskList, setTaskList] = useState([]);
+    const [isUpdate, setIsUpdate] = useState(null);
+    const [updateValue, setUpdateValue] = useState('');
+
+    const addTask = ()=>{
+        setTaskList(prev=>[...prev, task])  // if needed => () -recommended
+        // setTaskList([...taskList,task])-- works 
+        setTask('')
+    }
+
+    const removeTask = (removeTask)=>{
+        setTaskList(prev=>prev?.filter((availTasks)=>availTasks !== removeTask)) //-- () as single line --recommended
+        // setTaskList(taskList?.filter(availTasks=> availTasks !== task)) -works but not recommended
+    }
+
+    const updateTask = (existingValue,updateValue ) =>{
+        setTaskList(prev=>
+            prev.map((res)=>{
+                if(res===existingValue){
+                    return updateValue;
+                }
+                return res;
+            })
+        )
+    }
+
+    return (
+        <div>
+            <div>TO DO list</div>
+            <div style={{ display: 'flex', gap:'16px', marginBottom:"20px"}}>
+                <input type="text" value={task} onChange={(e)=>setTask(e.target.value)}/>
+
+                {/* both are correct but when no argument better to use onClick=>{addTask} */}
+                {/* <button onClick={()=>addTask()} style={{padding:'8px', borderRadius:'12px', fontSize:'12px'}}>+</button> */}
+                
+                <button onClick={addTask} style={{padding:'8px', borderRadius:'12px', fontSize:'12px'}}>+</button>
+            </div>
+            {
+                taskList?.map((listTask, index)=>(
+                    <div key={index} style={{ display: 'flex', gap:'16px'}}>
+                        {
+                            isUpdate ?(
+                                <>
+                                    <input type="text" value={listTask} onChange={(e)=> setUpdateValue(e.target.value)}/>
+                                    <button onClick={()=>updateTask(listTask, updateValue)} style={{padding:'8px', borderRadius:'12px', fontSize:'12px'}}>update</button>
+                                </>
+                            ):(
+                            <>
+                                <p style={{fontSize:'16px'}}>{listTask}</p>
+                                <button onClick={()=>setIsUpdate(true)} style={{padding:'8px', borderRadius:'12px', fontSize:'12px'}}>Edit</button>
+                            </>
+                                
+                            )
+                        }
+                        <button onClick={()=>removeTask(listTask)} style={{padding:'8px', borderRadius:'12px', fontSize:'12px'}}>-</button>
+                    </div>
+                ))
+            }
+        </div>
+    )
+}
+export default ToDoListWithoutIndex;
