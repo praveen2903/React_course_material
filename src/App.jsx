@@ -29,6 +29,8 @@ import DebouncedSearchWithRef from './optimisatonConcepts/DebouncedSearchWithRef
 import UndoRedo from './UseRefComponents/UndoRedo'
 import FocusInput from './UseRefComponents/FocusInput'
 import GridLights from './arraycomponentsandRef/GridLights'
+import EventBubbling from './javascriptConcepts/EventBubbling'
+import EventCapturing from './javascriptConcepts/EventCapturing'
 
 function App() {
 
@@ -43,7 +45,18 @@ function App() {
         <button onClick={()=> setTabs('pagination')}>Pagination</button>
         <button onClick={()=>setTabs('optimization')}>Optimization</button>
         <button onClick={()=>setTabs('useRefcomponents')}>UseRef</button>
+        <button onClick={()=>setTabs('jsConcepts')}>JS Concepts</button>
       </div>
+      {
+        tabs=='jsConcepts' && (
+          <>
+           <div>------------------------------------------------------------------------------------------------------------------</div>
+           <EventBubbling/>
+           <div>------------------------------------------------------------------------------------------------------------------</div>
+           <EventCapturing/>
+          </>
+        )
+      }
       {
         tabs==='pagination' && (
           <>
