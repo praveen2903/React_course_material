@@ -1,3 +1,8 @@
+Goated rule in jsx if {} - used for the conditions or any and keep the return
+
+()-- used for the map, filter, and all the jsx functions when no value is rendered in DOM check this
+
+
 1. () Parentheses = Expression / Return Value / Grouping
 Use () when you want to:
 

@@ -7,6 +7,8 @@ const TodoListIndexing= ()=>{
     const [updateValue, setUpdateValue] = useState('');
     const [updateIndex, setUpdateIndex] = useState(null); //can't be 0 since 0 is index right so null
 
+    const [dragIndex, setDragIndex] = useState(null);
+
     const addTask= ()=>{
         setTaskList(taskList=>[...taskList, inputText]);
         //or setTaskList(prev=> [...prev, inputText])  like setCount(count=> count+1) React batching
@@ -31,7 +33,18 @@ const TodoListIndexing= ()=>{
         }));
         setUpdateIndex(null)
         setUpdateValue('');
+    }
 
+    const handleDrop = (dropIndex)=>{
+        if(dragIndex===null) return;
+
+        const copy=[...taskList];
+        const draggedItem = copy[dragIndex];  //this drag index can be preserved by ref dragref.current
+        copy.splice(dragIndex,1);
+        copy.splice(dropIndex,0,draggedItem);
+
+        setTaskList(copy);
+        setDragIndex(null);
     }
 
     return (
@@ -55,11 +68,16 @@ const TodoListIndexing= ()=>{
                             <button style={{padding:'8px', fontSize:'12px', borderRadius:'8px'}} onClick={updateTask}>update</button>
                     </>
                    ): (
-                     <>
+                     <div key={index} draggable onDragStart={()=>setDragIndex(index)}
+                     onDragOver={(e)=>e.preventDefault()}
+                     onDrop={()=>handleDrop(index)}
+
+                     style={{display:"flex", gap:'30px', cursor:'grab', background: dragIndex===index?  '#dbeafe':'#f1f1f1'}}
+                     >
                             <p>{availableTask}</p>                            
                             <button style={{padding:'8px', fontSize:'12px', borderRadius:'8px'}} onClick={()=>{setUpdateIndex(index); setUpdateValue(availableTask)}}>Edit</button>
                             <button style={{padding:'8px', fontSize:'12px', borderRadius:'8px'}} onClick={()=>removeTask(index)}>delete</button>
-                    </>
+                    </div>
                    )
                 }
                     </div>

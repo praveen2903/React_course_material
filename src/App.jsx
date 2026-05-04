@@ -13,13 +13,19 @@ import SequentialProgressBarsWithState from './paginationandprogressbar/Sequenti
 import ConcurrentProgressBars from './paginationandprogressbar/ConcurrentProgressBars'
 import DynamicArrayPagination from './paginationandprogressbar/DynamicArrayPagination'
 import PaginationAndSorting from './paginationandprogressbar/PaginationandSorting'
-import DebouncedSearch from './optimisatonConcepts/DeboundedSearch'
+import DebouncedSearch from './optimisatonConcepts/DebouncedSearch'
 import ThrottleSearch from './optimisatonConcepts/ThrottleSearch'
 import RateLimitingSearch from './optimisatonConcepts/RateLimitingSearch'
 import StopWatch from './UseRefComponents/StopWatch'
 import DigitalClock from './UseRefComponents/DigitalClock'
 import TrafficLightsWithRef from './arraycomponentsandRef/TrafficLightsWithRef'
 import TrafficLights from './arraycomponentsandRef/TrafficLights'
+import OTPEntry from './UseRefComponents/OtpEntry'
+import DragAndDropTodo from './UseRefComponents/DragAndDropTodo'
+import CountRenders from './UseRefComponents/CountRenders'
+import InfiniteScroll from './UseRefComponents/InfiniteScroll'
+import ModalRefs from './UseRefComponents/ModalRefs'
+import DebouncedSearchWithRef from './optimisatonConcepts/DebouncedSearchWithRef'
 
 function App() {
 
@@ -87,6 +93,8 @@ function App() {
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <DebouncedSearch/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
+            <DebouncedSearchWithRef/>
+            <div>------------------------------------------------------------------------------------------------------------------</div>
             <ThrottleSearch/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <RateLimitingSearch/>
@@ -97,10 +105,21 @@ function App() {
         tabs==='useRefcomponents' && (
           <>
            <div>------------------------------------------------------------------------------------------------------------------</div>
+            <InfiniteScroll/>
+            <div>------------------------------------------------------------------------------------------------------------------</div>
+            <ModalRefs/>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+           <DragAndDropTodo/>
+           <div>------------------------------------------------------------------------------------------------------------------</div>
            <StopWatch/>
 
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <DigitalClock/>
+            <div>------------------------------------------------------------------------------------------------------------------</div>
+            <OTPEntry/>
+
+            <div>------------------------------------------------------------------------------------------------------------------</div>
+            <CountRenders/>
           </>
         )
       }

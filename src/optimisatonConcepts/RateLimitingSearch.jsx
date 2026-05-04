@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 
 export default function RateLimitingSearch(){
     const [inputText, setInputText]= useState('');
+    const [result, setResult] = useState('')
     const callsRef= useRef([]);
 
 
@@ -21,7 +22,7 @@ export default function RateLimitingSearch(){
     }
 
     const searchApi= (value)=>{
-        console.log("Rate Limited Search: ", value)
+        setResult("Rate Limited Search: "+ value)
     }
 
     const rateLimitRef = useRef(null);
@@ -37,6 +38,8 @@ export default function RateLimitingSearch(){
                 setInputText(e.target.value);
                 rateLimitRef.current(e.target.value);
             }}/>
+            <p>Text:{inputText}</p>
+            <p>Result: {result}</p>
         </>
     )
 }

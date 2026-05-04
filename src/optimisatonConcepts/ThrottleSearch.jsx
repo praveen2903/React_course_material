@@ -2,6 +2,8 @@ import { useRef, useState } from "react";
 
 export default function ThrottleSearch(){
     const [inputText, setInputText] = useState('');
+    const [result, setResult] = useState('');
+
     const lastCallRef= useRef(0);
 
     const throttle= (fn, limit)=>{
@@ -15,7 +17,7 @@ export default function ThrottleSearch(){
             }
         }
     }
-    const searchApi= (value)=> console.log("Throttle Search: ", value)
+    const searchApi= (value)=> setResult("Throttle Search: "+ value)
 
     const throttleSearch = throttle(searchApi, 3000);  
     
@@ -29,6 +31,8 @@ export default function ThrottleSearch(){
             setInputText(e.target.value);
             throttleSearch(e.target.value);
         }} />
+        <p>Text: {inputText}</p>
+        <p> Result: {result}</p>
         </>
     )
 }
