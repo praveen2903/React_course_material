@@ -24,7 +24,7 @@ const ModalRefs = () => {
     {
         openModal && (
             <div style={{position:'fixed', top:0, left:0, right:0, bottom:0, display:'flex', justifyContent:'center', alignItems: 'center'}}>
-                <div ref={modalRef}>
+                <div ref={modalRef} style={{background: '#f7e3e3', opacity: '0.95', padding:'30px'}}>
                     <h3> hello modal</h3>
                     <p> click outside to close modal</p>
                 </div>

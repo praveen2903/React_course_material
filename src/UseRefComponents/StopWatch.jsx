@@ -20,8 +20,10 @@ export default function StopWatch(){
         <>
         <div>StopWatch-- timer storage</div>
         <h1>{time}</h1>
-        <button onClick={start}>Start</button>
-        <button onClick={stop}>Stop</button>
+        <div style={{display:'flex', gap:'30px'}}>
+            <button onClick={start}>Start</button>
+            <button onClick={stop}>Stop</button>
+        </div>
         </>
     )
 }

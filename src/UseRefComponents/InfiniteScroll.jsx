@@ -29,8 +29,8 @@ const InfiniteScroll = () => {
 
     return (
     <>
-        <div>Infinite Scroll problem using Ref</div>
-        <div ref={boxRef} onScroll={handleScroll} style={{height:'300px', width:'300px', overflowY: 'auto', padding:'10px'}}>
+        <div>Infinite Scroll problem using Ref use properties like (scrollTop, clientHeight, scrollHeight)</div>
+        <div ref={boxRef} onScroll={handleScroll} style={{height:'200px', width:'200px', overflowY: 'auto', padding:'10px'}}>
             {items.map((data, index)=>(
                 <div key={index} style={{padding:'12px', marginBottom: '12px'}}>{data}</div>
             ))}
