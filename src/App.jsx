@@ -31,6 +31,11 @@ import FocusInput from './UseRefComponents/FocusInput'
 import GridLights from './arraycomponentsandRef/GridLights'
 import EventBubbling from './javascriptConcepts/EventBubbling'
 import EventCapturing from './javascriptConcepts/EventCapturing'
+import EventDelegation from './javascriptConcepts/EventDelegation'
+import EventQueue from './javascriptConcepts/EventQueue'
+import AbortControllerDemo from './optimisatonConcepts/AbortController'
+import UseStateHook from './reacthooks/UseStateHook'
+import UseEffectHook from './reacthooks/UseEffectHook'
 
 function App() {
 
@@ -46,10 +51,25 @@ function App() {
         <button onClick={()=>setTabs('optimization')}>Optimization</button>
         <button onClick={()=>setTabs('useRefcomponents')}>UseRef</button>
         <button onClick={()=>setTabs('jsConcepts')}>JS Concepts</button>
+        <button onClick={()=> setTabs('hooks')}> React Hooks</button>
       </div>
+      {
+        tabs==='hooks' && (
+          <>
+            <div>------------------------------------------------------------------------------------------------------------------</div>
+            <UseStateHook/>
+            <div>------------------------------------------------------------------------------------------------------------------</div>
+            <UseEffectHook/>
+          </>
+        )
+      }
       {
         tabs=='jsConcepts' && (
           <>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+            <EventDelegation/>
+            <div>------------------------------------------------------------------------------------------------------------------</div>
+            <EventQueue/>
            <div>------------------------------------------------------------------------------------------------------------------</div>
            <EventBubbling/>
            <div>------------------------------------------------------------------------------------------------------------------</div>
@@ -117,6 +137,8 @@ function App() {
             <ThrottleSearch/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <RateLimitingSearch/>
+            <div>------------------------------------------------------------------------------------------------------------------</div>
+            <AbortControllerDemo/>
           </>
         )
       }
