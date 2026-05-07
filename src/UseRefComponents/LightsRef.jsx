@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-export default function TrafficLightsWithRef(){
+export default function LightsRef(){
     const [currentLights, setCurrentLights] = useState("red");
 
     const timeRef= useRef(null);  //managing time no need to manipulate dom and store timer 

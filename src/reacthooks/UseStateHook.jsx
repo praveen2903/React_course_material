@@ -117,11 +117,29 @@ export default function UseStateHook() {
   return (
     <div style={{ padding: 20 }}>
       <h2>useState Interview Traps and react batching-- check console</h2>
-
+      <code><pre>
+        {`const [count,setCount]= useState(0)
+const handleClick = ()=>{
+    setCount(count+1)
+    setCount(count+1)
+    setCount(count+1)
+}
+          console.log(count) //1 --- no react batching so dom paint done post update
+      `}</pre></code>
+      <p> No React batching the post completion of the funtcion  only dom updates so in setInterval and setTimeout we use react batching </p>
+      <code><pre>
+        {`const [count,setCount] = useState(0)
+const handleClick=()=>{
+  setCount(count=> count+1)
+  setCount(count=> count+1)
+  setCount(count=> count+1)
+}
+        console.log(count)    //3
+        }`}
+      </pre></code>
       <h3>Count: {count}</h3>
       <h3>User: {user.name} - {user.age}</h3>
 
-      <hr />
 
       <button onClick={staleTrap}>❌ Stale Trap</button>
       <button onClick={staleFix}>✅ Stale Fix</button>

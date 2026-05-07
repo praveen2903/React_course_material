@@ -36,6 +36,16 @@ import EventQueue from './javascriptConcepts/EventQueue'
 import AbortControllerDemo from './optimisatonConcepts/AbortController'
 import UseStateHook from './reacthooks/UseStateHook'
 import UseEffectHook from './reacthooks/UseEffectHook'
+import UseContextHook from './reacthooks/UseContextHook'
+import UseContextTraps from './reacthooks/UseContextTraps'
+import StarRatingFractions from './arraycomponentsandRef/StarRatingFractions'
+import TimeoutvsInterval from './reacthooks/TimeoutvsInterval'
+import UseMemoHook from './reacthooks/UseMemoHook'
+import UseCallbackHook from './reacthooks/UseCallbackHook'
+import UseCallbackAndMemo from './reacthooks/UseCallbackAndMemo'
+import LightsRef from './UseRefComponents/LightsRef'
+import UseRefHook from './reacthooks/UseRefHook'
+import UseReducerHook from './reacthooks/UseReducerHook'
 
 function App() {
 
@@ -57,9 +67,26 @@ function App() {
         tabs==='hooks' && (
           <>
             <div>------------------------------------------------------------------------------------------------------------------</div>
+            <TimeoutvsInterval/>
+            <div>------------------------------------------------------------------------------------------------------------------</div>
             <UseStateHook/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
-            <UseEffectHook/>
+            <UseEffectHook/>            
+            <div>------------------------------------------------------------------------------------------------------------------</div>
+            <UseContextHook/>
+            <UseContextTraps/>
+            <div>------------------------------------------------------------------------------------------------------------------</div>
+            <UseMemoHook/>
+            <div>------------------------------------------------------------------------------------------------------------------</div>
+            <UseCallbackHook/>
+            <UseCallbackAndMemo/>
+            <div>------------------------------------------------------------------------------------------------------------------</div>
+            <UseRefHook/>
+            <div>------------------------------------------------------------------------------------------------------------------</div>
+            <UseReducerHook/>
+
+
+
           </>
         )
       }
@@ -103,6 +130,8 @@ function App() {
         
         tabs === 'array' && (
           <> 
+          <div>------------------------------------------------------------------------------------------------------------------</div>   
+            <StarRatingFractions/>
           
             <div>------------------------------------------------------------------------------------------------------------------</div>   
             <GridLights/>
@@ -159,6 +188,8 @@ function App() {
            <DragAndDropTodo/>
            <div>------------------------------------------------------------------------------------------------------------------</div>
            <StopWatch/>
+           <div>------------------------------------------------------------------------------------------------------------------</div>
+           <LightsRef/>
 
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <DigitalClock/>

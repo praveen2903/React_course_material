@@ -4,7 +4,7 @@ export default function StopWatch(){
     const [time, setTime]= useState(0);
     const timeRef= useRef(null);
 
-    const start=()=>{
+    const start=()=>{  //Grid Lights different approach
         if(timeRef.current) return;
 
         timeRef.current= setInterval(()=>{     //ref stores the iterval id
@@ -18,7 +18,8 @@ export default function StopWatch(){
     }
     return (
         <>
-        <div>StopWatch-- timer storage</div>
+        <div>StopWatch-- timer storage (setInterval)--approach 1st and 2nd is grid lights</div>
+        
         <h1>{time}</h1>
         <div style={{display:'flex', gap:'30px'}}>
             <button onClick={start}>Start</button>

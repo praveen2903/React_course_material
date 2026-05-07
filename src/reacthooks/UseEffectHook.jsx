@@ -47,7 +47,7 @@ export default function UseEffectHook() {
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      <h2>useEffect Full Lifecycle Example</h2>
+      <h2>useEffect Full Lifecycle Example- handles sideeffects component didmount, component didupdate, component unmount</h2>
 
       <div>Count: {count}</div>
 
