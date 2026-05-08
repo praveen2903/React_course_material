@@ -46,6 +46,12 @@ import UseCallbackAndMemo from './reacthooks/UseCallbackAndMemo'
 import LightsRef from './UseRefComponents/LightsRef'
 import UseRefHook from './reacthooks/UseRefHook'
 import UseReducerHook from './reacthooks/UseReducerHook'
+import UseRefMistakes from './mistakesInHooks/UseRefMistakes'
+import ReactHooksInterviewNotes from './mistakesInHooks/ReactHooksInterviewNotes'
+import ToolTip from './advancedConcepts/ToolTip'
+import InfiniteScrollRef from './advancedConcepts/InfiniteScrollRef'
+import DebounceUndoRedo from './advancedConcepts/DebounceUndoRedo'
+import RefDebouncedSearch from './optimisatonConcepts/RefDebouncedSearch'
 
 function App() {
 
@@ -62,7 +68,31 @@ function App() {
         <button onClick={()=>setTabs('useRefcomponents')}>UseRef</button>
         <button onClick={()=>setTabs('jsConcepts')}>JS Concepts</button>
         <button onClick={()=> setTabs('hooks')}> React Hooks</button>
+        <button onClick={()=>setTabs('mistakes')}>Your mistakes</button>
+        <button onClick={()=>setTabs('advanced')}>Advanced</button>
       </div>
+      {
+        tabs==='advanced' && (
+          <>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          <DebounceUndoRedo/>
+           <div>------------------------------------------------------------------------------------------------------------------</div>
+           <ToolTip/>
+           <div>------------------------------------------------------------------------------------------------------------------</div>
+          <InfiniteScrollRef/>
+          </>
+        )
+      }
+      {
+        tabs==='mistakes' && (
+          <>
+            <div>------------------------------------------------------------------------------------------------------------------</div>
+            <UseRefMistakes/>
+            <div>------------------------------------------------------------------------------------------------------------------</div>
+<ReactHooksInterviewNotes/>
+          </>
+        )
+      }
       {
         tabs==='hooks' && (
           <>
@@ -162,6 +192,8 @@ function App() {
             <DebouncedSearch/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <DebouncedSearchWithRef/>
+            <div>------------------------------------------------------------------------------------------------------------------</div>
+            <RefDebouncedSearch/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <ThrottleSearch/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
