@@ -117,7 +117,9 @@ const DebounceUndoRedo = () => {
 
   return (
     <>
-      <div>DebounceUndoRedo</div>
+      <div>DebounceUndoRedo-- useRef initalized with a function to store debounce as it should rerender with change with current
+        useMemo/useCallback the ref values in it changes so it may rerender
+      </div>
 
       <div style={{display: "flex", gap: "30px", padding: "20px", alignItems: "flex-start"}}>
         <div style={{ width: "40%" }}>

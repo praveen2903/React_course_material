@@ -30,7 +30,7 @@ function UseCallbackAndMemo() {
 //   })
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div style={{ padding: "20px", textAlign:'left' }}>
         <span>we can implement useCallback with simple useMemo too but need to return function</span>
       <code> 
         {`const handleClick = useCallback(() => {

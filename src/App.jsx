@@ -54,6 +54,9 @@ import InfiniteScrollRef from './advancedConcepts/InfiniteScrollRef'
 import DebounceUndoRedo from './advancedConcepts/DebounceUndoRedo'
 import RefDebouncedSearch from './optimisatonConcepts/RefDebouncedSearch'
 import ReactDomCheatSheet from './mistakesInHooks/CheatSheet'
+import EventLoop from './javascriptConcepts/EventLoop'
+import CallBindApply from './javascriptConcepts/CallBindApply'
+import BindUsage from './javascriptConcepts/BindUsage'
 
 function App() {
 
@@ -129,6 +132,11 @@ function App() {
       {
         tabs=='jsConcepts' && (
           <>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          <BindUsage/>
+          <CallBindApply/>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          <EventLoop/>
           <div>------------------------------------------------------------------------------------------------------------------</div>
             <EventDelegation/>
             <div>------------------------------------------------------------------------------------------------------------------</div>

@@ -83,6 +83,22 @@ useRef("") -- best for mutable text values without re-render
 useRef([]) -- best for storing multiple refs in lists, grids, drag-drop elements
 
 useRef({}) -- best for mutable objects like previous values, caches, configs
+
+const debouncedSave = useRef(
+    debounceRef.current((value) => {
+      const lastValue =debounceUndoRef.current[debounceUndoRef.current.length - 1];
+      if (lastValue !== value.trim()) {   //no need to save if user is idle for long time
+        debounceUndoRef.current.push(value);
+      }
+      debounceRedoRef.current = [];
+      updateButtons();
+    }, 1000)
+  ).current;    --ref can be used to store the function 
+
+so no useMemo and callback
+useRef stores a stable value between renders
+Updating .current does NOT re-render
+Same function instance persists
             `}
         </pre>
       </section>

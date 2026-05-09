@@ -44,28 +44,28 @@ const sectionStyle = {
         <h3>✅ Mouse Events</h3>
 
         <pre style={codeStyle}>
-{`onClick
+{`onClick  -- on single click of button 
 -------
 Runs when element is clicked
 
 <button onClick={handleClick}>Click</button>
 
 
-onDoubleClick
+onDoubleClick  -- on double click event is activated for the button
 --------------
 Runs on double click
 
 <button onDoubleClick={handleDouble}>Double</button>
 
 
-onMouseEnter
+onMouseEnter  -- like when tooltip when mouse enters the tooltips then tooltipref doesn't close
 -------------
 Runs when mouse enters element
 
 <div onMouseEnter={() => console.log("entered")}></div>
 
 
-onMouseLeave
+onMouseLeave  -- when mouse leaves the tooltip it must close
 -------------
 Runs when mouse leaves element
 
@@ -101,14 +101,15 @@ Runs when mouse released
         <h3>✅ Keyboard Events</h3>
 
         <pre style={codeStyle}>
-{`onKeyDown
+{`onKeyDown  -- the event.key gives the details of what key 
+pressed like backspace/enter like on click enter while giving input it must be set can be done this way
 -----------
 Runs when key pressed
 
 <input onKeyDown={(e) => console.log(e.key)} />
 
 
-onKeyUp
+onKeyUp  -- like when key is released the signal can't be sent
 --------
 Runs when key released
 
@@ -141,24 +142,25 @@ const handleKey = (e) => {
 
       {/* ===================================================== */}
       <section style={sectionStyle}>
-        <h3>✅ Input Events</h3>
+        <h3>✅ Input/ textArea Events</h3>
 
         <pre style={codeStyle}>
-{`onChange
+{`onChange  -- input onchange the target.value saves what in the data
 ----------
 Runs when input value changes
 
 <input onChange={(e) => setText(e.target.value)} />
 
 
-onFocus
+onFocus  -- while ref.current.focus() it gets highlighted we could give custom styles at e.target.style
 --------
 Runs when input focused
 
-<input onFocus={() => console.log("focus")} />
+<input onFocus={(e) => console.log("focus")
+e.target.style.border=''} />
 
 
-onBlur
+onBlur -- while ref.current.focus() is not applied, it counterpart of focus() we could give custom styles at e.target.style
 -------
 Runs when input loses focus
 
@@ -175,7 +177,7 @@ Runs when input loses focus
         <pre style={codeStyle}>
 {`onScroll
 ---------
-Runs while scrolling
+Runs while scrolling -- infinite scroll and show more while using we use this
 
 <div onScroll={handleScroll}></div>
 
@@ -192,12 +194,11 @@ scrollHeight
 → total content height
 
 
-Bottom Detection
+Bottom Detection  -how much need to scroll to bottom
 -----------------
 if(scrollTop + clientHeight >= scrollHeight - 5) {
   loadMore()
 }
-
 
 Used In
 --------
@@ -212,7 +213,7 @@ Used In
 
       {/* ===================================================== */}
       <section style={sectionStyle}>
-        <h3>✅ Drag And Drop Events</h3>
+        <h3>✅ Drag And Drop Events-- drag and drop</h3>
 
         <pre style={codeStyle}>
 {`draggable
@@ -245,15 +246,21 @@ Runs when dropped
 
 Common Drag Flow
 ----------------
-onDragStart
+onDragStart -- store it in ref store current index ref.current=index
 → store dragged index
 
-onDragOver
+onDragOver  -- stop browser to refresh/accidentally drop
 → prevent default
 
-onDrop
+onDrop  - give as an argument for handle drop
 → swap/update items
 
+
+const copyTasks =  [...taskList];
+const dragged = copyTasks[dragRef.current];
+
+copyTasks.splice(dragRef.current,1);   //slice vs splice -- slice in pagination and splice for drag and drop
+copyTasks.splice(dropIndex,0, dragged);
 
 Used In
 --------
@@ -304,7 +311,7 @@ Used In
 
       {/* ===================================================== */}
       <section style={sectionStyle}>
-        <h3>✅ Mouse Coordinates</h3>
+        <h3>✅ Mouse Coordinates -- used to auto close</h3>
 
         <pre style={codeStyle}>
 {`clientX / clientY
