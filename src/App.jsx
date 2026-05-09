@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import './App.css'
 import DropDownAccordin from './arraycomponentsandRef/DropDownAccordin'
 import ModalPopup from './arraycomponentsandRef/ModalPopup'
 import OtpEnter from './arraycomponentsandRef/OtpEnter'
@@ -52,6 +53,7 @@ import ToolTip from './advancedConcepts/ToolTip'
 import InfiniteScrollRef from './advancedConcepts/InfiniteScrollRef'
 import DebounceUndoRedo from './advancedConcepts/DebounceUndoRedo'
 import RefDebouncedSearch from './optimisatonConcepts/RefDebouncedSearch'
+import ReactDomCheatSheet from './mistakesInHooks/CheatSheet'
 
 function App() {
 
@@ -61,16 +63,18 @@ function App() {
   return (
     <div style={{display:'flex', alignItems:'center',justifyContent:'center',flexDirection:'column', gap:'20px'}}>
 
-      <div style={{display:'flex', gap:'24px', marginTop: '8px'}}>
-        <button onClick={()=> setTabs("array")}>Array and useRef</button>
-        <button onClick={()=> setTabs('pagination')}>Pagination</button>
-        <button onClick={()=>setTabs('optimization')}>Optimization</button>
-        <button onClick={()=>setTabs('useRefcomponents')}>UseRef</button>
-        <button onClick={()=>setTabs('jsConcepts')}>JS Concepts</button>
-        <button onClick={()=> setTabs('hooks')}> React Hooks</button>
-        <button onClick={()=>setTabs('mistakes')}>Your mistakes</button>
-        <button onClick={()=>setTabs('advanced')}>Advanced</button>
-      </div>
+    <div className="tabs-container">
+      <button onClick={() => setTabs("array")}>Array and useRef</button>
+      <button onClick={() => setTabs("pagination")}>Pagination</button>
+      <button onClick={() => setTabs("optimization")}>Optimization</button>
+      <button onClick={() => setTabs("useRefcomponents")}>UseRef</button>
+      <button onClick={() => setTabs("jsConcepts")}>JS Concepts</button>
+      <button onClick={() => setTabs("hooks")}>React Hooks</button>
+      <button onClick={() => setTabs("mistakes")}>
+        CheatSheet & Mistakes
+      </button>
+      <button onClick={() => setTabs("advanced")}>Advanced</button>
+    </div>
       {
         tabs==='advanced' && (
           <>
@@ -90,6 +94,8 @@ function App() {
             <UseRefMistakes/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
 <ReactHooksInterviewNotes/>
+            <div>------------------------------------------------------------------------------------------------------------------</div>
+<ReactDomCheatSheet/>
           </>
         )
       }

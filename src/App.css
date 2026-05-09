@@ -182,3 +182,84 @@
     border-right-color: var(--border);
   }
 }
+.tabs-container {
+  width: 100%;
+
+  display: flex;
+  flex-wrap: wrap;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 12px;
+}
+
+.tabs-container button {
+  border: 1px solid var(--border);
+
+  background: var(--bg);
+  color: var(--text-h);
+
+  padding: 10px 16px;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  transition: all 0.25s ease;
+
+  min-width: 140px;
+}
+
+.tabs-container button:hover {
+  background: var(--accent-bg);
+
+  border-color: var(--accent-border);
+
+  transform: translateY(-2px);
+
+  box-shadow: var(--shadow);
+}
+
+.tabs-container button:active {
+  transform: scale(0.98);
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1024px) {
+  .tabs-container {
+    gap: 10px;
+  }
+
+  .tabs-container button {
+    flex: 1 1 calc(50% - 10px);
+
+    min-width: unset;
+
+    font-size: 14px;
+
+    padding: 10px 12px;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 640px) {
+  .tabs-container {
+    flex-direction: column;
+  }
+
+  .tabs-container button {
+    width: 100%;
+  }
+}
