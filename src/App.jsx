@@ -13,7 +13,7 @@ import SequentialProgressBarRef from './paginationandprogressbar/SequentialProgr
 import SequentialProgressBarsWithState from './paginationandprogressbar/SequentialProgressBarsWithState'
 import ConcurrentProgressBars from './paginationandprogressbar/ConcurrentProgressBars'
 import DynamicArrayPagination from './paginationandprogressbar/DynamicArrayPagination'
-import PaginationAndSorting from './paginationandprogressbar/PaginationandSorting'
+import PaginationAndSorting from './paginationandprogressbar/PaginationAndSorting'
 import DebouncedSearch from './optimisatonConcepts/DebouncedSearch'
 import ThrottleSearch from './optimisatonConcepts/ThrottleSearch'
 import RateLimitingSearch from './optimisatonConcepts/RateLimitingSearch'
