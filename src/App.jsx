@@ -57,6 +57,11 @@ import ReactDomCheatSheet from './mistakesInHooks/CheatSheet'
 import EventLoop from './javascriptConcepts/EventLoop'
 import CallBindApply from './javascriptConcepts/CallBindApply'
 import BindUsage from './javascriptConcepts/BindUsage'
+import KeyboardEventListener from './advancedConcepts/KeyboardEventListener'
+import KanbanBoard from './advancedConcepts/KanbanBoard'
+import TicTacToe from './advancedConcepts/TicTacToe'
+import BirthYearHistogram from './advancedConcepts/BirthYearHistogram'
+import ConnectFourGame from './advancedConcepts/ConnectFourGame'
 
 function App() {
 
@@ -86,7 +91,17 @@ function App() {
            <div>------------------------------------------------------------------------------------------------------------------</div>
            <ToolTip/>
            <div>------------------------------------------------------------------------------------------------------------------</div>
-          <InfiniteScrollRef/>
+          <InfiniteScrollRef/>           
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          <KeyboardEventListener/>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          <KanbanBoard/>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          <TicTacToe/>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          <ConnectFourGame/>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          <BirthYearHistogram/>
           </>
         )
       }
@@ -96,9 +111,9 @@ function App() {
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <UseRefMistakes/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
-<ReactHooksInterviewNotes/>
+            <ReactHooksInterviewNotes/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
-<ReactDomCheatSheet/>
+            <ReactDomCheatSheet/>
           </>
         )
       }
