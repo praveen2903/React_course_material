@@ -62,6 +62,7 @@ import KanbanBoard from './advancedConcepts/KanbanBoard'
 import TicTacToe from './advancedConcepts/TicTacToe'
 import BirthYearHistogram from './advancedConcepts/BirthYearHistogram'
 import ConnectFourGame from './advancedConcepts/ConnectFourGame'
+import CurryingAndPrototype from './javascriptConcepts/CurryingAndPrototype'
 
 function App() {
 
@@ -150,6 +151,8 @@ function App() {
           <div>------------------------------------------------------------------------------------------------------------------</div>
           <BindUsage/>
           <CallBindApply/>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          <CurryingAndPrototype/>
           <div>------------------------------------------------------------------------------------------------------------------</div>
           <EventLoop/>
           <div>------------------------------------------------------------------------------------------------------------------</div>
