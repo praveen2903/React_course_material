@@ -1,95 +1,159 @@
-import { useRef, useState } from "react"
+import { useRef, useState } from "react";
 
 function DragAndDropTodo() {
-    const [task , setTask] = useState('');
-    const [taskList, setTaskList] = useState([]);
-    const dragRef = useRef(null)   //keeps track of index dragged no initial value preserve dragged index
 
-    const [updateValue, setUpdateValue]= useState('');
+    const [task, setTask] = useState('');
+    const [taskList, setTaskList] = useState([]);
+
+    const dragRef = useRef(null);
+
+    const [updateValue, setUpdateValue] = useState('');
     const [updateIndex, setUpdateIndex] = useState(null);
 
     const [focusedIndex, setFocusedIndex] = useState(null);
 
+    const addTask = () => {
 
-    const addTask = ()=>{
-        if(!task.trim()) return;
+        if (!task.trim()) return;
 
-        setTaskList([...taskList, task]);
-        setTask('')  //clean up
-    }
+        setTaskList((prev) => [...prev, task]);
 
-    const deleteTask = (removeIndex)=>{
-        setTaskList(data=> data.filter((_, index)=> index !== removeIndex))
-    }
+        setTask('');
+    };
+
+    const deleteTask = (removeIndex) => {
+
+        setTaskList((prev) =>
+            prev.filter((_, index) => index !== removeIndex)
+        );
+    };
 
     const updateTask = () => {
-        setTaskList(data=> data.map((value, index)=>{
-            return updateIndex=== index ? updateValue: value
-        }))
-        setUpdateIndex(null)
-        setUpdateValue('')
-    }
 
-    const handleDragAndDrop = (dropIndex) =>{
-        if(dragRef.current){
-            dragRef.current.focus()
-        }
-        const copyTasks =  [...taskList];
-        const dragged = copyTasks[dragRef.current];
+        if (!updateValue.trim()) return;
 
-        copyTasks.splice(dragRef.current,1);   //slice vs splice -- slice in pagination and splice for drag and drop
-        copyTasks.splice(dropIndex,0, dragged);
-        setTaskList(copyTasks)
-    }
+        setTaskList((prev) =>
+            prev.map((value, index) =>
+                updateIndex === index
+                    ? updateValue
+                    : value
+            )
+        );
 
-    // console.log(taskList)
+        setUpdateIndex(null);
+        setUpdateValue('');
+    };
 
-  return (
-    <>
-        <div>DragAndDropTodo using useRef to store the drag index</div>
+    const handleDragAndDrop = (dropIndex) => {
+        //now the index is reffered as dragIndex
+        const { index: dragIndex, element } = dragRef.current;
 
-        <div style={{display:'flex', gap:'30px'}}>
-            <input value={task} placeholder="Enter task...." onChange={(e)=>setTask(e.target.value)} />
-            <button onClick={addTask}>+</button>
-        </div>
-        <div>
-            {
-                taskList.map((item, index)=>(
-                    index===updateIndex ? (
-                        <div style={{display:'flex', gap: '40px'}}>
-                            <input value={updateValue} placeholder="Update task ..." onChange={e=>{setUpdateValue(e.target.value);}} />
-                            <button onClick={updateTask}>Save</button>
+        if (dragIndex === dropIndex) return;
+
+        const copyTasks = [...taskList];
+
+        const dragged = copyTasks[dragIndex];
+
+        copyTasks.splice(dragIndex, 1);
+
+        //based on index value it needs to adjusted if without it then last index can't be dragged
+        const adjustedDropIndex = dragIndex < dropIndex ? dropIndex - 1 : dropIndex;
+
+        copyTasks.splice(adjustedDropIndex, 0, dragged);
+
+        setTaskList(copyTasks);
+
+        setTimeout(() => {
+            element.focus();
+        }, 0);
+    };
+
+    return (
+        <>
+            <h2>Drag And Drop Todo</h2>
+
+            <div style={{ display: 'flex', gap: '20px' }}>
+
+                <input value={task} placeholder="Enter task..." onChange={(e) => setTask(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            addTask();
+                            setTask('');
+                        }
+                    }}
+                />
+
+                <button onClick={addTask}>Add</button>
+            </div>
+
+            <div style={{ marginTop: '20px' }}>
+
+                {taskList.map((item, index) => (
+                    index === updateIndex ? (
+
+                        <div key={index} style={{ display: 'flex', gap: '20px', marginBottom: '10px'}}>
+                            <input
+                                value={updateValue}
+                                placeholder="Update task..."
+                                onChange={(e) =>
+                                    setUpdateValue(e.target.value)
+                                }
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        updateTask();
+                                    }
+                                }}
+                            />
+
+                            <button onClick={updateTask}>
+                                Save
+                            </button>
                         </div>
-                    ):(
-                        <div key={index} draggable 
-                            onDragStart={()=>(dragRef.current= index)}
 
-                            tabIndex={0}
-                            onFocus={()=> setFocusedIndex(index)}
-                            onBlur={()=> setFocusedIndex(null)}
+                    ) : (
 
-                            onDragOver={(e)=> e.preventDefault()}
-                            onDrop={()=>handleDragAndDrop(index)}
+                        <div key={index} draggable tabIndex={0}
+                            onDragStart={(event) => {
+                                dragRef.current = {
+                                    index,
+                                    element: event.currentTarget
+                                };
+                            }}
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={() => handleDragAndDrop(index)}
+                            onFocus={() =>setFocusedIndex(index)}
+                            onBlur={() => setFocusedIndex(null)}
                             style={{
-                                padding:'10px',
-                                marginBottom:'10px',
+                                padding: '10px',
+                                marginBottom: '10px',
                                 display: 'flex',
-                                background: focusedIndex===index?  '#dbeafe':'#f1f1f1',
                                 justifyContent: 'space-between',
-                                cursor:'grab',
-                                gap: '40px'
+                                gap: '20px',
+                                cursor: 'grab',
+                                background:focusedIndex === index ? '#dbeafe': '#f1f1f1'
                             }}
                         >
-                                <span>{item}</span>
-                                <button onClick={()=>{setUpdateValue(item); setUpdateIndex(index)}}>Edit</button>           
-                                <button onClick={()=>deleteTask(index)}>Delete</button>                 
+
+                            <span>{item}</span>
+                            <button
+                                onClick={() => {setUpdateValue(item);setUpdateIndex(index);}}>
+                                Edit
+                            </button>
+
+                            <button
+                                onClick={() =>
+                                    deleteTask(index)
+                                }
+                            >
+                                Delete
+                            </button>
+
                         </div>
                     )
-                ))
-            }
-        </div>
-    </>
-  )
+                ))}
+            </div>
+        </>
+    );
 }
 
 export default DragAndDropTodo;

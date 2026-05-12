@@ -27,6 +27,27 @@ export default function ThrottleSearch(){
         <>
         <div> Throttle-- Runs every given time, suppose ignore all calls for 10 seconds this is used</div>
         <div> uses: scroll events, mouse movements, resize tracking</div>
+
+<code style={{textAlign:'left'}}>
+<pre>{`
+const lastCallRef= useRef(0);
+
+const throttle= (fn, limit)=>{
+    // let lastCall=0; --------------instead of using these better to use ref to keep track outside of dom and stop rerendering
+
+    return function(...args){
+        const now= Date.now();
+        if(now-lastCallRef.current >=limit){
+            lastCallRef.current=now;
+            fn(...args);
+        }
+    }
+}
+const searchApi= (value)=> setResult("Throttle Search: "+ value)
+
+const throttleSearch = throttle(searchApi, 3000);  
+`}</pre>
+</code>
         <input type="text" value={inputText} onChange={(e)=>{
             setInputText(e.target.value);
             throttleSearch(e.target.value);

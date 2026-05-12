@@ -75,6 +75,48 @@ const AbortControllerDemo = () => {
     <div style={{ padding: '20px' }}>
       <h2>AbortController Example</h2>
 
+<code style={{textAlign:'left'}}><pre>
+  {`  useEffect(() => {
+    // ✅ Step 1: create controller for this request
+    const controller = new AbortController();
+
+    async function fetchUser() {
+      try {
+        console.log("📡 Fetching user:", userId);
+
+        // ✅ Step 2: pass controller.signal to fetch 
+        // -- connect abort and fetch like controller.abort clicked this lets you know
+        const res = await fetch('https://jsonplaceholder.typicode.com/users/${userId}',
+          { signal: controller.signal }
+        );
+
+        const response = await res.json();
+
+        // ✅ Step 3: update state (only if not aborted)
+        setData(response);
+
+      } catch (err) {
+        // ✅ Step 4: handle abort separately
+        if (err.name === "AbortError") {
+          console.log("🛑 Request Aborted");
+        } else {
+          console.log("❌ Error:", err);
+        }
+      }
+    }
+
+    fetchUser();
+
+    // ✅ Step 5: cleanup (runs on unmount or userId change)
+    return () => {
+      controller.abort(); // cancel previous request
+      console.log("🧹 Cleanup: Request Cancelled");
+    };
+
+  }, [userId, setData]); // runs when userId changes
+`}
+  </pre></code>
+
       <UserCard userId={userId} data={data} setData={setData} />
 
       <button onClick={() => setUserId(prev => prev + 1)}>

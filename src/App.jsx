@@ -63,6 +63,7 @@ import TicTacToe from './advancedConcepts/TicTacToe'
 import BirthYearHistogram from './advancedConcepts/BirthYearHistogram'
 import ConnectFourGame from './advancedConcepts/ConnectFourGame'
 import CurryingAndPrototype from './javascriptConcepts/CurryingAndPrototype'
+import MovingTicTacToe from './advancedConcepts/MovingTicTacToe'
 
 function App() {
 
@@ -99,6 +100,8 @@ function App() {
           <KanbanBoard/>
           <div>------------------------------------------------------------------------------------------------------------------</div>
           <TicTacToe/>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          <MovingTicTacToe/>
           <div>------------------------------------------------------------------------------------------------------------------</div>
           <ConnectFourGame/>
           <div>------------------------------------------------------------------------------------------------------------------</div>
