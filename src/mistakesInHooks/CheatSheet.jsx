@@ -98,7 +98,7 @@ Runs when mouse released
 
       {/* ===================================================== */}
       <section style={sectionStyle}>
-        <h3>✅ Keyboard Events</h3>
+        <h3>✅ Keyboard Events-- like when give input and on key press enter keyboard events it is need to keep it to input</h3>
 
         <pre style={codeStyle}>
 {`onKeyDown  -- the event.key gives the details of what key 
@@ -857,6 +857,167 @@ Used In
 `}
         </pre>
       </section>
+<pre>
+   <h3>✅ splice -- drag and drop vs slice -- pagination</h3>
+  <section style={sectionStyle}>
+{`slice()
+--------
+Does NOT change original array
+Used to copy or extract items
+
+
+const arr = [10, 20, 30, 40, 50];
+
+const result = arr.slice(1, 4);
+
+console.log(result)
+// [20, 30, 40]
+
+console.log(arr)
+// [10, 20, 30, 40, 50]
+
+
+Explanation
+------------
+Start from index 1
+Stop BEFORE index 4
+
+Indexes:
+0   1   2   3   4
+10  20  30  40  50
+
+Returned:
+20 30 40
+
+
+
+Copy Array
+------------
+const nums = [1,2,3];
+
+const copy = nums.slice();
+
+console.log(copy)
+// [1,2,3]
+
+
+
+Remove First Item
+------------------
+const arr2 = [10,20,30];
+
+const res = arr2.slice(1);
+
+console.log(res)
+// [20,30]
+
+
+
+Remove Last Item
+-----------------
+const arr3 = [10,20,30];
+
+const res2 = arr3.slice(0,-1);
+
+console.log(res2)
+// [10,20]
+
+
+
+splice()
+---------
+CHANGES original array
+Used to add/remove/replace items
+
+
+Syntax
+-------
+array.splice(start, deleteCount, items)
+
+
+
+Remove Items
+--------------
+const arr4 = [10,20,30,40,50];
+
+const removed = arr4.splice(1,2);
+
+console.log(removed)
+// [20,30]
+
+console.log(arr4)
+// [10,40,50]
+
+
+Explanation
+-------------
+Start at index 1
+Delete 2 items
+
+
+
+Insert Items
+--------------
+const arr5 = [10,20,50];
+
+arr5.splice(2,0,30,40);
+
+console.log(arr5)
+// [10,20,30,40,50]
+
+
+Explanation
+-------------
+Start at index 2
+Delete 0 items
+Insert 30 and 40
+
+
+
+Replace Items
+---------------
+const arr6 = [10,20,30,40];
+
+arr6.splice(1,2,100,200);
+
+console.log(arr6)
+// [10,100,200,40]
+
+
+Explanation
+-------------
+Remove:
+20,30
+
+Insert:
+100,200
+
+
+
+Main Difference
+----------------
+slice  -> no mutation
+splice -> mutates original array
+
+
+
+React Important
+----------------
+slice() is preferred in React
+because it does NOT mutate state
+
+
+Bad
+----
+todos.splice(1,1)
+
+
+Good
+-----
+const newTodos = todos.slice(1)
+`}
+  </section>
+</pre>
     </div>
   );
 };
