@@ -1,435 +1,966 @@
-import React from "react";
+import React, {
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+  createContext,
+} from "react";
+
+const ThemeContext = createContext();
+
+const MemoChild = memo(({ onClick }) => {
+  console.log("Memo Child Rendered");
+
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        padding: "12px 20px",
+        border: "none",
+        borderRadius: "10px",
+        background: "#7c3aed",
+        color: "white",
+        cursor: "pointer",
+      }}
+    >
+      Memo Child Button
+    </button>
+  );
+});
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "increment":
+      return { count: state.count + 1 };
+
+    case "decrement":
+      return { count: state.count - 1 };
+
+    default:
+      return state;
+  }
+};
 
 function ReactHooksInterviewNotes() {
+  const [count, setCount] = useState(0);
+
+  const [text, setText] = useState("");
+
+  const [theme, setTheme] = useState("light");
+
+  const [state, dispatch] = useReducer(reducer, {
+    count: 0,
+  });
+
+  const renderRef = useRef(0);
+
+  const inputRef = useRef(null);
+
+  const measureRef = useRef(null);
+
+  const [boxWidth, setBoxWidth] = useState(0);
+
+  renderRef.current++;
+
+  useEffect(() => {
+    console.log("useEffect runs after paint");
+
+    return () => {
+      console.log("cleanup");
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    if (measureRef.current) {
+      const rect = measureRef.current.getBoundingClientRect();
+
+      setBoxWidth(rect.width);
+    }
+  }, []);
+
+  const expensiveCalculation = useMemo(() => {
+    console.log("Heavy calculation");
+
+    let total = 0;
+
+    for (let i = 0; i < 1000000; i++) {
+      total += i;
+    }
+
+    return total;
+  }, []);
+
+  const stableCallback = useCallback(() => {
+    alert("Stable callback");
+  }, []);
+
+  const pageStyle = {
+    padding: "40px",
+    maxWidth: "1500px",
+    margin: "0 auto",
+    fontFamily: "Arial",
+    lineHeight: "1.8",
+    background: "#f5f7fb",
+    color: "#222",
+    textAlign:'left'
+  };
+
   const sectionStyle = {
-    marginBottom: "35px",
-    textAlign: "left",
+    marginBottom: "60px",
+  };
+
+  const headingStyle = {
+    fontSize: "34px",
+    marginBottom: "20px",
+  };
+
+  const gridStyle = {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit,minmax(430px,1fr))",
+    gap: "22px",
+  };
+
+  const cardStyle = {
+    background: "white",
+    borderRadius: "16px",
+    padding: "22px",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
   };
 
   const codeStyle = {
-    background: "#f4f4f4",
-    padding: "14px",
-    borderRadius: "8px",
+    background: "#111827",
+    color: "#00ff95",
+    padding: "16px",
+    borderRadius: "12px",
     overflowX: "auto",
-    fontSize: "14px",
-    marginTop: "10px",
     whiteSpace: "pre-wrap",
-    lineHeight: "1.8",
+    fontSize: "14px",
+    marginTop: "15px",
   };
+
+  const descStyle = {
+    background: "#eef6ff",
+    padding: "18px",
+    borderRadius: "12px",
+    borderLeft: "6px solid #2563eb",
+    marginBottom: "20px",
+  };
+
+  const demoStyle = {
+    border: "2px dashed #bbb",
+    borderRadius: "12px",
+    padding: "20px",
+    background: "#fafafa",
+    marginTop: "15px",
+  };
+
+  const warningStyle = {
+    background: "#fff4e5",
+    borderLeft: "6px solid orange",
+    padding: "14px",
+    borderRadius: "10px",
+    marginTop: "15px",
+  };
+
+  const successStyle = {
+    background: "#e8f5e9",
+    borderLeft: "6px solid green",
+    padding: "14px",
+    borderRadius: "10px",
+    marginTop: "15px",
+  };
+
+  return (
+    <ThemeContext.Provider value={{ theme }}>
+      <div style={pageStyle}>
+        <h1
+          style={{
+            textAlign: "center",
+            fontSize: "48px",
+            marginBottom: "20px",
+          }}
+        >
+          React Hooks + Redux + Apollo Interview Notes
+        </h1>
+
+        <p
+          style={{
+            textAlign: "center",
+            color: "#555",
+            marginBottom: "60px",
+            fontSize: "18px",
+          }}
+        >
+          Complete practical React hooks handbook with
+          live demos, interview concepts, mistakes,
+          visual understanding and real-world usage.
+        </p>
+
+        {/* ===================================================== */}
+        {/* useState */}
+        {/* ===================================================== */}
+
+        <section style={sectionStyle}>
+          <h2 style={headingStyle}>✅ useState</h2>
+
+          <div style={descStyle}>
+            <h3>Concept</h3>
+
+            <p>
+              useState stores reactive UI state.
+              Whenever state changes, component re-renders.
+            </p>
+
+            <ul>
+              <li>Triggers re-render</li>
+              <li>Updates are async</li>
+              <li>React batches updates</li>
+            </ul>
+
+            <div style={successStyle}>
+              💡 Best For:
+              forms, toggles, counters, loading states
+            </div>
+
+            <div style={warningStyle}>
+              ❌ Never mutate state directly.
+            </div>
+          </div>
+
+          <div style={gridStyle}>
+            <div style={cardStyle}>
+              <h3>Live Counter Demo</h3>
+
+              <div style={demoStyle}>
+                <h2>{count}</h2>
+
+                <button
+                  onClick={() => setCount((prev) => prev + 1)}
+                  style={{
+                    padding: "12px 20px",
+                    border: "none",
+                    borderRadius: "10px",
+                    background: "#2563eb",
+                    color: "white",
+                  }}
+                >
+                  Increment
+                </button>
+              </div>
+
+              <pre style={codeStyle}>
+{`const [count,setCount] = useState(0)
+
+setCount(prev => prev + 1)`}
+              </pre>
+            </div>
+
+            <div style={cardStyle}>
+              <h3>Functional Update Flow</h3>
+
+              <div style={demoStyle}>
+                <pre>
+{`CLICK
+ ↓
+setState()
+ ↓
+React schedules update
+ ↓
+Component re-renders`}
+                </pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ===================================================== */}
+        {/* React batching */}
+        {/* ===================================================== */}
+
+        <section style={sectionStyle}>
+          <h2 style={headingStyle}>🔥 React Batching</h2>
+
+          <div style={descStyle}>
+            <p>
+              React combines multiple state updates into
+              one render for performance optimization.
+            </p>
+
+            <div style={warningStyle}>
+              ❌ Stale state issue:
+              setCount(count + 1) twice may still become +1
+            </div>
+          </div>
+
+          <div style={cardStyle}>
+            <pre style={codeStyle}>
+{`BAD
+----
+setCount(count + 1)
+setCount(count + 1)
+
+GOOD
+-----
+setCount(prev => prev + 1)
+setCount(prev => prev + 1)`}
+            </pre>
+          </div>
+        </section>
+
+        {/* ===================================================== */}
+        {/* useEffect */}
+        {/* ===================================================== */}
+
+        <section style={sectionStyle}>
+          <h2 style={headingStyle}>✅ useEffect</h2>
+
+          <div style={descStyle}>
+            <p>
+              Handles side effects after render.
+            </p>
+
+            <ul>
+              <li>API calls</li>
+              <li>Timers</li>
+              <li>Subscriptions</li>
+              <li>Event listeners</li>
+            </ul>
+
+            <div style={successStyle}>
+              💡 Runs after browser paint.
+            </div>
+          </div>
+
+          <div style={gridStyle}>
+            <div style={cardStyle}>
+              <h3>Effect Flow</h3>
+
+              <div style={demoStyle}>
+                <pre>
+{`Render
+ ↓
+Browser Paint
+ ↓
+useEffect runs`}
+                </pre>
+              </div>
+
+              <pre style={codeStyle}>
+{`useEffect(()=>{
+ console.log("runs")
+},[])`}
+              </pre>
+            </div>
+
+            <div style={cardStyle}>
+              <h3>Cleanup</h3>
+
+              <pre style={codeStyle}>
+{`useEffect(()=>{
+ const id = setInterval(...)
+
+ return ()=>{
+   clearInterval(id)
+ }
+},[])`}
+              </pre>
+            </div>
+          </div>
+        </section>
+
+        {/* ===================================================== */}
+        {/* useRef */}
+        {/* ===================================================== */}
+
+        <section style={sectionStyle}>
+          <h2 style={headingStyle}>✅ useRef</h2>
+
+          <div style={descStyle}>
+            <p>
+              Stores mutable values without re-rendering.
+            </p>
+
+            <ul>
+              <li>DOM access</li>
+              <li>Timers</li>
+              <li>Previous values</li>
+              <li>Mutable storage</li>
+            </ul>
+
+            <div style={warningStyle}>
+              ❌ Updating ref does NOT re-render component.
+            </div>
+          </div>
+
+          <div style={gridStyle}>
+            <div style={cardStyle}>
+              <h3>Focus Input Demo</h3>
+
+              <div style={demoStyle}>
+                <input
+                  ref={inputRef}
+                  placeholder="Focus me"
+                  style={{
+                    padding: "12px",
+                    width: "100%",
+                    borderRadius: "10px",
+                    border: "1px solid #ccc",
+                  }}
+                />
+
+                <button
+                  onClick={() => inputRef.current.focus()}
+                  style={{
+                    marginTop: "15px",
+                    padding: "10px 18px",
+                  }}
+                >
+                  Focus Input
+                </button>
+              </div>
+
+              <pre style={codeStyle}>
+{`const ref = useRef(null)
+
+ref.current.focus()`}
+              </pre>
+            </div>
+
+            <div style={cardStyle}>
+              <h3>Ref Lifecycle</h3>
+
+              <div style={demoStyle}>
+                <pre>
+{`Before Mount
+ref.current = null
+
+After Mount
+ref.current = DOM node`}
+                </pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ===================================================== */}
+        {/* useMemo */}
+        {/* ===================================================== */}
+
+        <section style={sectionStyle}>
+          <h2 style={headingStyle}>✅ useMemo</h2>
+
+          <div style={descStyle}>
+            <p>
+              Memoizes expensive computed values.
+            </p>
+
+            <div style={successStyle}>
+              💡 Prevents unnecessary recalculation.
+            </div>
+
+            <div style={warningStyle}>
+              ❌ Does NOT prevent component re-render.
+            </div>
+          </div>
+
+          <div style={gridStyle}>
+            <div style={cardStyle}>
+              <h3>Heavy Calculation Demo</h3>
+
+              <div style={demoStyle}>
+                <h4>{expensiveCalculation}</h4>
+
+                <p>
+                  Heavy calculation only runs once.
+                </p>
+              </div>
+
+              <pre style={codeStyle}>
+{`const value = useMemo(()=>{
+ return expensiveWork()
+},[])`}
+              </pre>
+            </div>
+
+            <div style={cardStyle}>
+              <h3>Best Use Cases</h3>
+
+              <div style={demoStyle}>
+                <ul>
+                  <li>Filtering</li>
+                  <li>Sorting</li>
+                  <li>Large calculations</li>
+                  <li>Stable object references</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ===================================================== */}
+        {/* useCallback */}
+        {/* ===================================================== */}
+
+        <section style={sectionStyle}>
+          <h2 style={headingStyle}>✅ useCallback</h2>
+
+          <div style={descStyle}>
+            <p>
+              Memoizes function reference.
+            </p>
+
+            <div style={successStyle}>
+              💡 Useful with React.memo children.
+            </div>
+
+            <div style={warningStyle}>
+              ❌ Overusing can reduce readability.
+            </div>
+          </div>
+
+          <div style={gridStyle}>
+            <div style={cardStyle}>
+              <h3>Stable Function Demo</h3>
+
+              <div style={demoStyle}>
+                <MemoChild onClick={stableCallback} />
+              </div>
+
+              <pre style={codeStyle}>
+{`const fn = useCallback(()=>{
+ console.log("stable")
+},[])`}
+              </pre>
+            </div>
+
+            <div style={cardStyle}>
+              <h3>Flow</h3>
+
+              <div style={demoStyle}>
+                <pre>
+{`Parent Re-render
+ ↓
+Same callback reference
+ ↓
+Memo child skips render`}
+                </pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ===================================================== */}
+        {/* React.memo */}
+        {/* ===================================================== */}
+
+        <section style={sectionStyle}>
+          <h2 style={headingStyle}>✅ React.memo</h2>
+
+          <div style={descStyle}>
+            <p>
+              Prevents unnecessary child renders
+              using shallow prop comparison.
+            </p>
+
+            <div style={warningStyle}>
+              ❌ New object/function references
+              still trigger renders.
+            </div>
+          </div>
+
+          <div style={cardStyle}>
+            <pre style={codeStyle}>
+{`const Child = React.memo(Component)`}
+            </pre>
+          </div>
+        </section>
+
+        {/* ===================================================== */}
+        {/* useLayoutEffect */}
+        {/* ===================================================== */}
+
+        <section style={sectionStyle}>
+          <h2 style={headingStyle}>✅ useLayoutEffect</h2>
+
+          <div style={descStyle}>
+            <p>
+              Runs synchronously before browser paint.
+            </p>
+
+            <div style={successStyle}>
+              💡 Used for DOM measurements.
+            </div>
+          </div>
+
+          <div style={gridStyle}>
+            <div style={cardStyle}>
+              <h3>Measurement Demo</h3>
+
+              <div
+                ref={measureRef}
+                style={{
+                  ...demoStyle,
+                  width: "300px",
+                }}
+              >
+                Measured Width:
+                <h3>{boxWidth}px</h3>
+              </div>
+
+              <pre style={codeStyle}>
+{`useLayoutEffect(()=>{
+ const rect =
+ ref.current.getBoundingClientRect()
+})`}
+              </pre>
+            </div>
+
+            <div style={cardStyle}>
+              <h3>Difference</h3>
+
+              <div style={demoStyle}>
+                <pre>
+{`useEffect
+→ after paint
+
+useLayoutEffect
+→ before paint`}
+                </pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ===================================================== */}
+        {/* useContext */}
+        {/* ===================================================== */}
+
+        <section style={sectionStyle}>
+          <h2 style={headingStyle}>✅ useContext</h2>
+
+          <div style={descStyle}>
+            <p>
+              Shares global state without prop drilling.
+            </p>
+
+            <div style={successStyle}>
+              💡 Used for:
+              theme, auth, language
+            </div>
+          </div>
+
+          <div style={cardStyle}>
+            <ThemePreview />
+
+            <button
+              onClick={() =>
+                setTheme((prev) =>
+                  prev === "light"
+                    ? "dark"
+                    : "light"
+                )
+              }
+              style={{
+                marginTop: "15px",
+                padding: "10px 18px",
+              }}
+            >
+              Toggle Theme
+            </button>
+
+            <pre style={codeStyle}>
+{`const value =
+useContext(MyContext)`}
+            </pre>
+          </div>
+        </section>
+
+        {/* ===================================================== */}
+        {/* useReducer */}
+        {/* ===================================================== */}
+
+        <section style={sectionStyle}>
+          <h2 style={headingStyle}>✅ useReducer</h2>
+
+          <div style={descStyle}>
+            <p>
+              Centralized complex state logic.
+            </p>
+
+            <div style={successStyle}>
+              💡 Best for:
+              carts, forms, auth flows
+            </div>
+          </div>
+
+          <div style={gridStyle}>
+            <div style={cardStyle}>
+              <h3>Reducer Demo</h3>
+
+              <div style={demoStyle}>
+                <h2>{state.count}</h2>
+
+                <button
+                  onClick={() =>
+                    dispatch({ type: "increment" })
+                  }
+                >
+                  +
+                </button>
+
+                <button
+                  onClick={() =>
+                    dispatch({ type: "decrement" })
+                  }
+                  style={{
+                    marginLeft: "10px",
+                  }}
+                >
+                  -
+                </button>
+              </div>
+
+              <pre style={codeStyle}>
+{`dispatch({
+ type:"increment"
+})`}
+              </pre>
+            </div>
+
+            <div style={cardStyle}>
+              <h3>Reducer Flow</h3>
+
+              <div style={demoStyle}>
+                <pre>
+{`dispatch(action)
+ ↓
+reducer()
+ ↓
+new state
+ ↓
+re-render`}
+                </pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ===================================================== */}
+        {/* useSelector */}
+        {/* ===================================================== */}
+
+        <section style={sectionStyle}>
+          <h2 style={headingStyle}>✅ useSelector (Redux)</h2>
+
+          <div style={descStyle}>
+            <p>
+              Reads Redux store state inside component.
+            </p>
+
+            <div style={successStyle}>
+              💡 Re-renders component when selected value changes.
+            </div>
+
+            <div style={warningStyle}>
+              ❌ Selecting entire store causes extra renders.
+            </div>
+          </div>
+
+          <div style={cardStyle}>
+            <pre style={codeStyle}>
+{`const count = useSelector(
+ state => state.counter.count
+)`}
+            </pre>
+          </div>
+        </section>
+
+        {/* ===================================================== */}
+        {/* useDispatch */}
+        {/* ===================================================== */}
+
+        <section style={sectionStyle}>
+          <h2 style={headingStyle}>✅ useDispatch (Redux)</h2>
+
+          <div style={descStyle}>
+            <p>
+              Sends actions to Redux store.
+            </p>
+
+            <div style={successStyle}>
+              💡 Used with reducers.
+            </div>
+          </div>
+
+          <div style={cardStyle}>
+            <pre style={codeStyle}>
+{`const dispatch = useDispatch()
+
+dispatch(addTodo(data))`}
+            </pre>
+          </div>
+        </section>
+
+        {/* ===================================================== */}
+        {/* useQuery */}
+        {/* ===================================================== */}
+
+        <section style={sectionStyle}>
+          <h2 style={headingStyle}>✅ useQuery (Apollo GraphQL)</h2>
+
+          <div style={descStyle}>
+            <p>
+              Fetches GraphQL data automatically.
+            </p>
+
+            <ul>
+              <li>loading</li>
+              <li>error</li>
+              <li>data</li>
+            </ul>
+
+            <div style={successStyle}>
+              💡 Auto caching + auto updates.
+            </div>
+          </div>
+
+          <div style={cardStyle}>
+            <pre style={codeStyle}>
+{`const {
+ loading,
+ error,
+ data
+} = useQuery(GET_USERS)
+
+if(loading) return "Loading"
+
+console.log(data)`}
+            </pre>
+          </div>
+        </section>
+
+        {/* ===================================================== */}
+        {/* useMutation */}
+        {/* ===================================================== */}
+
+        <section style={sectionStyle}>
+          <h2 style={headingStyle}>✅ useMutation (Apollo)</h2>
+
+          <div style={descStyle}>
+            <p>
+              Used for create/update/delete operations.
+            </p>
+
+            <div style={successStyle}>
+              💡 Triggered manually.
+            </div>
+          </div>
+
+          <div style={cardStyle}>
+            <pre style={codeStyle}>
+{`const [addUser] =
+useMutation(ADD_USER)
+
+addUser({
+ variables:{
+   name:"Sai"
+ }
+})`}
+            </pre>
+          </div>
+        </section>
+
+        {/* ===================================================== */}
+        {/* custom hooks */}
+        {/* ===================================================== */}
+
+        <section style={sectionStyle}>
+          <h2 style={headingStyle}>✅ Custom Hooks</h2>
+
+          <div style={descStyle}>
+            <p>
+              Reusable logic extracted into hook functions.
+            </p>
+
+            <div style={successStyle}>
+              💡 Keeps components clean.
+            </div>
+          </div>
+
+          <div style={cardStyle}>
+            <pre style={codeStyle}>
+{`function useToggle(initial){
+
+ const [value,setValue] =
+ useState(initial)
+
+ const toggle = ()=>{
+   setValue(prev => !prev)
+ }
+
+ return [value,toggle]
+}`}
+            </pre>
+          </div>
+        </section>
+
+        {/* ===================================================== */}
+        {/* render count */}
+        {/* ===================================================== */}
+
+        <section style={sectionStyle}>
+          <h2 style={headingStyle}>🔥 Render Count Tracking</h2>
+
+          <div style={descStyle}>
+            <p>
+              Useful for debugging unnecessary renders.
+            </p>
+          </div>
+
+          <div style={cardStyle}>
+            <div style={demoStyle}>
+              <h3>
+                Component Render Count:
+                {renderRef.current}
+              </h3>
+            </div>
+
+            <pre style={codeStyle}>
+{`const renderRef = useRef(0)
+
+renderRef.current++`}
+            </pre>
+          </div>
+        </section>
+      </div>
+    </ThemeContext.Provider>
+  );
+}
+
+function ThemePreview() {
+  const { theme } = useContext(ThemeContext);
 
   return (
     <div
       style={{
         padding: "20px",
-        maxWidth: "1000px",
-        margin: "0 auto",
-        lineHeight: "1.8",
-        textAlign: "left",
-        fontFamily: "sans-serif",
+        borderRadius: "12px",
+        background:
+          theme === "light"
+            ? "#f3f4f6"
+            : "#1f2937",
+        color:
+          theme === "light"
+            ? "#111"
+            : "white",
       }}
     >
-      <h2>🧠 React Hooks Interview Notes</h2>
-
-      {/* ===================================================== */}
-      <section style={sectionStyle}>
-        <h3>✅ useState</h3>
-
-        <pre style={codeStyle}>
-{`CONCEPT:
-- Stores reactive UI state
-- State change triggers re-render
-- Updates are async and batched
-
-RELATED CONCEPT:
-- React Batching
-- Functional Updates
-
-IMPORTANT:
-setCount(prev => prev + 1)
--- best when depending on previous state
-
-COMMON MISTAKES:
-❌ Mutating state directly
-❌ Expecting immediate update
-❌ Forgetting functional updates
-❌ Replacing object accidentally
-
-BEST FOR:
-- Forms
-- Toggles
-- Counters
-- Loading states`}
-        </pre>
-      </section>
-
-      {/* ===================================================== */}
-      <section style={sectionStyle}>
-        <h3>🔥 React Batching</h3>
-
-        <pre style={codeStyle}>
-{`CONCEPT:
-- React combines multiple state updates into one render
-
-IMPORTANT:
-setCount(count + 1)
-setCount(count + 1)
--- may still become +1
-
-setCount(prev => prev + 1)
-setCount(prev => prev + 1)
--- becomes +2
-
-COMMON MISTAKES:
-❌ Using stale state values -- stale values update (paint on DOM) only post completion of function so use react batching
-❌ Forgetting batching exists
-
-BEST PRACTICE:
-- Use functional updates when depending on previous state`}
-        </pre>
-      </section>
-
-      {/* ===================================================== */}
-      <section style={sectionStyle}>
-        <h3>✅ useEffect</h3>
-
-        <pre style={codeStyle}>
-{`CONCEPT:
-- Handles side effects after render
-- Runs after browser paint
-
-RELATED CONCEPT:
-- Dependency Array
-- Cleanup Function
-
-IMPORTANT:
-useEffect(() => {}, [])
--- runs once
-
-useEffect(() => {}, [value])
--- runs when dependency changes
-
-COMMON MISTAKES:
-❌ Missing dependencies
-❌ Infinite loops
-❌ Updating state unnecessarily
-❌ Heavy logic inside effect
-
-BEST FOR:
-- API calls
-- Timers
-- Event listeners
-- Subscriptions`}
-        </pre>
-      </section>
-
-      {/* ===================================================== */}
-      <section style={sectionStyle}>
-        <h3>🔥 useEffect Cleanup</h3>
-
-        <pre style={codeStyle}>
-{`CONCEPT:
-- Cleanup prevents memory leaks
-
-IMPORTANT:
-return () => {}
-
-cleanup runs:
-- before next effect
-- on unmount
-
-COMMON MISTAKES:
-❌ Forgetting clearInterval
-❌ Forgetting removeEventListener
-❌ Memory leaks
-
-BEST FOR:
-- Timers
-- Subscriptions
-- Event listeners
-- WebSocket cleanup`}
-        </pre>
-      </section>
-
-      {/* ===================================================== */}
-      <section style={sectionStyle}>
-        <h3>⏱️ setTimeout</h3>
-
-        <pre style={codeStyle}>
-{`CONCEPT:
-- Runs once after delay
-
-IMPORTANT:
-const id = setTimeout(...)
-
-clearTimeout(id)
-
-COMMON MISTAKES:
-❌ Forgetting cleanup
-❌ Using for repeated tasks
-
-BEST FOR:
-- Debouncing
-- Delayed actions
-- Retry logic
-- Controlled polling`}
-        </pre>
-      </section>
-
-      {/* ===================================================== */}
-      <section style={sectionStyle}>
-        <h3>⏱️ setInterval</h3>
-
-        <pre style={codeStyle}>
-{`CONCEPT:
-- Runs repeatedly after interval
-
-IMPORTANT:
-const id = setInterval(...)
-
-clearInterval(id)
-
-COMMON MISTAKES:
-❌ Multiple intervals running
-❌ Forgetting cleanup
-❌ Overlapping async calls
-
-BEST FOR:
-- Clocks
-- Countdowns
-- Repeated updates`}
-        </pre>
-      </section>
-
-      {/* ===================================================== */}
-      <section style={sectionStyle}>
-        <h3>⚡ setTimeout vs setInterval</h3>
-
-        <pre style={codeStyle}>
-{`setTimeout:
-- Runs once
-- Better for polling
-- Better async control
-
-setInterval:
-- Runs repeatedly
-- Simpler repeated tasks
-
-COMMON MISTAKES:
-❌ Using setInterval for async polling
-
-BEST PRACTICE:
-- Recursive setTimeout is safer for APIs`}
-        </pre>
-      </section>
-
-      {/* ===================================================== */}
-      <section style={sectionStyle}>
-        <h3>✅ useRef</h3>
-
-        <pre style={codeStyle}>
-{`CONCEPT:
-- Stores mutable values
-- Does NOT re-render component
-- Persists across renders
-
-RELATED CONCEPT:
-- DOM Refs
-- Callback Refs
-
-IMPORTANT:
-ref.current = value
-
-COMMON MISTAKES:
-❌ Expecting re-render
-❌ Forgetting attaching ref to DOM
-❌ Using state instead of ref for timers
-
-BEST FOR:
-- DOM access
-- Timers
-- Previous values
-- Mutable storage`}
-        </pre>
-      </section>
-
-      {/* ===================================================== */}
-      <section style={sectionStyle}>
-        <h3>⚡ Callback Ref</h3>
-
-        <pre style={codeStyle}>
-{`CONCEPT:
-- Manual DOM ref assignment
-
-IMPORTANT:
-ref={(el) => gridRef.current[index] = el}
-
-COMMON MISTAKES:
-❌ Forgetting dynamic refs in lists
-❌ Using single ref for multiple elements
-
-BEST FOR:
-- Lists
-- Grids
-- Drag-drop systems`}
-        </pre>
-      </section>
-
-      {/* ===================================================== */}
-      <section style={sectionStyle}>
-        <h3>✅ useMemo</h3>
-
-        <pre style={codeStyle}>
-{`CONCEPT:
-- Memoizes computed values
-- Prevents unnecessary recalculation
-
-RELATED CONCEPT:
-- Reference Equality
-
-IMPORTANT:
-useMemo(() => value, [deps])
-
-COMMON MISTAKES:
-❌ Overusing useMemo
-❌ Missing dependencies
-❌ Thinking it prevents re-render
-
-BEST FOR:
-- Expensive calculations
-- Filtering
-- Sorting
-- Stable object references`}
-        </pre>
-      </section>
-
-      {/* ===================================================== */}
-      <section style={sectionStyle}>
-        <h3>✅ useCallback</h3>
-
-        <pre style={codeStyle}>
-{`CONCEPT:
-- Memoizes function reference
-
-RELATED CONCEPT:
-- React.memo
-
-IMPORTANT:
-useCallback(fn, deps)
-
-COMMON MISTAKES:
-❌ Overusing useCallback
-❌ Missing dependencies
-❌ Using without React.memo
-
-BEST FOR:
-- Stable callbacks
-- Memoized children
-- Event handlers`}
-        </pre>
-      </section>
-
-      {/* ===================================================== */}
-      <section style={sectionStyle}>
-        <h3>✅ React.memo</h3>
-
-        <pre style={codeStyle}>
-{`CONCEPT:
-- Prevents unnecessary child re-renders
-
-RELATED CONCEPT:
-- Shallow Comparison
-
-IMPORTANT:
-React.memo(Component)
-
-COMMON MISTAKES:
-❌ Passing new objects/functions
-❌ Using everywhere unnecessarily
-
-BEST FOR:
-- Expensive child components
-- Large UI trees`}
-        </pre>
-      </section>
-
-      {/* ===================================================== */}
-      <section style={sectionStyle}>
-        <h3>✅ useLayoutEffect</h3>
-
-        <pre style={codeStyle}>
-{`CONCEPT:
-- Runs before browser paint
-- Synchronous effect
-
-RELATED CONCEPT:
-- DOM Measurements
-
-IMPORTANT:
-useLayoutEffect(() => {})
-
-COMMON MISTAKES:
-❌ Heavy calculations blocking paint
-❌ Using instead of useEffect unnecessarily
-
-BEST FOR:
-- Measuring elements
-- Preventing flicker
-- Layout calculations`}
-        </pre>
-      </section>
-
-      {/* ===================================================== */}
-      <section style={sectionStyle}>
-        <h3>✅ useContext</h3>
-
-        <pre style={codeStyle}>
-{`CONCEPT:
-- Shares global state without prop drilling
-
-RELATED CONCEPT:
-- Context Provider
-
-IMPORTANT:
-useContext(SomeContext)
-
-COMMON MISTAKES:
-❌ Large frequently changing context
-❌ Unnecessary re-renders
-❌ Creating new provider objects every render
-
-BEST FOR:
-- Theme
-- Auth
-- Language
-- Global settings`}
-        </pre>
-      </section>
-
-      {/* ===================================================== */}
-      <section style={sectionStyle}>
-        <h3>✅ useReducer</h3>
-
-        <pre style={codeStyle}>
-{`CONCEPT:
-- Centralized complex state management
-
-RELATED CONCEPT:
-- Reducer Pattern
-
-IMPORTANT:
-dispatch({ type: "increment" })
-
-COMMON MISTAKES:
-❌ Mutating state
-❌ Missing default case
-❌ Side effects inside reducer
-
-BEST FOR:
-- Complex forms
-- Shopping carts
-- Authentication flows`}
-        </pre>
-      </section>
+      Current Theme: {theme}
     </div>
   );
 }

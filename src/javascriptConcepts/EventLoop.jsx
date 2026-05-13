@@ -27,6 +27,7 @@ const EventLoop = () => {
     <h2>Event Loop</h2>
 <div style={{textAlign:'left'}}>
         <code><pre>
+            
 {`console.log("start");
 setTimeout(()=>{
     console.log("Timeout")
@@ -39,7 +40,24 @@ console.log("end")
 output: 1. start 2. end 3. promise 4. Timeout
 
 Promise: MicroTask Queue (High priority), Timeout: MacroTask queue (low priority)
+------------------------------------------------------------------------------------------
 
+function test() {
+    console.log('before promises')
+
+    Promise.resolve().then(()=>{
+        console.log('promises')
+    })
+}
+
+console.log("start")
+test()
+console.log("end")
+
+output:- start before promises end promises
+promises-- microtask queue (gets high priority)
+
+-------------------------------------------------------------------------------------------
 implicit/ var scopes lets the call backs execute after the block completes
 for(i=0 (same as) var i=0; i<10; i++){
     setTimeout(()=>{
@@ -47,7 +65,7 @@ for(i=0 (same as) var i=0; i<10; i++){
     },0)
 }
 output: 10 10 10 10 10 10 10 10 10 10 10 why 10 since <10 means 0-9 like i value get updated before asyncronous tasks
-
+---------------------------------------------------------------------------------------------------------
 let scope lets you make scope for callbacks even though they execute late
 for(let i=0; i<10; i++){
     setTimeout(()=>{
