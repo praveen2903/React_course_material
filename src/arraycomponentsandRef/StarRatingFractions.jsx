@@ -20,7 +20,7 @@ const StarRatingFractions = () => {
 
     const handleClick=(index, event) =>{
         const value = calculateValue(event, index);
-        setRating(value) //0.1-5 so no +1
+        setRating(value) //0.1-5 so no +1  set the hovered index to the rating
 
     }
 
@@ -44,6 +44,17 @@ const StarRatingFractions = () => {
     return (
     <>
     <div>StarRatingFractions</div>
+<code style={{textAlign:'left'}}>
+<pre>
+{`OnMouseMove -- calculate the targeted circle area and how much width occupied
+const calculateValue =(event, index) =>{
+    const rect = event.currentTarget.getBoundingClientRect();
+    const widthOccupied= event.clientX- rect.left;  
+    const percentOccupied= widthOccupied / rect.width;
+    return Number((index+percentOccupied).toFixed(1))
+}`}
+</pre>
+</code>
     <div>{rating}</div>
     <div>{hoverValue}</div>
     <div style={{display:'flex', gap:'20px'}} onMouseLeave={handleMouseLeave}>

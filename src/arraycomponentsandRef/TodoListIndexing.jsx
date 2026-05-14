@@ -11,7 +11,6 @@ const TodoListIndexing= ()=>{
 
     const addTask= ()=>{
         setTaskList(taskList=>[...taskList, inputText]);
-        //or setTaskList(prev=> [...prev, inputText])  like setCount(count=> count+1) React batching
         setInputText('');
     }
 
@@ -52,6 +51,34 @@ const TodoListIndexing= ()=>{
         <div>
             TODO List With Indexing -- best and light when using array and usestate try to use indexing only even with refs
         </div>
+<code style={{textAlign:'left'}}>
+<pre>
+{`
+Splice(startIndex, deletecount, ...items)-- startIndex from where need to start removal, deletecount-- no.of items to delete
+...items-- items list to delete in arguments 0 to any can be there optional
+
+Add todo
+setItem([...items, newItem])
+delete 
+SetItem(prev=> prev.filter(res=> res.id !== deleteId))
+update
+setItem(prev=> prev.map(res=> res.id===updatedId? updatedValue: res))
+
+Drag & drop explained ref need to attached to each of the dom and share index and element if focus needed
+const handleDrop = (dropIndex)=>{
+    if(dragRef.current===null) return;
+    const {dragIndex, element} = dragRef.current   // dragIndex = 2  & dropIndex = 3
+    const copy=[...taskList];                   // a   b   c  d   e  f
+
+    const draggedItem = copy[dragIndex];        // c
+    copy.splice(dragIndex,1);                   // a   b   d   e   f
+    copy.splice(dropIndex,0,draggedItem);       // a   b   d   c   f   e
+
+    setTaskList(copy);
+    setDragIndex(null);
+}`}
+</pre>
+</code>
         <div style={{ display: 'flex', gap:'16px', marginBottom:"20px"}}>
             <input type="text" value={inputText} onChange={(e)=> setInputText(e.target.value)} />
             <button onClick={addTask} style={{padding:'8px', fontSize:'12px', borderRadius:'8px'}}>+</button>

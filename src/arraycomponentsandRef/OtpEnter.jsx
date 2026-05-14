@@ -36,7 +36,7 @@ const OtpEnter= ()=>{
         <div>
             <div>Otp Entering</div>
             {
-                [0,1,2,3,4,5].map((index)=>(
+                [...Array(6)].map((_, index)=>(
                     <input key={index} 
                         maxLength='1'
 
