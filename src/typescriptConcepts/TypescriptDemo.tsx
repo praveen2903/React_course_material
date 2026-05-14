@@ -7,6 +7,637 @@ import React, {
   useState,
 } from "react";
 
+function TypeVsInterface() {
+  return (
+    <div style={styles.card}>
+
+      <h1>
+        🚀 Type vs Interface Complete Guide
+      </h1>
+
+      <p>
+        Both <b>type</b> and <b>interface</b>
+        are used to define data structures in TypeScript.
+      </p>
+
+      <p>
+        They look similar initially,
+        but internally they are VERY different.
+      </p>
+
+      {/* ===================================================== */}
+
+      <h2>
+        🔥 1. Basic Object Example
+      </h2>
+
+      <pre style={styles.code}>
+{`interface User {
+  name: string;
+  age: number;
+  email: string;
+}`}
+      </pre>
+
+      <pre style={styles.code}>
+{`type User = {
+  name: string;
+  age: number;
+  email: string;
+}`}
+      </pre>
+
+      <pre style={styles.code}>
+{`const user: User = {
+  name: "Sai",
+  age: 25,
+  email: "sai@gmail.com",
+};`}
+      </pre>
+
+      <div style={styles.warning}>
+        Both work similarly for simple objects.
+      </div>
+
+      {/* ===================================================== */}
+
+      <h2>
+        🔥 2. Extending Interfaces
+      </h2>
+
+      <p>
+        Interfaces use <b>extends</b>.
+      </p>
+
+      <pre style={styles.code}>
+{`interface Person {
+  name: string;
+  age: number;
+}
+
+interface Employee extends Person {
+  employeeId: number;
+  department: string;
+}`}
+      </pre>
+
+      <pre style={styles.code}>
+{`const emp: Employee = {
+  name: "Sai",
+  age: 25,
+  employeeId: 101,
+  department: "Frontend",
+};`}
+      </pre>
+
+      <div style={styles.success}>
+        Interfaces are very common in OOP-style architectures.
+      </div>
+
+      {/* ===================================================== */}
+
+      <h2>
+        🔥 3. Type Intersections
+      </h2>
+
+      <p>
+        Types use intersection operator <b>&</b>.
+      </p>
+
+      <pre style={styles.code}>
+{`type Person = {
+  name: string;
+  age: number;
+};
+
+type Employee = Person & {
+  employeeId: number;
+  department: string;
+};`}
+      </pre>
+
+      <pre style={styles.code}>
+{`const emp: Employee = {
+  name: "Sai",
+  age: 25,
+  employeeId: 101,
+  department: "Backend",
+};`}
+      </pre>
+
+      {/* ===================================================== */}
+
+      <h2>
+        🔥 4. Declaration Merging
+      </h2>
+
+      <p>
+        Interfaces support automatic merging.
+      </p>
+
+      <pre style={styles.code}>
+{`interface User {
+  name: string;
+}
+
+interface User {
+  age: number;
+}`}
+      </pre>
+
+      <pre style={styles.code}>
+{`const user: User = {
+  name: "Sai",
+  age: 25,
+};`}
+      </pre>
+
+      <div style={styles.warning}>
+        TypeScript automatically merges both interfaces.
+      </div>
+
+      <h3>
+        ❌ Types Cannot Merge
+      </h3>
+
+      <pre style={styles.code}>
+{`type User = {
+  name: string;
+};
+
+type User = {
+  age: number;
+};`}
+      </pre>
+
+      <div style={styles.error}>
+        Duplicate identifier error.
+      </div>
+
+      {/* ===================================================== */}
+
+      <h2>
+        🔥 5. Union Types
+      </h2>
+
+      <p>
+        One of the BIGGEST advantages of types.
+      </p>
+
+      <pre style={styles.code}>
+{`type Status =
+  | "loading"
+  | "success"
+  | "error";`}
+      </pre>
+
+      <pre style={styles.code}>
+{`const apiStatus: Status = "loading";`}
+      </pre>
+
+      <div style={styles.success}>
+        Interfaces CANNOT create union types.
+      </div>
+
+      {/* ===================================================== */}
+
+      <h2>
+        🔥 6. Real World API Response Example
+      </h2>
+
+      <pre style={styles.code}>
+{`type ApiResponse =
+  | {
+      success: true;
+      data: string[];
+    }
+  | {
+      success: false;
+      error: string;
+    };`}
+      </pre>
+
+      <pre style={styles.code}>
+{`function handleResponse(
+  response: ApiResponse
+) {
+
+  if (response.success) {
+    console.log(response.data);
+  } else {
+    console.log(response.error);
+  }
+
+}`}
+      </pre>
+
+      <div style={styles.warning}>
+        This pattern is EXTREMELY common in real applications.
+      </div>
+
+      {/* ===================================================== */}
+
+      <h2>
+        🔥 7. Function Types
+      </h2>
+
+      <h3>
+        Interface Function
+      </h3>
+
+      <pre style={styles.code}>
+{`interface Add {
+  (
+    a: number,
+    b: number
+  ): number;
+}`}
+      </pre>
+
+      <h3>
+        Type Function
+      </h3>
+
+      <pre style={styles.code}>
+{`type Add = (
+  a: number,
+  b: number
+) => number;`}
+      </pre>
+
+      <pre style={styles.code}>
+{`const sum: Add = (a, b) => {
+  return a + b;
+};`}
+      </pre>
+
+      {/* ===================================================== */}
+
+      <h2>
+        🔥 8. Tuple Types
+      </h2>
+
+      <p>
+        Tuples are mostly used with types.
+      </p>
+
+      <pre style={styles.code}>
+{`type Coordinates = [
+  number,
+  number
+];`}
+      </pre>
+
+      <pre style={styles.code}>
+{`const point: Coordinates = [
+  10,
+  20,
+];`}
+      </pre>
+
+      {/* ===================================================== */}
+
+      <h2>
+        🔥 9. Primitive Aliases
+      </h2>
+
+      <p>
+        Only types can alias primitives.
+      </p>
+
+      <pre style={styles.code}>
+{`type UserId = string;
+
+type Age = number;
+
+type IsAdmin = boolean;`}
+      </pre>
+
+      {/* ===================================================== */}
+
+      <h2>
+        🔥 10. Advanced Union Example
+      </h2>
+
+      <pre style={styles.code}>
+{`type PaymentMethod =
+  | {
+      type: "card";
+      cardNumber: string;
+      cvv: number;
+    }
+  | {
+      type: "upi";
+      upiId: string;
+    }
+  | {
+      type: "paypal";
+      email: string;
+    };`}
+      </pre>
+
+      <pre style={styles.code}>
+{`function processPayment(
+  payment: PaymentMethod
+) {
+
+  if (payment.type === "card") {
+
+    console.log(payment.cardNumber);
+
+  }
+
+  if (payment.type === "upi") {
+
+    console.log(payment.upiId);
+
+  }
+
+}`}
+      </pre>
+
+      <div style={styles.success}>
+        This is called a discriminated union.
+      </div>
+
+      {/* ===================================================== */}
+
+      <h2>
+        🔥 11. React Props Example
+      </h2>
+
+      <h3>
+        Using Interface
+      </h3>
+
+      <pre style={styles.code}>
+{`interface ButtonProps {
+  title: string;
+  disabled?: boolean;
+}
+
+function Button({
+  title,
+  disabled
+}: ButtonProps) {
+
+  return (
+    <button disabled={disabled}>
+      {title}
+    </button>
+  );
+}`}
+      </pre>
+
+      <h3>
+        Using Type
+      </h3>
+
+      <pre style={styles.code}>
+{`type ButtonProps = {
+  title: string;
+  disabled?: boolean;
+};`}
+      </pre>
+
+      {/* ===================================================== */}
+
+      <h2>
+        🔥 12. Classes + Interface
+      </h2>
+
+      <pre style={styles.code}>
+{`interface Animal {
+  name: string;
+  speak(): void;
+}
+
+class Dog implements Animal {
+
+  name = "Tommy";
+
+  speak() {
+    console.log("Bark");
+  }
+
+}`}
+      </pre>
+
+      <div style={styles.warning}>
+        Interfaces are commonly used with classes.
+      </div>
+
+      {/* ===================================================== */}
+
+      <h2>
+        🔥 13. Mapped Types
+      </h2>
+
+      <p>
+        Advanced TypeScript feature.
+      </p>
+
+      <pre style={styles.code}>
+{`interface User {
+  name: string;
+  age: number;
+}
+
+type PartialUser =
+  Partial<User>;`}
+      </pre>
+
+      <pre style={styles.code}>
+{`const user: PartialUser = {
+  name: "Sai",
+};`}
+      </pre>
+
+      {/* ===================================================== */}
+
+      <h2>
+        🔥 14. Conditional Types
+      </h2>
+
+      <pre style={styles.code}>
+{`type IsString<T> =
+  T extends string
+    ? true
+    : false;`}
+      </pre>
+
+      <pre style={styles.code}>
+{`type A = IsString<string>;
+type B = IsString<number>;`}
+      </pre>
+
+      {/* ===================================================== */}
+
+      <h2>
+        🔥 15. Full Comparison Table
+      </h2>
+
+      <table style={styles.table}>
+        <thead>
+          <tr>
+            <th style={styles.th}>
+              Feature
+            </th>
+
+            <th style={styles.th}>
+              Interface
+            </th>
+
+            <th style={styles.th}>
+              Type
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr>
+            <td style={styles.td}>
+              Objects
+            </td>
+
+            <td style={styles.td}>
+              ✅
+            </td>
+
+            <td style={styles.td}>
+              ✅
+            </td>
+          </tr>
+
+          <tr>
+            <td style={styles.td}>
+              Extending
+            </td>
+
+            <td style={styles.td}>
+              ✅
+            </td>
+
+            <td style={styles.td}>
+              ✅
+            </td>
+          </tr>
+
+          <tr>
+            <td style={styles.td}>
+              Declaration merging
+            </td>
+
+            <td style={styles.td}>
+              ✅
+            </td>
+
+            <td style={styles.td}>
+              ❌
+            </td>
+          </tr>
+
+          <tr>
+            <td style={styles.td}>
+              Union types
+            </td>
+
+            <td style={styles.td}>
+              ❌
+            </td>
+
+            <td style={styles.td}>
+              ✅
+            </td>
+          </tr>
+
+          <tr>
+            <td style={styles.td}>
+              Tuples
+            </td>
+
+            <td style={styles.td}>
+              ❌
+            </td>
+
+            <td style={styles.td}>
+              ✅
+            </td>
+          </tr>
+
+          <tr>
+            <td style={styles.td}>
+              Primitive aliases
+            </td>
+
+            <td style={styles.td}>
+              ❌
+            </td>
+
+            <td style={styles.td}>
+              ✅
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+
+      {/* ===================================================== */}
+
+      <h2>
+        🔥 16. Best Practice
+      </h2>
+
+      <div style={styles.box}>
+        <pre style={styles.code}>
+{`Use interface for:
+-------------------
+- Object structures
+- React props
+- OOP style code
+- Public APIs
+
+Use type for:
+--------------
+- Union types
+- Advanced TS features
+- Conditional types
+- Utility types
+- Tuples`}
+        </pre>
+      </div>
+
+      {/* ===================================================== */}
+
+      <h2>
+        🔥 Most Important Interview Question
+      </h2>
+
+      <pre style={styles.code}>
+{`Q) Which is better:
+type or interface?
+
+A)
+
+Neither is universally better.
+
+interface is better for
+object-oriented extensible designs.
+
+type is more flexible and supports
+advanced TypeScript features like:
+
+- unions
+- mapped types
+- conditional types
+- tuples`}
+      </pre>
+
+    </div>
+  );
+}
+
 const topics = [
   { id: "primitive-types", title: "Primitive Types" },
   { id: "type-inference", title: "Type Inference" },
@@ -194,6 +825,7 @@ export default function TypeScriptMasterCheatSheet() {
 
   return(
     <div style={styles.container}>
+      <TypeVsInterface/>
   <Section
     id="primitive-types"
     title="Primitive Types"
