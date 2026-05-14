@@ -66,6 +66,10 @@ import CurryingAndPrototype from './javascriptConcepts/CurryingAndPrototype'
 import MovingTicTacToe from './advancedConcepts/MovingTicTacToe'
 import GameMove from './advancedConcepts/GameMove'
 import DraggingGameMove from './advancedConcepts/DraggingGameMove'
+import SliceVsSpliceGuide from './javascriptConcepts/slicevssplice'
+import ReactQueryCompleteGuide from './reacthooks/ReactQuery'
+import ReduxToolkitCompleteDemo from './mistakesInHooks/Redux'
+import GraphQLDemoApp from './mistakesInHooks/GraphQL'
 
 function App() {
 
@@ -85,8 +89,26 @@ function App() {
       <button onClick={() => setTabs("mistakes")}>
         CheatSheet & Mistakes
       </button>
+      <button onClick={() => setTabs("redux") }>Redux</button>
+      <button onClick={() => setTabs('graphql')}>Graph QL</button>
       <button onClick={() => setTabs("advanced")}>Advanced</button>
     </div>
+    {
+      tabs==='redux' && (
+        <>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          <ReduxToolkitCompleteDemo/>
+        </>
+      )
+    }
+    {
+      tabs==='graphql' && (
+        <>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          <GraphQLDemoApp/>
+        </>
+      )
+    }
       {
         tabs==='advanced' && (
           <>
@@ -135,7 +157,9 @@ function App() {
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <UseStateHook/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
-            <UseEffectHook/>            
+            <UseEffectHook/>   
+            <div>------------------------------------------------------------------------------------------------------------------</div>
+            <ReactQueryCompleteGuide/>         
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <UseContextHook/>
             <UseContextTraps/>
@@ -157,6 +181,8 @@ function App() {
       {
         tabs=='jsConcepts' && (
           <>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          <SliceVsSpliceGuide/>
           <div>------------------------------------------------------------------------------------------------------------------</div>
           <EventLoop/>
           <div>------------------------------------------------------------------------------------------------------------------</div>

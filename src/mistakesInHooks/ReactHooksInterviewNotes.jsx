@@ -117,6 +117,7 @@ function ReactHooksInterviewNotes() {
   const headingStyle = {
     fontSize: "34px",
     marginBottom: "20px",
+    color: 'black'
   };
 
   const gridStyle = {

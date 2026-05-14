@@ -78,6 +78,7 @@ const ReactDomCheatSheet = () => {
   const headingStyle = {
     fontSize: "34px",
     marginBottom: "25px",
+    color:'black'
   };
 
   const gridStyle = {
@@ -142,6 +143,7 @@ const ReactDomCheatSheet = () => {
         style={{
           textAlign: "center",
           fontSize: "48px",
+          color: 'black0',
           marginBottom: "20px",
         }}
       >

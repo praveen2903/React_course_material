@@ -21,18 +21,14 @@ export default function SequentialProgressBarsWithState() {
     const timer = setInterval(() => {
         setProgressBars(prev => {
             if (currentIndex >= prev.length) return prev;
-
             const copy = [...prev];
-
             if (copy[currentIndex] === 100) return prev;
-
             const updated = Math.min(copy[currentIndex] + 20, 100);
             copy[currentIndex] = updated;
 
             if (updated === 100) {
                 setCurrentIndex(prevIndex => prevIndex + 1);
             }
-
             return copy;
         });
     }, 500);

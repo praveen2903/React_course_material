@@ -8,16 +8,15 @@ export default function SequentialProgressBarRef() {
     const startTimer = ()=>{
         timeRef.current= setInterval(() => {
             setProgressBars(prev => {
-                let index = indexRef.current;
+                let index = indexRef.current;  
+                //when stop/start store which index currently I am in
 
 
                 // if(index >= prev.length){     --- continuous timer repositioning timer ***
                 //     indexRef.current=0;
                 //     return prev.map(()=>0)
                 // }
-                
-                
-                
+
                 if (index >= prev.length) {  
             //stop the timer and update the prev with the last copy value -- stop the interval and update progress bar
                     clearInterval(timeRef.current);
