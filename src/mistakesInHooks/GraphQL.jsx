@@ -179,9 +179,6 @@ export default function GraphQLDemoApp() {
   );
 }
 
-/* =========================================================
-   THEORY SECTION
-   ========================================================= */
 
 function GraphQLNotes() {
   return (

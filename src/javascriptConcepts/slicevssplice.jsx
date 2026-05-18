@@ -34,7 +34,7 @@ function SliceVsSpliceGuide() {
     width: "60px",
     height: "60px",
     borderRadius: "10px",
-    background: "#4f46e5",
+    // background: "#4f46e5",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -79,6 +79,7 @@ function SliceVsSpliceGuide() {
         fontFamily: "sans-serif",
         lineHeight: "1.8",
         background: "#f5f7fb",
+        textAlign:'left'
       }}
     >
 

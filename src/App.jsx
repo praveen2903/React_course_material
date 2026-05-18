@@ -71,6 +71,11 @@ import ReactQueryCompleteGuide from './reacthooks/ReactQuery.jsx'
 import ReduxToolkitCompleteDemo from './mistakesInHooks/Redux.jsx'
 import GraphQLDemoApp from './mistakesInHooks/GraphQL.jsx'
 import TypeScriptMasterCheatSheet from './typescriptConcepts/TypescriptDemo'
+import EventLoops from './javascriptAsyncronous/EventLoops'
+import Callbacks from './javascriptAsyncronous/Callbacks'
+import Promises from './javascriptAsyncronous/Promises'
+import AsyncAwait from './javascriptAsyncronous/AsyncAwait'
+import DestructuringUsage from './javascriptConcepts/DestructuringUsage'
 
 function App() {
 
@@ -86,6 +91,7 @@ function App() {
       <button onClick={() => setTabs("optimization")}>Optimization</button>
       <button onClick={() => setTabs("useRefcomponents")}>UseRef</button>
       <button onClick={() => setTabs("jsConcepts")}>JS Concepts</button>
+      <button onClick={()=> setTabs("promises")}>Promises</button>
       <button onClick={() => setTabs("hooks")}>React Hooks</button>
       <button onClick={() => setTabs("mistakes")}>
         CheatSheet & Mistakes
@@ -108,6 +114,21 @@ function App() {
         <>
           <div>------------------------------------------------------------------------------------------------------------------</div>
           <GraphQLDemoApp/>
+        </>
+      )
+    }
+    {
+      tabs==='promises' && (
+        <>
+        <h2>asyncronous codes demo</h2>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          <EventLoops/>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          <Callbacks/>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          <Promises/>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          <AsyncAwait/>
         </>
       )
     }
@@ -192,14 +213,16 @@ function App() {
         tabs=='jsConcepts' && (
           <>
           <div>------------------------------------------------------------------------------------------------------------------</div>
-          <SliceVsSpliceGuide/>
-          <div>------------------------------------------------------------------------------------------------------------------</div>
           <EventLoop/>
           <div>------------------------------------------------------------------------------------------------------------------</div>
           <BindUsage/>
           <CallBindApply/>
           <div>------------------------------------------------------------------------------------------------------------------</div>
+          <DestructuringUsage/>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
           <CurryingAndPrototype/>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          <SliceVsSpliceGuide/>
           <div>------------------------------------------------------------------------------------------------------------------</div>
             <EventDelegation/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
