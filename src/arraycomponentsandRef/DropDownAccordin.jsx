@@ -12,7 +12,7 @@ const DropDownAccordin=()=>{
         <>
         <div>Dropdown Accordin</div>
            <div style={{display:'flex', gap: '40px'}}>
-             {
+           {
                 data.map((item, index)=>(
                     <div style={{display:'flex', flexDirection:'column'}}>
                     <div key={index} style={{display:'flex', alignItems:"center", justifyContent:'center', gap:"20px"}}>

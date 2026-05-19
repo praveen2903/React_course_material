@@ -71,8 +71,8 @@ const handleDrop = (dropIndex)=>{
     const copy=[...taskList];                   // a   b   c  d   e  f
 
     const draggedItem = copy[dragIndex];        // c
-    copy.splice(dragIndex,1);                   // a   b   d   e   f
-    copy.splice(dropIndex,0,draggedItem);       // a   b   d   c   f   e
+    copy.splice(deletefromIndex,deleteIndexCount);                   // a   b   d   e   f
+    copy.splice(dropIndex,deleteIndexesCount,...items);       // a   b   d   c   f   e
 
     setTaskList(copy);
     setDragIndex(null);

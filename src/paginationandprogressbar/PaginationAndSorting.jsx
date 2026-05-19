@@ -47,6 +47,41 @@ export default function PaginationAndSorting(){
 
     return (
         <>
+<code>
+    <pre>
+{`
+const totalPages = Math.ceil(data.length/pageSize);
+
+const pageStartIndexes = (pageNumber-1)*pageSize;
+const filteredData = data.slice(pageStartIndexes, pageStartIndexes + pageSize);
+
+{<table>
+<thead><th></th></thead>
+filteredData.map((item, index)=>(
+    <>
+
+    <tbody><td></td></tbody>
+    </>
+    ))
+</table>
+}
+<p>{pageNumber} in {totalPages} </p>
+<button onClick={()=>setPageNumber(num=> num-1)} disabled={pageNumber===1}>Prev</button>
+<p>Page size</p>
+<select value={pageSize} onChange={(e)=> setPageSize(e.target.value)}>
+<option value='5'>5</option>
+<option value='10'>10</option>
+<option value='15'>15</option>
+{
+    [...Array(totalPages)].map((_, index)=>(
+        <button key={index} onClick={()=>setPageNumber(index+1)}>{index+1}</button> 
+    ))
+}
+<button onClick={()=>setPgeNumber(num=>num+1)} disabled={pageNumber===totalPages}>Next</button>
+
+`}
+    </pre>
+</code>
             <div>Pagination and sorting ** too important</div>
             <div style={{display: 'flex', gap:'20px'}}>
                 <input type="text" value={search} onChange={(e)=>setSearch(e.target.value)}/>
