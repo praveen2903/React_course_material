@@ -40,12 +40,16 @@ Splice(startIndex, deletecount, ...items)-- startIndex from where need to start 
 // Drag & drop explained ref need to attached to each of the dom and share index and element if focus needed
 const handleDrop = (dropIndex)=>{
     if(dragRef.current===null) return;
-    const {dragIndex, element} = dragRef.current   // dragIndex = 2  & dropIndex = 3
+    const {dragIndex, element} = dragRef.current   // dragIndex = 2  & dropIndex = 3  
     const copy=[...taskList];                   // a   b   c  d   e  f  --- copied the list
 
     const draggedItem = copy[dragIndex];        // c                     --- copied the item to drag
-    copy.splice(dragIndex,1);                   // a   b   d   e   f     ---- Removed it from it's position
-    copy.splice(dropIndex,0,draggedItem);       // a   b   d   c   f   e ---- appended it where it is required
+
+    copy.splice(dragIndex (deleteBeginIndex),1 (no.of items to delete from begin index));  
+    // a   b   d   e   f     ---- Removed it from it's position
+
+    copy.splice(dropIndex (deleteBeginIndex),0 (no.of items to delete from begin index),draggedItem (adding indexes at deleteBeginIndex));       
+    // a   b   d   c   f   e ---- appended it where it is required
 
     setTaskList(copy);
     setDragIndex(null);

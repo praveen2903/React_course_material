@@ -12,9 +12,7 @@ const ConnectFourGame = () => {
   const checkWinner = (board, currentPlayer) => {
     for (let row = 0; row < ROWS; row++) {
       for (let col = 0; col < COLS; col++) {
-        // horizontal
-        if (
-          col + 3 < COLS &&
+        if (col + 3 < COLS &&
           board[row][col] === currentPlayer &&
           board[row][col + 1] === currentPlayer &&
           board[row][col + 2] === currentPlayer &&
