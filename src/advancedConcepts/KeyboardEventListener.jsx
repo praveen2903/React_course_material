@@ -2,7 +2,23 @@ import { use, useEffect, useState } from "react";
 
 export default function KeyboardEventListener() {
     const [open, setOpen] = useState(false);
+    const modalRef = useRef();
 
+    //onclick close modal
+    useEffect(()=>{
+        function handleClick(e){
+            if(openModal && modalRef.current && !modalRef.current.contains(e.target)){
+                setOpenModal(false)
+            }
+        }
+
+        document.addEventListener("mousedown", handleClick); 
+        return  () => {
+            document.removeEventListener("mousedown", handleClick)
+        }
+    }, [openModal])
+
+    //keyboard event esc key -- so adding listener than attaching it to the dom events
     useEffect(()=>{
         const key= (event) => event.key === "Escape" && setOpen(false)
 
@@ -14,7 +30,56 @@ export default function KeyboardEventListener() {
         <>
         <h3> On click escape close modal like external event right not like input we could pass event from the dom
              so how to control it-- we use listeners</h3>
-         <div style={{ padding: "40px", fontFamily: "Arial, sans-serif" }}>
+
+        <code>
+            <pre>
+{` -- onclick outside close modal and onclick esc key close the modal
+--- you learn like why we use the addEventListeners?
+Ans:- like when the event cannot be attached to the dom elements like here click outside and keydown esc cases can't be attached to modal so we use eventListeners
+
+const modalRef = useRef();
+
+//onclick close modal
+useEffect(()=>{
+    function handleClick(e){
+        if(openModal && modalRef.current && !modalRef.current.contains(e.target)){
+            setOpenModal(false)
+        }
+    }
+
+    document.addEventListener("mousedown", handleClick); 
+    return  () => {
+        document.removeEventListener("mousedown", handleClick)
+    }
+}, [openModal])
+
+//keyboard event esc key -- so adding listener than attaching it to the dom events
+useEffect(()=>{
+    const key= (event) => event.key === "Escape" && setOpen(false)
+
+    window.addEventListener("keydown", key);
+    return () => window.removeEventListener("keydown", key);
+})
+
+return (
+<>
+    <button onClick={()=> setOpenModal(true)}>open</button>
+    {openModal && (
+        <>
+            <div onClick ={()=>setOpenModal(false)}>close</div>
+            <div ref={modalRef}>     // except on click in this area anywhere click modal closes
+            <div>Modal contents</div>
+            </div>
+        </>
+    )}
+</>
+)
+`}
+            </pre>
+        </code>
+
+        
+        <div style={{ padding: "40px", fontFamily: "Arial, sans-serif" }}>
         <button
             onClick={() => setOpen(true)}
             style={{
@@ -41,7 +106,7 @@ export default function KeyboardEventListener() {
                 alignItems: "center",
             }}
             >
-            <div
+            <div ref={modalRef}
                 onClick={(e) => e.stopPropagation()}
                 style={{
                 width: "420px",

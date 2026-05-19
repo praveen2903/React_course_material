@@ -13,17 +13,13 @@ const DebounceUndoRedo = () => {
   //Prevents undo/redo operations from new debounce Saves
   const isUndoRedoRef= useRef(false)
 
-  // normal undo/redo
   const undoRef = useRef([]);
   const redoRef = useRef([]);
 
-  // debounce undo/redo
   const debounceUndoRef = useRef([]);
   const debounceRedoRef = useRef([]);
 
   const timerRef = useRef(null);
-
-  /* ================= NORMAL ================= */
 
   const updateButtons = () => {
     setEnableUndo(undoRef.current.length > 0);
@@ -55,9 +51,6 @@ const DebounceUndoRedo = () => {
     updateButtons();
   };
 
-  /* ================= DEBOUNCE ================= */
-
-  // stable debounce function
   const debounceRef = useRef((func, delay) => {
     return (...args) => {
       clearTimeout(timerRef.current);
@@ -120,6 +113,32 @@ const DebounceUndoRedo = () => {
       <div>DebounceUndoRedo-- useRef initalized with a function to store debounce as it should rerender with change with current
         useMemo/useCallback the ref values in it changes so it may rerender
       </div>
+      <code style={{textAlign:'left'}}>
+        <pre>
+{`  const handleNormalChange = (value) => {
+    undoRef.current.push(input);
+    redoRef.current = [];
+    setInput(value);
+    updateButtons();
+  };
+
+  const handleUndo = () => {
+    if (undoRef.current.length === 0) return;
+    redoRef.current.push(input);
+    const undoValue = undoRef.current.pop();
+    setInput(undoValue);
+    updateButtons();
+  };
+
+  const handleRedo = () => {
+    if (redoRef.current.length === 0) return;
+    undoRef.current.push(input);
+    const redoValue = redoRef.current.pop();
+    setInput(redoValue);
+    updateButtons();
+  };`}
+        </pre>
+      </code>
 
       <div style={{display: "flex", gap: "30px", padding: "20px", alignItems: "flex-start"}}>
         <div style={{ width: "40%" }}>

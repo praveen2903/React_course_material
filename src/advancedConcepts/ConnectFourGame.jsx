@@ -4,16 +4,11 @@ const ROWS = 6;
 const COLS = 7;
 
 const ConnectFourGame = () => {
-  const [grid, setGrid] = useState(
-    Array(ROWS)
-      .fill()
-      .map(() => Array(COLS).fill(""))
-  );
+  const [grid, setGrid] = useState(Array(ROWS).fill().map(() => Array(COLS).fill("")));
 
   const [player, setPlayer] = useState("red");
   const [winner, setWinner] = useState(null);
 
-  // winner check
   const checkWinner = (board, currentPlayer) => {
     for (let row = 0; row < ROWS; row++) {
       for (let col = 0; col < COLS; col++) {

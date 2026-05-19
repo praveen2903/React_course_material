@@ -1,14 +1,7 @@
 import React, { useRef } from "react";
-import {
-  configureStore,
-  createSlice,
-} from "@reduxjs/toolkit";
+import {configureStore,createSlice} from "@reduxjs/toolkit";
 
-import {
-  Provider,
-  useDispatch,
-  useSelector,
-} from "react-redux";
+import { Provider, useDispatch,useSelector} from "react-redux";
 
 /* =========================================================
    STYLES

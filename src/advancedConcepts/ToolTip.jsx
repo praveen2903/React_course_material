@@ -267,17 +267,14 @@ This is normal tooltip.
     const totalViewWidth = window.innerWidth;
     //measure how much space to right side to keep tooltip left/right
     const rightSpace = totalViewWidth - rect.right;
-
     return rightSpace < 320 ? "left" : "right";
   };
 
   const handleTooltipMouseEnter = (id) => {
     if (tooltipTimeoutRef.current) {
       clearTimeout(tooltipTimeoutRef.current);
-
       tooltipTimeoutRef.current = null;
     }
-
     setActiveTooltip(id);
   };
 
@@ -305,20 +302,62 @@ This is normal tooltip.
 
   return (
     <>
-      <div
-        style={{
-          fontSize: "16px",
-          fontWeight: "bold",
-          padding: "20px",
-        }}
-      >
+      <div style={{fontSize: "16px", fontWeight: "bold",padding: "20px",}}>
         Tooltip Positions -- Topics covered UseMemo like stopped getting new Data for every render, 
         e.stopPropogation() clicking http://google.com is not effecting parent, UseRef for finding and using positions of tooltip
         Mouse Enter and leave options neatly.
       </div>
+      <code style={{textAlign:'left'}}>
+        <pre>
+{`onMouseEnter()=>
+  const handleTooltipMouseEnter = (id) => {
+    if (tooltipTimeoutRef.current) {
+      clearTimeout(tooltipTimeoutRef.current);
 
-      <div
-        style={{
+      tooltipTimeoutRef.current = null;
+    }
+
+    setActiveTooltip(id);
+  };
+onMouseLeave()=>
+  const handleTooltipMouseLeave = (id) => {
+    if (activeTooltip === id) {
+      tooltipTimeoutRef.current = setTimeout(() => {
+        setActiveTooltip(null);
+      }, 150);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (tooltipTimeoutRef.current) {
+        clearTimeout(tooltipTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  the tooltip position helps to determine the left or right
+
+  const getTooltipPosition = (element) => {
+    if (!element) return "right";
+
+    //first measure the whole grid length
+    const rect = element.getBoundingClientRect();
+    
+    //total viewport/ monitor length
+    const totalViewWidth = window.innerWidth;
+
+    //measure how much space to right side to keep tooltip left/right window.inner width gives space totally
+    const rightSpace = totalViewWidth - rect.right;
+
+    return rightSpace < 320 ? "left" : "right";
+  };
+
+  `}
+        </pre>
+      </code>
+
+      <div style={{
           display: "grid",
           gridTemplateColumns: "repeat(5,1fr)",
           gap: "48px",
@@ -326,8 +365,7 @@ This is normal tooltip.
         }}
       >
         {data.map((item) => (
-          <div
-            key={item.id}
+          <div key={item.id}
             ref={(element) => {if (element) {gridRefs.current[item.id] = element;}}} //Callback ref
             style={{
               background: getGridColor(item.age),

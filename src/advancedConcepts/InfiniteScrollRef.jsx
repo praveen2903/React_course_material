@@ -200,11 +200,49 @@ const InfiniteScrollRef = () => {
   return (
 
     <>
-    <code>
+    <code style={{textAlign:'left'}}>
         {`  scrollTop means how much the user has scrolled.
   clientHeight means visible height of container.
   scrollHeight means total scrollable content height.`}
     </code>
+<pre>
+{`
+const InfiniteScrollRef = () => {
+    const [items, setItems] = useState(Array.from({ length: 20 }, (_, i) => \`Item \${i + 1}\`));
+    const boxRef = useRef(null);  //dom reffering
+
+    const loadMore = () => {   //onscroll bottom add still 10
+        setItems((prev) => [
+            ...prev, ...Array.from({ length: 10 }, (_, index) => {return \`Item \${prev.length + index + 1}\`;})
+        ]);
+    };
+
+    const handleScroll = () => {
+        const box = boxRef.current;  
+        //dom boxRef helps to refer the area size of that dom element if whole page then check below
+
+        if (!box) return;
+        const scrollTop = box.scrollTop;
+        const clientHeight = box.clientHeight;
+        const scrollHeight = box.scrollHeight;
+
+        if (scrollTop + clientHeight >= scrollHeight - 5) {
+            loadMore();
+        }
+    };
+
+    return (
+        <>
+            <div ref={boxRef} onScroll={handleScroll}>
+                {items.map((data, index) => (
+                    <div key={index}>{data}</div>
+                ))}
+            </div>
+        </>
+    );
+};
+`}
+</pre>
     <div
       style={{
         display: "flex",
