@@ -10,7 +10,7 @@ type PostType = {
 }
 
 
-const InfiniteScrollWindow = () => {
+const OldInfiniteScrollWindow = () => {
     const [users, setUsers] = useState<PostType[]>([]);
     const [page, setPage] = useState<number>(1);
 
@@ -75,8 +75,66 @@ const InfiniteScrollWindow = () => {
             }}
         >
 
-            <h1> Infinite Scroll using Window Scroll</h1>
+            <h2> Infinite Scroll using  old way without ref Window Scroll</h2>
+      <code style={{textAlign:'left'}}>
+        <pre>
+{`     const [users, setUsers] = useState<PostType[]>([]);
+    const [page, setPage] = useState<number>(1);
 
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const [hasMore, setHasMore] = useState<boolean>(true);
+
+    const fetchUsers = useCallback(async (): Promise<void> => {
+        if (loading || !hasMore) return;
+        try {
+            setLoading(true);
+            const response = await axios.get<PostType[]>(
+                'https://jsonplaceholder.typicode.com/posts?_limit=10&_page={page}'
+            );
+            console.log(response.data);   
+
+             // If no data stop infinite scroll
+            if (response.data.length === 0) {
+                setHasMore(false);
+                return;
+            }
+
+            // Append new data
+            setUsers((prev) => [...prev,...response.data]);
+
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    }, [page, loading, hasMore]);
+
+
+    useEffect(() => {
+        fetchUsers();
+    }, [fetchUsers]);
+
+
+    const handleScroll = (): void => {
+        const scrollHeight = document.documentElement.scrollHeight;
+        const scrollTop = document.documentElement.scrollTop;
+        const clientHeight = document.documentElement.clientHeight;
+
+        if ( scrollTop + clientHeight >= scrollHeight - 100 && !loading && hasMore) {
+            setPage((prev) => prev + 1);
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll',handleScroll);
+        };
+    }, [loading, hasMore]);
+`}
+        </pre>
+      </code>
             {
                 users.map((user: PostType) => (
 
@@ -134,4 +192,4 @@ const InfiniteScrollWindow = () => {
     )
 }
 
-export default InfiniteScrollWindow
+export default OldInfiniteScrollWindow

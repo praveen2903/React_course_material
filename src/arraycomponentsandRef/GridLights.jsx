@@ -11,7 +11,7 @@ const GridLights = () => {
   return (
     <>
     <div> Grid Lights</div>
-    <code>
+    <code style={{textAlign:'left', minWidth: '500px'}}>
       <pre>
 {`const [active, setActive]= useState([]);
 const length =9;                        //3x3 grid

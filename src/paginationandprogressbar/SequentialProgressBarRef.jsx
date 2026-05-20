@@ -51,7 +51,7 @@ export default function SequentialProgressBarRef() {
     return (
         <>
             <div>Sequential ProgressBar with Ref  --same approach for the lights problem too******</div>
-<code style={{textAlign:'left'}}>
+<code style={{textAlign:'left', minWidth: '500px'}}>
     <pre>
 {` start and stop timer too and proper progressbar indexing
 

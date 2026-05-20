@@ -188,7 +188,7 @@ function GraphQLNotes() {
         🚀 GraphQL + Apollo Complete Notes
       </h1>
 
-      <code>
+      <code style={{textAlign:'left', minWidth: '500px'}}>
         <pre>
 {`/* =========================================================
    WHY GRAPHQL?

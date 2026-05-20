@@ -198,7 +198,7 @@ const DestructuringUsage = () => {
                     Array Destructuring -- values are extracted based on position/index
                 </h2>
 
-                <code>
+                <code style={{textAlign:'left', minWidth: '500px'}}>
                     <pre>
 {`const colors = ['red', 'blue', 'green'];
 
@@ -219,7 +219,7 @@ console.log(third);   // green`}
                     Skipping Values -- skip unwanted positions using commas
                 </h2>
 
-                <code>
+                <code style={{textAlign:'left', minWidth: '500px'}}>
                     <pre>
 {`const nums = [10, 20, 30, 40];
 
@@ -239,7 +239,7 @@ console.log(c); // 30`}
                     Default Values -- used when value is undefined
                 </h2>
 
-                <code>
+                <code style={{textAlign:'left', minWidth: '500px'}}>
                     <pre>
 {`const arr = [1];
 
@@ -259,7 +259,7 @@ console.log(y); // 100`}
                     Swapping Variables -- no temp variable needed
                 </h2>
 
-                <code>
+                <code style={{textAlign:'left', minWidth: '500px'}}>
                     <pre>
 {`let a = 10;
 let b = 20;
@@ -280,7 +280,7 @@ console.log(b); // 10`}
                     Rest Operator -- collects remaining values
                 </h2>
 
-                <code>
+                <code style={{textAlign:'left', minWidth: '500px'}}>
                     <pre>
 {`const numbers = [1,2,3,4,5];
 
@@ -300,7 +300,7 @@ console.log(rest);  // [2,3,4,5]`}
                     Object Destructuring -- values extracted using property names
                 </h2>
 
-                <code>
+                <code style={{textAlign:'left', minWidth: '500px'}}>
                     <pre>
 {`const user = {
     name: 'Sai',
@@ -325,7 +325,7 @@ console.log(city);`}
                     Renaming Variables -- rename property while destructuring
                 </h2>
 
-                <code>
+                <code style={{textAlign:'left', minWidth: '500px'}}>
                     <pre>
 {`const user = {
     name: 'Sai',
@@ -351,7 +351,7 @@ console.log(userAge);`}
                     Object Default Values
                 </h2>
 
-                <code>
+                <code style={{textAlign:'left', minWidth: '500px'}}>
                     <pre>
 {`const student = {
     fullName: 'Rahul'
@@ -376,7 +376,7 @@ console.log(marks);    // 0`}
                     Nested Object Destructuring
                 </h2>
 
-                <code>
+                <code style={{textAlign:'left', minWidth: '500px'}}>
                     <pre>
 {`const employee = {
     id: 1,
@@ -407,7 +407,7 @@ console.log(pincode);`}
                     Function Parameter Destructuring
                 </h2>
 
-                <code>
+                <code style={{textAlign:'left', minWidth: '500px'}}>
                     <pre>
 {`function printUser({ name, age }) {
     console.log(name);
@@ -430,7 +430,7 @@ printUser({
                     API Response Destructuring
                 </h2>
 
-                <code>
+                <code style={{textAlign:'left', minWidth: '500px'}}>
                     <pre>
 {`const response = {
     status: 200,
@@ -456,7 +456,7 @@ console.log(users);`}
                     Important Rule
                 </h2>
 
-                <code>
+                <code style={{textAlign:'left', minWidth: '500px'}}>
                     <pre>
 {`Arrays  -> []
 

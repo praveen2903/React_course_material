@@ -75,7 +75,7 @@ const AbortControllerDemo = () => {
     <div style={{ padding: '20px' }}>
       <h2>AbortController Example</h2>
 
-<code style={{textAlign:'left'}}><pre>
+<code style={{textAlign:'left', minWidth: '500px'}}><pre>
   {`  useEffect(() => {
     // ✅ Step 1: create controller for this request
     const controller = new AbortController();

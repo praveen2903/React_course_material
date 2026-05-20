@@ -47,7 +47,7 @@ export default function PaginationAndSorting(){
 
     return (
         <>
-<code style={{textAlign:'left'}}>
+<code style={{textAlign:'left', minWidth: '500px'}}>
     <pre>
 {`
 const totalPages = Math.ceil(data.length/pageSize);

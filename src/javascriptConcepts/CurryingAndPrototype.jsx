@@ -115,7 +115,7 @@ add(a)(b)(c)`}
         </h3>
 
         <div style={styles.codeWrapper}>
-          <code>
+          <code style={{textAlign:'left', minWidth: '500px'}}>
             <pre>
 {`function add(a) {
   return function (b) {
@@ -160,7 +160,7 @@ const handleMessage = (text) => () => {
         </h3>
 
         <div style={styles.codeWrapper}>
-          <code>
+          <code style={{textAlign:'left', minWidth: '500px'}}>
             <pre>
 {`function User(name, age) {
   this.name = name;
@@ -218,7 +218,7 @@ null`}
         </h3>
 
         <div style={styles.codeWrapper}>
-          <code>
+          <code style={{textAlign:'left', minWidth: '500px'}}>
             <pre>
 {`const obj = {
   a: 10,

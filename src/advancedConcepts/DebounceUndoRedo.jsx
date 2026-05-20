@@ -113,30 +113,93 @@ const DebounceUndoRedo = () => {
       <div>DebounceUndoRedo-- useRef initalized with a function to store debounce as it should rerender with change with current
         useMemo/useCallback the ref values in it changes so it may rerender
       </div>
-      <code style={{textAlign:'left'}}>
+      <code style={{textAlign:'left', minWidth: '500px'}}>
         <pre>
 {`  const handleNormalChange = (value) => {
-    undoRef.current.push(input);
-    redoRef.current = [];
-    setInput(value);
-    updateButtons();
-  };
+  undoRef.current.push(input);
+  redoRef.current = [];
+  setInput(value);
+  updateButtons();
+};
 
-  const handleUndo = () => {
-    if (undoRef.current.length === 0) return;
-    redoRef.current.push(input);
-    const undoValue = undoRef.current.pop();
-    setInput(undoValue);
-    updateButtons();
-  };
+const handleUndo = () => {
+  if (undoRef.current.length === 0) return;
+  redoRef.current.push(input);
+  const undoValue = undoRef.current.pop();
+  setInput(undoValue);
+  updateButtons();
+};
 
-  const handleRedo = () => {
-    if (redoRef.current.length === 0) return;
-    undoRef.current.push(input);
-    const redoValue = redoRef.current.pop();
-    setInput(redoValue);
+const handleRedo = () => {
+  if (redoRef.current.length === 0) return;
+  undoRef.current.push(input);
+  const redoValue = redoRef.current.pop();
+  setInput(redoValue);
+  updateButtons();
+};
+`}
+      </pre>
+    </code>
+<h2>If debounce the logic</h2>
+    <code style={{textAlign:'left', minWidth: '500px'}}>
+      <pre>
+{`const debounceRef = useRef((func, delay) => {
+  return (...args) => {
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+});
+
+
+const debouncedSave = useRef(
+  debounceRef.current((value) => {
+    const lastValue =debounceUndoRef.current[debounceUndoRef.current.length - 1];
+    if (lastValue !== value.trim()) {   //no need to save if user is idle for long time
+      debounceUndoRef.current.push(value);
+    }
+    debounceRedoRef.current = [];
     updateButtons();
-  };`}
+  }, 1000)
+).current;
+
+
+useEffect(() => {
+    // skip save during undo/redo
+  if (isUndoRedoRef.current) {
+      isUndoRedoRef.current = false;
+      return;
+  }
+  debouncedSave(debounceInput);
+  return () => clearTimeout(timerRef.current);
+}, [debounceInput]);
+
+const handleChange = (value) => {
+  setDebounceInput(value);
+};
+
+const handleDebounceUndoPush = () => {
+  if (debounceUndoRef.current.length <= 1) return;
+  isUndoRedoRef.current = true;
+  debounceRedoRef.current.push(debounceInput);
+  debounceUndoRef.current.pop();
+
+  const previousValue = debounceUndoRef.current[debounceUndoRef.current.length - 1];
+  setDebounceInput(previousValue);
+  updateButtons();
+};
+
+const handleDebounceRedoPush = () => { 
+  if (debounceRedoRef.current.length === 0) return;
+  isUndoRedoRef.current=true;
+  const redoValue = debounceRedoRef.current.pop();
+
+  debounceUndoRef.current.push(redoValue);
+  setDebounceInput(redoValue);
+  updateButtons();
+};
+`}
         </pre>
       </code>
 

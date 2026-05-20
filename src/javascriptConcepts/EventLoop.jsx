@@ -26,7 +26,7 @@ const EventLoop = () => {
     <>
     <h2>Event Loop</h2>
 <div style={{textAlign:'left'}}>
-        <code><pre>
+        <code style={{textAlign:'left', minWidth: '500px'}}><pre>
             
 {`console.log("start");
 setTimeout(()=>{

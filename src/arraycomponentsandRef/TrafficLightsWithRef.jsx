@@ -40,6 +40,46 @@ export default function TrafficLightsWithRef(){
     return (
         <>
         <div>Traffic Lights with ref allows to store interval Id and start/stop is enabled</div>
+<code style={{textAlign:'left', minWidth: '500px'}}>
+    <pre>
+{`const [currentLights, setCurrentLights] = useState("red");
+
+const timeRef= useRef(null);                 //managing time no need to manipulate dom and store timer 
+const [running, setRunning]= useState(true); 
+
+//the stopwatch doesn't need useEffect so no additonal state kept interval 
+//but here need to have state to mandate start/stop other approach
+
+useEffect(()=>{
+    if(!running) return;
+
+    if(currentLights==='red'){
+        timeRef.current= setTimeout(()=>setCurrentLights('green'),10000);
+    }
+    else if(currentLights === 'green') {
+        timeRef.current = setTimeout(()=> setCurrentLights('orange'), 5000);
+    }
+    else{
+        timeRef.current= setTimeout(()=> setCurrentLights('red'),2000)
+    }
+
+    return ()=> clearTimeout(timeRef.current)  
+//timeout is cleared like ref is ended,and every change in currentLights create new timeout so end current cleanup
+},[currentLights, running]);
+
+const stop=()=>{
+    clearTimeout(timeRef.current);
+    timeRef.current= null;
+    setRunning(false)
+}
+const start=()=>{
+    setRunning(true);
+}
+const getColor=(color)=>{
+    return currentLights===color ? color: "#ccc"
+}`}
+    </pre>
+</code>
         <div style={{...styles.container}}>
             <div style={{...styles.container, background: getColor("red")}}>.</div>
             <div style={{...styles.container, background: getColor("orange")}}>.</div>

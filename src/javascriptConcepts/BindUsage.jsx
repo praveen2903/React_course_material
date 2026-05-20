@@ -18,7 +18,7 @@ const BindUsage = () => {
         <span style={{fontSize: '20px'}}>Bind usage-- bind is stricter and helps to store the values even if the function assigned to other variable too</span>
         <div>
             <h2>Bind-- the function is given to other reference so the sum is lost so we need to bind the object to it</h2>
-            <code>
+            <code style={{textAlign:'left', minWidth: '500px'}}>
                 <pre>
 {`const obj= {
     a:10,
@@ -33,7 +33,7 @@ console.log(res()) //30`}
             </code>
 
             <h2>Bind -- locking the value with it example</h2>
-            <code>
+            <code style={{textAlign:'left', minWidth: '500px'}}>
                 <pre>
 {`const user1 = {name: 'A'};
 const user2 = {name: 'B'};
@@ -57,7 +57,7 @@ output: A B A A  -- since the user1 A is permanently locked/binded with bindfn s
                 </pre>
             </code>
                         <h2>Bind-- if need to change create a new object with new </h2>
-            <code>
+            <code style={{textAlign:'left', minWidth: '500px'}}>
                 <pre>
 {`function Person(name) {
   this.name = name;

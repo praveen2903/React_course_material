@@ -32,7 +32,7 @@ export default function DebouncedSearch() {
     }
     return (
         <>
-        <code style={{textAlign:'left'}}><pre>{`
+        <code style={{textAlign:'left', minWidth: '500px'}}><pre>{`
 
 -- without ref
 const debounce=(fn, delay)=>{

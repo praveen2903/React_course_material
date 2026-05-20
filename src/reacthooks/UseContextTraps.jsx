@@ -34,12 +34,12 @@ const UseContextTraps = () => {
             {/* ------------------- THEORY ------------------- */}
 
             <p><b>1. Unnecessary Re-renders:</b><br/>
-            Even if a component uses only <code>user</code>, it re-renders when <code>theme</code> changes.<br/>
+            Even if a component uses only <code style={{textAlign:'left', minWidth: '500px'}}>user</code>, it re-renders when <code style={{textAlign:'left', minWidth: '500px'}}>theme</code> changes.<br/>
             👉 Reason: Context value object changes → React triggers all consumers.
             </p>
 
             <p><b>2. Object Reference Trap:</b><br/>
-            <code>{`value={{user, theme}}`}</code> creates a new object each render.<br/>
+            <code style={{textAlign:'left', minWidth: '500px'}}>{`value={{user, theme}}`}</code> creates a new object each render.<br/>
             👉 React compares by reference, not deep equality.
             </p>
 
@@ -102,7 +102,7 @@ const UseContextTraps = () => {
             <ul style={{textAlign: 'left'}}>
                 <li>Context causes re-render when value reference changes</li>
                 <li>Memoize provider value using useMemo: instead of passing object pass the memoized object</li>
-                <li>Split contexts for performance optimization (AppContextlike <code>{`value={{user, theme}}`}</code>) cause extra rerenders, split as
+                <li>Split contexts for performance optimization (AppContextlike <code style={{textAlign:'left', minWidth: '500px'}}>{`value={{user, theme}}`}</code>) cause extra rerenders, split as
                     userContext and themeContext
                 </li>
                 <li>Context is NOT for frequently changing state -- for frequent updates need to use Redux</li>

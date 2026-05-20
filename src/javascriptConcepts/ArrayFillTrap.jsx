@@ -5,7 +5,7 @@ const ArrayFillTrap = () => {
     <div>
         <h2>Array usage</h2>
         <div style={{textAlign:'left'}}>
-            <code>
+            <code style={{textAlign:'left', minWidth: '500px'}}>
                 <pre>
 {`
 1. Array.from method

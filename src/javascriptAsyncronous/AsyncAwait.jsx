@@ -4,7 +4,7 @@ const AsyncAwait = () => {
   return (
     <div>
         <h2>AsyncAwait Instead of promises to remove chaining</h2>
-        <code>
+        <code style={{textAlign:'left', minWidth: '500px'}}>
             <pre>
 {`
 function makePayment(){

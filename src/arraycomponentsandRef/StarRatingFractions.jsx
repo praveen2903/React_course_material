@@ -44,7 +44,7 @@ const StarRatingFractions = () => {
     return (
     <>
     <div>StarRatingFractions</div>
-<code style={{textAlign:'left'}}>
+<code style={{textAlign:'left', minWidth: '500px'}}>
 <pre>
 {`OnMouseMove -- calculate the targeted circle area and how much width occupied
 const calculateValue =(event, index) =>{

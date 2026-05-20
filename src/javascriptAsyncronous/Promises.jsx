@@ -4,7 +4,7 @@ const Promises = () => {
   return (
     <div>
         <h2>Promises increase the readability and functions as callbacks hell</h2>
-        <code>
+        <code style={{textAlign:'left', minWidth: '500px'}}>
             <pre>
 {`
 function login(){
@@ -56,7 +56,7 @@ the order is correct but the chaining is too big
         </code>
 
         <h2>Promises with reject and resolve</h2>
-        <code>
+        <code style={{textAlign:'left', minWidth: '500px'}}>
             <pre>
 {`
 function makePayment(paymentStatus){

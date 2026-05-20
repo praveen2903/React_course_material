@@ -6,7 +6,7 @@ const EventLoops = () => {
   return (
     <div style={{textAlign:'left'}}>
         <h2>EventLoops  -- due to timeouts</h2>
-        <code>
+        <code style={{textAlign:'left', minWidth: '500px'}}>
             <pre>
 {`console.log('start');
 for(let i=0; i< 2; i++){
@@ -27,7 +27,7 @@ output order: start inside f2 inside f2 end inside f1 inside f1
             </pre>
         </code>
         <h2>But I need to run f1 first and then f2 mandatorily  -- Then use callbacks to avoid event loops</h2>
-        <code>
+        <code style={{textAlign:'left', minWidth: '500px'}}>
             <pre>
 {`console.log('start');
 for(let i=0; i< 2; i++){
@@ -49,7 +49,7 @@ output order: start end inside f1 inside f1 inside f2 inside f2
         </code>
 
         <h2>But I need to run f1 first and then f2 mandatorily  -- Then use callbacks to avoid event loops</h2>
-        <code>
+        <code style={{textAlign:'left', minWidth: '500px'}}>
             <pre>
 {`console.log("start");
 setTimeout(()=>{

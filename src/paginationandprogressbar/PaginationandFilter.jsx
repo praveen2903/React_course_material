@@ -49,7 +49,7 @@ export default function PaginationAndFilter(){
     return (
         <>
         <h2>Types of writing arrays in javascript</h2>
-        <code>
+        <code style={{textAlign:'left', minWidth: '500px'}}>
   <pre>
 {`1. Array.from()
 

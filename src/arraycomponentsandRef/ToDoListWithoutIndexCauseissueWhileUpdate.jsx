@@ -31,7 +31,7 @@ const ToDoListWithoutIndex= ()=>{
     return (
         <div>
             <div>TO DO list</div>
-<code style={{textAlign:'left'}}>
+<code style={{textAlign:'left', minWidth: '500px'}}>
 <pre>
 {`
 Splice(startIndex, deletecount, ...items)-- startIndex from where need to start removal, deletecount-- no.of items to delete

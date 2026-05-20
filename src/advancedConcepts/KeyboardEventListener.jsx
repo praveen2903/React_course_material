@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 
 export default function KeyboardEventListener() {
     const [open, setOpen] = useState(false);
@@ -7,8 +7,8 @@ export default function KeyboardEventListener() {
     //onclick close modal
     useEffect(()=>{
         function handleClick(e){
-            if(openModal && modalRef.current && !modalRef.current.contains(e.target)){
-                setOpenModal(false)
+            if(open && modalRef.current && !modalRef.current.contains(e.target)){
+                setOpen(false)
             }
         }
 
@@ -16,7 +16,7 @@ export default function KeyboardEventListener() {
         return  () => {
             document.removeEventListener("mousedown", handleClick)
         }
-    }, [openModal])
+    }, [open])
 
     //keyboard event esc key -- so adding listener than attaching it to the dom events
     useEffect(()=>{
@@ -31,7 +31,7 @@ export default function KeyboardEventListener() {
         <h3> On click escape close modal like external event right not like input we could pass event from the dom
              so how to control it-- we use listeners</h3>
 
-        <code>
+        <code style={{textAlign:'left', minWidth: '500px'}}>
             <pre>
 {` -- onclick outside close modal and onclick esc key close the modal
 --- you learn like why we use the addEventListeners?

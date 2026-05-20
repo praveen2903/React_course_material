@@ -34,7 +34,7 @@ export default function RateLimitingSearch(){
     return (
         <>
             <div> Rate Limit-- allows to control no.of api calls in time frame</div>
-<code style={{textAlign:'left'}}><pre>{`
+<code style={{textAlign:'left', minWidth: '500px'}}><pre>{`
 const callsRef= useRef([]);
 
 const rateLimit= (fn, limit, interval)=>{

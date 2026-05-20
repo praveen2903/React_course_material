@@ -307,7 +307,7 @@ This is normal tooltip.
         e.stopPropogation() clicking http://google.com is not effecting parent, UseRef for finding and using positions of tooltip
         Mouse Enter and leave options neatly.
       </div>
-      <code style={{textAlign:'left'}}>
+      <code style={{textAlign:'left', minWidth: '500px'}}>
         <pre>
 {`onMouseEnter()=>
   const handleTooltipMouseEnter = (id) => {

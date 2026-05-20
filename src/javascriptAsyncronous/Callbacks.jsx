@@ -4,7 +4,7 @@ const Callbacks = () => {
   return (
     <div>
         <h2>Initially syncronous programming</h2>
-        <code>
+        <code style={{textAlign:'left', minWidth: '500px'}}>
             <pre>
 {`
 function login(){
@@ -27,7 +27,7 @@ output: user logged IN!      restaurant is fetched           order placed!!
         </code>
 
 <h2> adding asyncronous to it</h2>
-        <code>
+        <code style={{textAlign:'left', minWidth: '500px'}}>
             <pre>
 {`
 function login(){
@@ -62,7 +62,7 @@ like what ever has less timeout gets executed first so let's try with callbacks
         </code>
 
 <h2>CALLBACKS - resolve the problem but make callbacks hell like multiple nested callbacks </h2>
-        <code>
+        <code style={{textAlign:'left', minWidth: '500px'}}>
             <pre>
 {`
 function login(callback){

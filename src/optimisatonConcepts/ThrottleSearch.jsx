@@ -28,7 +28,7 @@ export default function ThrottleSearch(){
         <div> Throttle-- Runs every given time, suppose ignore all calls for 10 seconds this is used</div>
         <div> uses: scroll events, mouse movements, resize tracking</div>
 
-<code style={{textAlign:'left'}}>
+<code style={{textAlign:'left', minWidth: '500px'}}>
 <pre>{`
 const lastCallRef= useRef(0);
 

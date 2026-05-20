@@ -10,7 +10,7 @@ const FocusInput = () => {
 
   return (
     <>
-<code style={{textAlign:'left'}}>
+<code style={{textAlign:'left', minWidth: '500px'}}>
     <pre>
 {`Common Violations 
 

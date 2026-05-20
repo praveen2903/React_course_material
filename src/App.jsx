@@ -76,6 +76,8 @@ import Callbacks from './javascriptAsyncronous/Callbacks'
 import Promises from './javascriptAsyncronous/Promises'
 import AsyncAwait from './javascriptAsyncronous/AsyncAwait'
 import DestructuringUsage from './javascriptConcepts/DestructuringUsage'
+import ModernInfiniteScrollWindow from './infinite_scroll/ModernInfiniteScrollWindow'
+import OldInfiniteScrollWindow from './infinite_scroll/OldInfiniteScrollWindow'
 
 function App() {
 
@@ -100,6 +102,8 @@ function App() {
       <button onClick={() => setTabs('graphql')}>Graph QL</button>
       <button onClick={() => setTabs('typescript')}>TypeScript</button>
       <button onClick={() => setTabs("advanced")}>Advanced</button>
+      <button onClick={() => setTabs("modernInfiniteScroll")}>Modern Infinite scroll</button>
+      <button onClick={() => setTabs("oldInfiniteScroll")}>old Infinite scroll</button>
     </div>
     {
       tabs==='redux' && (
@@ -140,6 +144,19 @@ function App() {
         </>
       )
     }
+    {tabs==='infiniteScroll' && (
+      <>
+        <div>------------------------------------------------------------------------------------------------------------------</div>
+        <ModernInfiniteScrollWindow/>
+      </>
+    )}
+        {tabs==='infiniteScroll' && (
+      <>
+        <div>------------------------------------------------------------------------------------------------------------------</div>
+        <OldInfiniteScrollWindow/>
+
+      </>
+    )}
       {
         tabs==='advanced' && (
           <>
