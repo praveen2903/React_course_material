@@ -78,6 +78,7 @@ import AsyncAwait from './javascriptAsyncronous/AsyncAwait'
 import DestructuringUsage from './javascriptConcepts/DestructuringUsage'
 import ModernInfiniteScrollWindow from './infinite_scroll/ModernInfiniteScrollWindow'
 import OldInfiniteScrollWindow from './infinite_scroll/OldInfiniteScrollWindow'
+import StorePreviousValue from './UseRefComponents/StorePreviousValue'
 
 function App() {
 
@@ -323,6 +324,8 @@ function App() {
       {
         tabs==='useRefcomponents' && (
           <>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          <StorePreviousValue/>
           <div>------------------------------------------------------------------------------------------------------------------</div>
             <FocusInput/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
