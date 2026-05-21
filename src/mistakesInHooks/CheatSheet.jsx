@@ -1,5 +1,43 @@
 import React, { useEffect, useRef, useState } from "react";
+import jwtImg from "../assets/jwt.jpeg";
+import redisImg from "../assets/jwt_token_redis.jpeg";
+import useEffectImg from "../assets/useEffect_working.jpeg";
+import executionImg from "../assets/execution_order.jpeg";
 
+
+function ImageBanner() {
+  const images = [
+    jwtImg,
+    redisImg,
+    useEffectImg,
+    executionImg,
+  ];
+
+  return (
+    <div style={styles.bannerContainer}>
+
+      <h1 style={styles.bannerTitle}>
+        🚀 GraphQL + Apollo Client
+      </h1>
+
+      <div style={styles.imageGrid}>
+        {images.map((img, index) => (
+          <div
+            key={index}
+            style={styles.imageCard}
+          >
+            <img
+              src={img}
+              alt="graphql"
+              style={styles.bannerImage}
+            />
+          </div>
+        ))}
+      </div>
+
+    </div>
+  );
+}
 const ReactDomCheatSheet = () => {
   const [hovered, setHovered] = useState(false);
 
@@ -139,6 +177,7 @@ const ReactDomCheatSheet = () => {
 
   return (
     <div style={pageStyle}>
+      <ImageBanner/>
       <h1
         style={{
           textAlign: "center",

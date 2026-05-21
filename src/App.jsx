@@ -79,6 +79,8 @@ import DestructuringUsage from './javascriptConcepts/DestructuringUsage'
 import ModernInfiniteScrollWindow from './infinite_scroll/ModernInfiniteScrollWindow'
 import OldInfiniteScrollWindow from './infinite_scroll/OldInfiniteScrollWindow'
 import StorePreviousValue from './UseRefComponents/StorePreviousValue'
+import DragBallWithHandlers from './arraycomponentsandRef/DragBallWithHandlers'
+import DragBallWithRef from './arraycomponentsandRef/DragBallWithRef'
 
 function App() {
 
@@ -280,7 +282,10 @@ function App() {
           <> 
           <div>------------------------------------------------------------------------------------------------------------------</div>   
             <StarRatingFractions/>
-          
+          <div>------------------------------------------------------------------------------------------------------------------</div>   
+          <DragBallWithHandlers/>
+                      <div>------------------------------------------------------------------------------------------------------------------</div>   
+<DragBallWithRef/>
             <div>------------------------------------------------------------------------------------------------------------------</div>   
             <GridLights/>
             <div>------------------------------------------------------------------------------------------------------------------</div>   

@@ -18,6 +18,42 @@ import {
   useMutation,
   useLazyQuery,
 } from "@apollo/client/react";
+import graphqlFullstack from "../assets/graphql_fullstack.png";
+import graphqlFrontend from "../assets/graphql_frontend.jpeg";
+import graphqlBackend from "../assets/graphql_backend.jpeg";
+
+
+function ImageBanner() {
+  const images = [
+    graphqlFullstack,
+    graphqlFrontend,
+    graphqlBackend,
+  ];
+  return (
+    <div style={styles.bannerContainer}>
+
+      <h1 style={styles.bannerTitle}>
+        🚀 GraphQL + Apollo Client
+      </h1>
+
+      <div style={styles.imageGrid}>
+        {images.map((img, index) => (
+          <div
+            key={index}
+            style={styles.imageCard}
+          >
+            <img
+              src={img}
+              alt="graphql"
+              style={styles.bannerImage}
+            />
+          </div>
+        ))}
+      </div>
+
+    </div>
+  );
+}
 
 /* =========================================================
    APOLLO CLIENT SETUP
@@ -62,11 +98,6 @@ const client = new ApolloClient({
   link: authLink.concat(httpLink),
 
   cache: new InMemoryCache({
-
-    /* =====================================================
-       TYPE POLICIES
-       ===================================================== */
-
     typePolicies: {
       Query: {
         fields: {
@@ -159,6 +190,7 @@ const CREATE_POST = gql`
 export default function GraphQLDemoApp() {
   return (
     <ApolloProvider client={client}>
+      <ImageBanner/>
       <GraphQLNotes />
       <GraphQLArchitecture />
       <GraphQLCoreConcepts />

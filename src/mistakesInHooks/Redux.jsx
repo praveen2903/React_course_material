@@ -1,6 +1,8 @@
 import React, { useRef } from "react";
 import {configureStore,createSlice} from "@reduxjs/toolkit";
-
+import reduxImg from "../assets/redux.png";
+import dispatchSelectorImg from "../assets/dispatch_and_selector.png";
+import reduxWorkingImg from "../assets/redux_working.png";
 import { Provider, useDispatch,useSelector} from "react-redux";
 
 /* =========================================================
@@ -150,11 +152,38 @@ const styles = {
     marginTop: "16px",
   },
 };
+function ImageBanner() {
+  const images = [
+    reduxImg,
+    dispatchSelectorImg,
+    reduxWorkingImg,
+  ];
 
-/* =========================================================
-   REDUX SLICE
-========================================================= */
+  return (
+    <div style={styles.bannerContainer}>
 
+      <h1 style={styles.bannerTitle}>
+        🚀 GraphQL + Apollo Client
+      </h1>
+
+      <div style={styles.imageGrid}>
+        {images.map((img, index) => (
+          <div
+            key={index}
+            style={styles.imageCard}
+          >
+            <img
+              src={img}
+              alt="graphql"
+              style={styles.bannerImage}
+            />
+          </div>
+        ))}
+      </div>
+
+    </div>
+  );
+}
 const counterSlice = createSlice({
   name: "counter",
 
@@ -206,10 +235,6 @@ const counterSlice = createSlice({
   },
 });
 
-/* =========================================================
-   ACTIONS
-========================================================= */
-
 const {
   increment,
   decrement,
@@ -221,26 +246,15 @@ const {
   replaceWholeStateWrong,
 } = counterSlice.actions;
 
-/* =========================================================
-   STORE
-========================================================= */
-
 const store = configureStore({
   reducer: {
     counter: counterSlice.reducer,
   },
 });
 
-/* =========================================================
-   MAIN DEMO COMPONENT
-========================================================= */
 
 function ReduxDemoComponent() {
   const dispatch = useDispatch();
-
-  /* =====================================================
-     useSelector
-  ===================================================== */
 
   const count = useSelector(
     (state) => state.counter.count
@@ -263,14 +277,12 @@ function ReduxDemoComponent() {
 
   return (
     <div style={styles.page}>
+      <ImageBanner/>
       <h1 style={styles.title}>
         🧠 Complete Redux Toolkit +
         React-Redux Demo
       </h1>
 
-      {/* =====================================================
-          WHAT IS REDUX
-      ===================================================== */}
 
       <section style={styles.section}>
         <h2 style={styles.subTitle}>
