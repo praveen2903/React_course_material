@@ -341,13 +341,13 @@ onMouseLeave()=>
   const getTooltipPosition = (element) => {
     if (!element) return "right";
 
-    //first measure the whole grid length
+first measure the whole grid length
     const rect = element.getBoundingClientRect();
     
-    //total viewport/ monitor length
+total viewport/ monitor length
     const totalViewWidth = window.innerWidth;
 
-    //measure how much space to right side to keep tooltip left/right window.inner width gives space totally
+measure how much space to right side to keep tooltip left/right window.inner width gives space totally
     const rightSpace = totalViewWidth - rect.right;
 
     return rightSpace < 320 ? "left" : "right";

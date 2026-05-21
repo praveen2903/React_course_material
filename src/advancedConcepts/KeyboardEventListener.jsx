@@ -35,11 +35,12 @@ export default function KeyboardEventListener() {
             <pre>
 {` -- onclick outside close modal and onclick esc key close the modal
 --- you learn like why we use the addEventListeners?
-Ans:- like when the event cannot be attached to the dom elements like here click outside and keydown esc cases can't be attached to modal so we use eventListeners
+Ans:- like when the event cannot be attached to the dom elements like here 
+click outside and keydown esc cases can't be attached to modal so we use eventListeners
 
 const modalRef = useRef();
 
-//onclick close modal
+onclick close modal
 useEffect(()=>{
     function handleClick(e){
         if(openModal && modalRef.current && !modalRef.current.contains(e.target)){

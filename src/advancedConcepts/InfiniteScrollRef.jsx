@@ -2,9 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 
 const InfiniteScrollRef = () => {
-  // ======================================================
-  // NORMAL STATIC ITEMS
-  // ======================================================
 
   const [scrollData, setScrollData] = useState(
     Array.from({ length: 20 }, (_, i) => ({
@@ -12,18 +9,11 @@ const InfiniteScrollRef = () => {
     }))
   );
 
-  // ======================================================
-  // AXIOS API ITEMS
-  // ======================================================
 
   const [apiItems, setApiItems] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-
-  // ======================================================
-  // LONG PARAGRAPH
-  // ======================================================
 
   const paragraph = `
   React is a JavaScript library used for building user interfaces.
@@ -149,22 +139,11 @@ const InfiniteScrollRef = () => {
     const clientHeight = box.clientHeight;
     const scrollHeight = box.scrollHeight;
 
-    // ======================================================
-    // OTHER CASE
-    // ======================================================
-
     if (
-      scrollTop + clientHeight >= scrollHeight - 5 &&
-      !loading &&
-      hasMore
-    ) {
+      scrollTop + clientHeight >= scrollHeight - 5 && !loading && hasMore) {
       setPage((prev) => prev + 1);
     }
   };
-
-  // ======================================================
-  // PARAGRAPH SCROLL
-  // ======================================================
 
   const getParagraphPosition = () => {
     const scrollTop = paragraphRef.current.scrollTop;
@@ -189,9 +168,6 @@ const InfiniteScrollRef = () => {
 
   return (
     <>
-      {/* ====================================================== */}
-      {/* CODE SECTION */}
-      {/* ====================================================== */}
 
       <code
         style={{

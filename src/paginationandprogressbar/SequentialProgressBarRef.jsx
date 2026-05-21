@@ -55,18 +55,20 @@ export default function SequentialProgressBarRef() {
     <pre>
 {` start and stop timer too and proper progressbar indexing
 
-const [progressBars, setProgressBars]= useState(Array.from(3).fill(0)) // currently 3 arrays of values 0
+const [progressBars, setProgressBars]= useState(Array.from(3).fill(0)) 
+// currently 3 arrays of values 0
+
 const timeRef = useRef(null);
 const indexRef = useRef(0);
 const startTimer = ()=>{
     timeRef.current= setInterval(() => {
         setProgressBars(prev => {
             let index = indexRef.current;  
-            //when stop/start store which index currently I am in
+//when stop/start store which index currently I am in
 
 
             if (index >= prev.length) {  
-                //stop the timer and update the prev with the last copy value -- stop the interval and update progress bar
+//stop the timer and update the prev with the last copy value -- stop the interval and update progress bar
                 clearInterval(timeRef.current);
                 return prev;
             }

@@ -54,7 +54,8 @@ const TodoListIndexing= ()=>{
 <code style={{textAlign:'left', minWidth: '500px'}}>
 <pre>
 {`
-Splice(startIndex, deletecount, ...items)-- startIndex from where need to start removal, deletecount-- no.of items to delete
+Splice(startIndex, deletecount, ...items)
+-- startIndex from where need to start removal, deletecount-- no.of items to delete
 ...items-- items list to delete in arguments 0 to any can be there optional
 
 Add todo
@@ -73,11 +74,12 @@ const handleDrop = (dropIndex)=>{
 
     const draggedItem = copy[dragIndex];        // c                     --- copied the item to drag
 
-    copy.splice(dragIndex (deleteBeginIndex),1 (no.of items to delete from begin index));  
-    // a   b   d   e   f     ---- Removed it from it's position
+copy.splice(dragIndex (deleteBeginIndex),1 (no.of items to delete from begin index));  
+// a   b   d   e   f     ---- Removed it from it's position
 
-    copy.splice(dropIndex (deleteBeginIndex),0 (no.of items to delete from begin index),draggedItem (adding indexes at deleteBeginIndex));       
-    // a   b   d   c   f   e ---- appended it where it is required
+copy.splice(dropIndex (deleteBeginIndex),0 (no.of items to delete from begin index),
+                                                    draggedItem (adding indexes at deleteBeginIndex));       
+// a   b   d   c   f   e ---- appended it where it is required
 
     setTaskList(copy);
     setDragIndex(null);
