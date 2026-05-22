@@ -162,10 +162,6 @@ function ImageBanner() {
   return (
     <div style={styles.bannerContainer}>
 
-      <h1 style={styles.bannerTitle}>
-        🚀 GraphQL + Apollo Client
-      </h1>
-
       <div style={styles.imageGrid}>
         {images.map((img, index) => (
           <div
@@ -277,6 +273,309 @@ function ReduxDemoComponent() {
 
   return (
     <div style={styles.page}>
+      {/* =========================================================
+    REDUX FLOW
+========================================================= */}
+
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "20px",
+    alignItems: "start",
+  }}
+>
+
+  {/* =========================================================
+      STORE
+  ========================================================= */}
+
+  <div>
+    <h2>🗂️ store.js</h2>
+
+    <pre
+      style={{
+        textAlign: "left",
+        padding: "16px",
+        borderRadius: "10px",
+        overflowX: "auto",
+        background: "#111",
+        color: "#00ff90",
+      }}
+    >
+{`
+import { configureStore }  from "@reduxjs/toolkit";
+
+import counterReducer from "./counterSlice";
+
+
+export const store = configureStore({
+  reducer: {
+    counter: counterReducer,
+    toggler: toggleReducer,
+  },
+});
+`}
+    </pre>
+  </div>
+
+  {/* =========================================================
+      PROVIDER
+  ========================================================= */}
+
+  <div>
+    <h2>🌍 Provider Global Access</h2>
+
+    <pre
+      style={{
+        textAlign: "left",
+        padding: "16px",
+        borderRadius: "10px",
+        overflowX: "auto",
+        background: "#111",
+        color: "#00d9ff",
+      }}
+    >
+{`
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+import App from "./App";
+
+import { Provider } from "react-redux";
+
+import { store } from "./store";
+
+ReactDOM.createRoot(
+  document.getElementById("root")
+).render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
+`}
+    </pre>
+  </div>
+
+  {/* =========================================================
+      SLICE
+  ========================================================= */}
+
+  <div>
+    <h2>🧠 counterSlice.js</h2>
+
+    <pre
+      style={{
+        textAlign: "left",
+        padding: "16px",
+        borderRadius: "10px",
+        overflowX: "auto",
+        background: "#111",
+        color: "#ffd166",
+        minHeight: "500px",
+      }}
+    >
+{`
+import { createSlice } from "@reduxjs/toolkit";
+  const initState = {
+    count: 0,
+    text: "",
+    darkMode: false,
+    todos: ["Learn Redux"],
+  },
+
+const counterSlice = createSlice({
+  name: "counter",  -- name can be same in store generally same
+  initialState: initState
+
+  // initalState:{  --same
+  //   count: 0,
+  //   text: "",
+  //   darkMode: false,
+  //   todos: ["Learn Redux"],
+  // },
+
+  reducers: {
+
+    increment: (state) => {
+      state.count += 1;
+    },
+
+    decrement: (state) => {
+      state.count -= 1;
+    },
+
+    incrementByAmount: (
+      state,
+      action
+    ) => {
+      state.count += action.payload;
+    },
+
+    setText: (state, action) => {
+      state.text = action.payload;
+    },
+
+    toggleTheme: (state) => {
+      state.darkMode = !state.darkMode;
+    },
+
+    addTodo: (state, action) => {
+      state.todos.push(action.payload);
+    },
+
+    removeTodo: (
+      state,
+      action
+    ) => {
+      state.todos.splice(
+        action.payload,
+        1
+      );
+    },
+  },
+});
+
+export const {
+  increment,
+  decrement,
+  incrementByAmount,
+  setText,
+  toggleTheme,
+  addTodo,
+  removeTodo,
+} = counterSlice.actions;
+
+export default counterSlice.reducer; 
+--helps to import in store as counterSlice 
+--else in store too you need counterSlice.reducer
+`}
+    </pre>
+  </div>
+
+  {/* =========================================================
+      COMPONENT
+  ========================================================= */}
+
+  <div>
+    <h2>⚛️ Redux Component</h2>
+
+    <pre
+      style={{
+        textAlign: "left",
+        padding: "16px",
+        borderRadius: "10px",
+        overflowX: "auto",
+        background: "#111",
+        color: "#ff8fab",
+        minHeight: "500px",
+      }}
+    >
+{`
+import React from "react";
+import {useSelector,useDispatch,} from "react-redux";
+
+import {increment, decrement,incrementByAmount,
+  setText, toggleTheme, addTodo, removeTodo,} from "./counterSlice";
+
+const ReduxExample = () => {
+
+  const dispatch = useDispatch();
+
+  /* =========================
+READ STATE -- useSelector(
+  (state)=> state.reducerName.variableName
+)
+reducerName :- reducerName: slice.reducer (or) slice (if exported);
+Note variableName-- must be in initialState of that reducer
+  ========================= */
+
+  const count = useSelector(
+    (state) => state.counter.count
+  );
+
+  const text = useSelector(
+    (state) => state.counter.text
+  );
+
+  const darkMode = useSelector(
+    (state) => state.counter.darkMode
+  );
+
+  const todos = useSelector(
+    (state) => state.counter.todos
+  );
+
+  return (
+    <div>
+
+      <h1>Count: {count}</h1>
+        /* =========================
+dispatch -- dispatch(
+  imported reducer method
+)
+
+Note: reducer method is imported from slice
+  ========================= */
+
+      <button
+        onClick={() =>
+          dispatch(increment())
+        }
+      >
+        Increment
+      </button>
+
+      <button
+        onClick={() =>
+          dispatch(addTodo("Task"))
+        }
+      >
+        Add Todo
+      </button>
+
+    </div>
+  );
+};
+
+export default ReduxExample;
+`}
+    </pre>
+  </div>
+
+</div>
+
+{/* =========================================================
+    REDUX FLOW
+========================================================= */}
+
+<pre
+  style={{
+    textAlign: "left",
+    padding: "20px",
+    marginTop: "20px",
+    borderRadius: "10px",
+    background: "#111",
+    color: "#ffffff",
+    fontSize: "16px",
+  }}
+>
+{`
+User Click
+     ↓
+dispatch(action)
+     ↓
+Reducer Runs
+     ↓
+Redux Store Updates
+     ↓
+useSelector Detects Change
+     ↓
+Component Re-renders
+     ↓
+Updated UI
+`}
+</pre>
       <ImageBanner/>
       <h1 style={styles.title}>
         🧠 Complete Redux Toolkit +

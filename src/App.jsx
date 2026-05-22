@@ -81,6 +81,8 @@ import OldInfiniteScrollWindow from './infinite_scroll/OldInfiniteScrollWindow'
 import StorePreviousValue from './UseRefComponents/StorePreviousValue'
 import DragBallWithHandlers from './arraycomponentsandRef/DragBallWithHandlers'
 import DragBallWithRef from './arraycomponentsandRef/DragBallWithRef'
+import Kubernetes from './mistakesInHooks/Kubernetes'
+import JwtTokens from './mistakesInHooks/JwtTokens'
 
 function App() {
 
@@ -107,7 +109,25 @@ function App() {
       <button onClick={() => setTabs("advanced")}>Advanced</button>
       <button onClick={() => setTabs("modernInfiniteScroll")}>Modern Infinite scroll</button>
       <button onClick={() => setTabs("oldInfiniteScroll")}>old Infinite scroll</button>
+      <button onClick={() => setTabs('kubernetes')}>Kubernetes</button>
+      <button onClick={() => setTabs('jwt')}>jwt</button>
     </div>
+    {
+      tabs==='kubernetes' && (
+        <>
+        <div>-------------------------------------------------------------------------------------------------------------------</div>
+        <Kubernetes/>
+        </>
+      )
+    }
+        {
+      tabs==='jwt' && (
+        <>
+        <div>-------------------------------------------------------------------------------------------------------------------</div>
+        <JwtTokens/>
+        </>
+      )
+    }
     {
       tabs==='redux' && (
         <>

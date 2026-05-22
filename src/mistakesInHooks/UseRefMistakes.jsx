@@ -3,7 +3,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-
 function UseRefMistakes() {
   const [count, setCount] = useState(0);
 

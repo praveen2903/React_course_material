@@ -1,136 +1,163 @@
-import React, {
-  memo,
-  useCallback,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useReducer,
-  useRef,
-  useState,
-  createContext,
-} from "react";
+import React from "react";
+import {
+  useForm,
+  Controller,
+  useFieldArray,
+} from "react-hook-form";
+import Select from "react-select";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-const ThemeContext = createContext();
+const genderOptions = [
+  { value: "male", label: "Male" },
+  { value: "female", label: "Female" },
+];
+const techOptions = [
+  { value: "react", label: "React" },
+  { value: "node", label: "Node JS" },
+  { value: "graphql", label: "GraphQL" },
+  { value: "redux", label: "Redux" },
+];
 
-const MemoChild = memo(({ onClick }) => {
-  console.log("Memo Child Rendered");
+/* =========================================================
+   ZOD SCHEMA
+========================================================= */
 
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        padding: "12px 20px",
-        border: "none",
-        borderRadius: "10px",
-        background: "#7c3aed",
-        color: "white",
-        cursor: "pointer",
-      }}
-    >
-      Memo Child Button
-    </button>
-  );
+const userSchema = z.object({
+  name: z.string().min(3, "Minimum 3 characters"),
+  email: z.string().email("Invalid email"),
+  password: z.string().min(6, "Minimum 6 characters"),
+  age: z.coerce.number().min(18, "Must be 18+"),
+  gender: z.object({
+    value: z.string(),
+    label: z.string(),
+  }),
+  technologies: z.array(
+      z.object({
+        value: z.string(),
+        label: z.string(),
+      })
+    )
+    .min(1, "Select technologies"),
+
+  skills: z
+    .array(
+      z.object({
+        value: z
+          .string()
+          .min(2, "Skill too short"),
+      })
+    )
+    .min(1, "Add at least one skill"),
 });
 
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "increment":
-      return { count: state.count + 1 };
 
-    case "decrement":
-      return { count: state.count - 1 };
 
-    default:
-      return state;
-  }
-};
+function ReactHookFormFullDemo() {
 
-function ReactHooksInterviewNotes() {
-  const [count, setCount] = useState(0);
 
-  const [text, setText] = useState("");
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(userSchema),
 
-  const [theme, setTheme] = useState("light");
-
-  const [state, dispatch] = useReducer(reducer, {
-    count: 0,
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      age: "",
+      gender: null,
+      technologies: [],
+      skills: [
+        { value: "" },
+      ],
+    },
   });
 
-  const renderRef = useRef(0);
 
-  const inputRef = useRef(null);
 
-  const measureRef = useRef(null);
+  /* =========================================================
+     useFieldArray
+  ========================================================= */
 
-  const [boxWidth, setBoxWidth] = useState(0);
+  const {fields,append,remove,} = useFieldArray({control,name: "skills",});
 
-  renderRef.current++;
 
-  useEffect(() => {
-    console.log("useEffect runs after paint");
 
-    return () => {
-      console.log("cleanup");
-    };
-  }, []);
+  /* =========================================================
+     SUBMIT
+  ========================================================= */
 
-  useLayoutEffect(() => {
-    if (measureRef.current) {
-      const rect = measureRef.current.getBoundingClientRect();
+  const onSubmit = (data) => {
+    console.log(data);
+    alert(JSON.stringify(data, null, 2));
+    reset();
+  };
 
-      setBoxWidth(rect.width);
-    }
-  }, []);
-
-  const expensiveCalculation = useMemo(() => {
-    console.log("Heavy calculation");
-
-    let total = 0;
-
-    for (let i = 0; i < 1000000; i++) {
-      total += i;
-    }
-
-    return total;
-  }, []);
-
-  const stableCallback = useCallback(() => {
-    alert("Stable callback");
-  }, []);
+  /* =========================================================
+     STYLES
+  ========================================================= */
 
   const pageStyle = {
     padding: "40px",
-    maxWidth: "1500px",
-    margin: "0 auto",
+    background: "#f4f7fb",
+    minHeight: "100vh",
     fontFamily: "Arial",
-    lineHeight: "1.8",
-    background: "#f5f7fb",
-    color: "#222",
-    textAlign:'left'
-  };
-
-  const sectionStyle = {
-    marginBottom: "60px",
+    textAlign: "left",
   };
 
   const headingStyle = {
-    fontSize: "34px",
+    textAlign: "center",
+    fontSize: "46px",
     marginBottom: "20px",
-    color: 'black'
+  };
+
+  const subHeadingStyle = {
+    textAlign: "center",
+    color: "#555",
+    marginBottom: "50px",
+    fontSize: "18px",
   };
 
   const gridStyle = {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit,minmax(430px,1fr))",
-    gap: "22px",
+    gridTemplateColumns:
+      "repeat(auto-fit,minmax(500px,1fr))",
+    gap: "24px",
   };
 
   const cardStyle = {
     background: "white",
-    borderRadius: "16px",
-    padding: "22px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+    padding: "28px",
+    borderRadius: "18px",
+    boxShadow:
+      "0 4px 12px rgba(0,0,0,0.08)",
+  };
+
+  const inputStyle = {
+    width: "100%",
+    padding: "12px",
+    borderRadius: "10px",
+    border: "1px solid #ccc",
+    marginTop: "8px",
+    marginBottom: "8px",
+  };
+
+  const labelStyle = {
+    fontWeight: "bold",
+    marginTop: "18px",
+    display: "block",
+  };
+
+  const errorStyle = {
+    color: "crimson",
+    fontSize: "14px",
+    marginBottom: "10px",
   };
 
   const codeStyle = {
@@ -141,829 +168,505 @@ function ReactHooksInterviewNotes() {
     overflowX: "auto",
     whiteSpace: "pre-wrap",
     fontSize: "14px",
-    marginTop: "15px",
+    marginTop: "18px",
   };
 
-  const descStyle = {
+  const infoStyle = {
     background: "#eef6ff",
-    padding: "18px",
+    padding: "16px",
     borderRadius: "12px",
     borderLeft: "6px solid #2563eb",
     marginBottom: "20px",
   };
 
-  const demoStyle = {
-    border: "2px dashed #bbb",
-    borderRadius: "12px",
-    padding: "20px",
-    background: "#fafafa",
+  const buttonStyle = {
+    padding: "12px 18px",
+    border: "none",
+    borderRadius: "10px",
+    cursor: "pointer",
+    background: "#2563eb",
+    color: "white",
     marginTop: "15px",
   };
 
-  const warningStyle = {
-    background: "#fff4e5",
-    borderLeft: "6px solid orange",
-    padding: "14px",
-    borderRadius: "10px",
-    marginTop: "15px",
-  };
 
-  const successStyle = {
-    background: "#e8f5e9",
-    borderLeft: "6px solid green",
-    padding: "14px",
-    borderRadius: "10px",
-    marginTop: "15px",
-  };
 
   return (
-    <ThemeContext.Provider value={{ theme }}>
-      <div style={pageStyle}>
-        <h1
-          style={{
-            textAlign: "center",
-            fontSize: "48px",
-            marginBottom: "20px",
-          }}
-        >
-          React Hooks + Redux + Apollo Interview Notes
-        </h1>
+    <div style={pageStyle}>
 
-        <p
-          style={{
-            textAlign: "center",
-            color: "#555",
-            marginBottom: "60px",
-            fontSize: "18px",
-          }}
-        >
-          Complete practical React hooks handbook with
-          live demos, interview concepts, mistakes,
-          visual understanding and real-world usage.
-        </p>
+      <h1 style={headingStyle}>
+        React Hook Form + Zod Full Guide
+      </h1>
 
-        {/* ===================================================== */}
-        {/* useState */}
-        {/* ===================================================== */}
+      <p style={subHeadingStyle}>
+        register, Controller,
+        useFieldArray, multi select,
+        schema validation and live form state
+      </p>
+      <div style={gridStyle}>
+        {/* =========================================================
+           FORM SECTION
+        ========================================================= */}
+        <div style={cardStyle}>
+          <h2>
+            ✅ Registration Form
+          </h2>
+          <form onSubmit={handleSubmit(onSubmit)}>
 
-        <section style={sectionStyle}>
-          <h2 style={headingStyle}>✅ useState</h2>
+            {/* =========================================================
+               NAME
+            ========================================================= */}
 
-          <div style={descStyle}>
-            <h3>Concept</h3>
+            <label style={labelStyle}>
+              Name
+            </label>
 
-            <p>
-              useState stores reactive UI state.
-              Whenever state changes, component re-renders.
+            <input
+              {...register("name")}
+              placeholder="Enter name"
+              style={inputStyle}
+            />
+
+            <p style={errorStyle}>
+              {errors.name?.message}
             </p>
 
-            <ul>
-              <li>Triggers re-render</li>
-              <li>Updates are async</li>
-              <li>React batches updates</li>
-            </ul>
 
-            <div style={successStyle}>
-              💡 Best For:
-              forms, toggles, counters, loading states
-            </div>
 
-            <div style={warningStyle}>
-              ❌ Never mutate state directly.
-            </div>
-          </div>
+            {/* =========================================================
+               EMAIL
+            ========================================================= */}
 
-          <div style={gridStyle}>
-            <div style={cardStyle}>
-              <h3>Live Counter Demo</h3>
+            <label style={labelStyle}>
+              Email
+            </label>
 
-              <div style={demoStyle}>
-                <h2>{count}</h2>
+            <input
+              {...register("email")}
+              placeholder="Enter email"
+              style={inputStyle}
+            />
 
-                <button
-                  onClick={() => setCount((prev) => prev + 1)}
-                  style={{
-                    padding: "12px 20px",
-                    border: "none",
-                    borderRadius: "10px",
-                    background: "#2563eb",
-                    color: "white",
-                  }}
-                >
-                  Increment
-                </button>
-              </div>
-
-              <pre style={codeStyle}>
-{`const [count,setCount] = useState(0)
-
-setCount(prev => prev + 1)`}
-              </pre>
-            </div>
-
-            <div style={cardStyle}>
-              <h3>Functional Update Flow</h3>
-
-              <div style={demoStyle}>
-                <pre>
-{`CLICK
- ↓
-setState()
- ↓
-React schedules update
- ↓
-Component re-renders`}
-                </pre>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ===================================================== */}
-        {/* React batching */}
-        {/* ===================================================== */}
-
-        <section style={sectionStyle}>
-          <h2 style={headingStyle}>🔥 React Batching</h2>
-
-          <div style={descStyle}>
-            <p>
-              React combines multiple state updates into
-              one render for performance optimization.
+            <p style={errorStyle}>
+              {errors.email?.message}
             </p>
 
-            <div style={warningStyle}>
-              ❌ Stale state issue:
-              setCount(count + 1) twice may still become +1
-            </div>
-          </div>
 
-          <div style={cardStyle}>
-            <pre style={codeStyle}>
-{`BAD
-----
-setCount(count + 1)
-setCount(count + 1)
 
-GOOD
------
-setCount(prev => prev + 1)
-setCount(prev => prev + 1)`}
-            </pre>
-          </div>
-        </section>
+            {/* =========================================================
+               PASSWORD
+            ========================================================= */}
 
-        {/* ===================================================== */}
-        {/* useEffect */}
-        {/* ===================================================== */}
+            <label style={labelStyle}>
+              Password
+            </label>
 
-        <section style={sectionStyle}>
-          <h2 style={headingStyle}>✅ useEffect</h2>
+            <input
+              type="password"
+              {...register("password")}
+              placeholder="Enter password"
+              style={inputStyle}
+            />
 
-          <div style={descStyle}>
-            <p>
-              Handles side effects after render.
+            <p style={errorStyle}>
+              {errors.password?.message}
             </p>
 
-            <ul>
-              <li>API calls</li>
-              <li>Timers</li>
-              <li>Subscriptions</li>
-              <li>Event listeners</li>
-            </ul>
 
-            <div style={successStyle}>
-              💡 Runs after browser paint.
-            </div>
-          </div>
 
-          <div style={gridStyle}>
-            <div style={cardStyle}>
-              <h3>Effect Flow</h3>
+            {/* =========================================================
+               AGE
+            ========================================================= */}
 
-              <div style={demoStyle}>
-                <pre>
-{`Render
- ↓
-Browser Paint
- ↓
-useEffect runs`}
-                </pre>
-              </div>
+            <label style={labelStyle}>
+              Age
+            </label>
 
-              <pre style={codeStyle}>
-{`useEffect(()=>{
- console.log("runs")
-},[])`}
-              </pre>
-            </div>
+            <input
+              type="number"
+              {...register("age")}
+              placeholder="Enter age"
+              style={inputStyle}
+            />
 
-            <div style={cardStyle}>
-              <h3>Cleanup</h3>
-
-              <pre style={codeStyle}>
-{`useEffect(()=>{
- const id = setInterval(...)
-
- return ()=>{
-   clearInterval(id)
- }
-},[])`}
-              </pre>
-            </div>
-          </div>
-        </section>
-
-        {/* ===================================================== */}
-        {/* useRef */}
-        {/* ===================================================== */}
-
-        <section style={sectionStyle}>
-          <h2 style={headingStyle}>✅ useRef</h2>
-
-          <div style={descStyle}>
-            <p>
-              Stores mutable values without re-rendering.
+            <p style={errorStyle}>
+              {errors.age?.message}
             </p>
 
-            <ul>
-              <li>DOM access</li>
-              <li>Timers</li>
-              <li>Previous values</li>
-              <li>Mutable storage</li>
-            </ul>
 
-            <div style={warningStyle}>
-              ❌ Updating ref does NOT re-render component.
-            </div>
-          </div>
 
-          <div style={gridStyle}>
-            <div style={cardStyle}>
-              <h3>Focus Input Demo</h3>
+            {/* =========================================================
+               CONTROLLER SELECT
+            ========================================================= */}
 
-              <div style={demoStyle}>
-                <input
-                  ref={inputRef}
-                  placeholder="Focus me"
-                  style={{
-                    padding: "12px",
-                    width: "100%",
-                    borderRadius: "10px",
-                    border: "1px solid #ccc",
-                  }}
+            <label style={labelStyle}>
+              Gender (Controller)
+            </label>
+
+            <Controller
+              control={control}
+              name="gender"
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  options={genderOptions}
+                  placeholder="Select Gender"
                 />
+              )}
+            />
 
-                <button
-                  onClick={() => inputRef.current.focus()}
+            <p style={errorStyle}>
+              {errors.gender?.message}
+            </p>
+
+
+
+            {/* =========================================================
+               MULTI SELECT
+            ========================================================= */}
+
+            <label style={labelStyle}>
+              Technologies (Multi Select)
+            </label>
+
+            <Controller
+              control={control}
+              name="technologies"
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  isMulti
+                  options={techOptions}
+                  placeholder="Select Technologies"
+                />
+              )}
+            />
+
+            <p style={errorStyle}>
+              {
+                errors.technologies
+                  ?.message
+              }
+            </p>
+
+
+
+            {/* =========================================================
+               useFieldArray
+            ========================================================= */}
+
+            <label style={labelStyle}>
+              Skills (useFieldArray)
+            </label>
+
+            {
+              fields.map(
+                (field, index) => (
+
+                <div
+                  key={field.id}
                   style={{
-                    marginTop: "15px",
-                    padding: "10px 18px",
+                    display: "flex",
+                    gap: "10px",
+                    marginBottom: "10px",
+                    alignItems: "center",
                   }}
                 >
-                  Focus Input
-                </button>
-              </div>
 
-              <pre style={codeStyle}>
-{`const ref = useRef(null)
+                  <input
+                    {...register(
+                      `skills.${index}.value`
+                    )}
+                    placeholder="Enter Skill"
+                    style={inputStyle}
+                  />
 
-ref.current.focus()`}
-              </pre>
-            </div>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      remove(index)
+                    }
+                    style={{
+                      padding: "10px",
+                    }}
+                  >
+                    Remove
+                  </button>
 
-            <div style={cardStyle}>
-              <h3>Ref Lifecycle</h3>
-
-              <div style={demoStyle}>
-                <pre>
-{`Before Mount
-ref.current = null
-
-After Mount
-ref.current = DOM node`}
-                </pre>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ===================================================== */}
-        {/* useMemo */}
-        {/* ===================================================== */}
-
-        <section style={sectionStyle}>
-          <h2 style={headingStyle}>✅ useMemo</h2>
-
-          <div style={descStyle}>
-            <p>
-              Memoizes expensive computed values.
-            </p>
-
-            <div style={successStyle}>
-              💡 Prevents unnecessary recalculation.
-            </div>
-
-            <div style={warningStyle}>
-              ❌ Does NOT prevent component re-render.
-            </div>
-          </div>
-
-          <div style={gridStyle}>
-            <div style={cardStyle}>
-              <h3>Heavy Calculation Demo</h3>
-
-              <div style={demoStyle}>
-                <h4>{expensiveCalculation}</h4>
-
-                <p>
-                  Heavy calculation only runs once.
-                </p>
-              </div>
-
-              <pre style={codeStyle}>
-{`const value = useMemo(()=>{
- return expensiveWork()
-},[])`}
-              </pre>
-            </div>
-
-            <div style={cardStyle}>
-              <h3>Best Use Cases</h3>
-
-              <div style={demoStyle}>
-                <ul>
-                  <li>Filtering</li>
-                  <li>Sorting</li>
-                  <li>Large calculations</li>
-                  <li>Stable object references</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ===================================================== */}
-        {/* useCallback */}
-        {/* ===================================================== */}
-
-        <section style={sectionStyle}>
-          <h2 style={headingStyle}>✅ useCallback</h2>
-
-          <div style={descStyle}>
-            <p>
-              Memoizes function reference.
-            </p>
-
-            <div style={successStyle}>
-              💡 Useful with React.memo children.
-            </div>
-
-            <div style={warningStyle}>
-              ❌ Overusing can reduce readability.
-            </div>
-          </div>
-
-          <div style={gridStyle}>
-            <div style={cardStyle}>
-              <h3>Stable Function Demo</h3>
-
-              <div style={demoStyle}>
-                <MemoChild onClick={stableCallback} />
-              </div>
-
-              <pre style={codeStyle}>
-{`const fn = useCallback(()=>{
- console.log("stable")
-},[])`}
-              </pre>
-            </div>
-
-            <div style={cardStyle}>
-              <h3>Flow</h3>
-
-              <div style={demoStyle}>
-                <pre>
-{`Parent Re-render
- ↓
-Same callback reference
- ↓
-Memo child skips render`}
-                </pre>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ===================================================== */}
-        {/* React.memo */}
-        {/* ===================================================== */}
-
-        <section style={sectionStyle}>
-          <h2 style={headingStyle}>✅ React.memo</h2>
-
-          <div style={descStyle}>
-            <p>
-              Prevents unnecessary child renders
-              using shallow prop comparison.
-            </p>
-
-            <div style={warningStyle}>
-              ❌ New object/function references
-              still trigger renders.
-            </div>
-          </div>
-
-          <div style={cardStyle}>
-            <pre style={codeStyle}>
-{`const Child = React.memo(Component)`}
-            </pre>
-          </div>
-        </section>
-
-        {/* ===================================================== */}
-        {/* useLayoutEffect */}
-        {/* ===================================================== */}
-
-        <section style={sectionStyle}>
-          <h2 style={headingStyle}>✅ useLayoutEffect</h2>
-
-          <div style={descStyle}>
-            <p>
-              Runs synchronously before browser paint.
-            </p>
-
-            <div style={successStyle}>
-              💡 Used for DOM measurements.
-            </div>
-          </div>
-
-          <div style={gridStyle}>
-            <div style={cardStyle}>
-              <h3>Measurement Demo</h3>
-
-              <div
-                ref={measureRef}
-                style={{
-                  ...demoStyle,
-                  width: "300px",
-                }}
-              >
-                Measured Width:
-                <h3>{boxWidth}px</h3>
-              </div>
-
-              <pre style={codeStyle}>
-{`useLayoutEffect(()=>{
- const rect =
- ref.current.getBoundingClientRect()
-})`}
-              </pre>
-            </div>
-
-            <div style={cardStyle}>
-              <h3>Difference</h3>
-
-              <div style={demoStyle}>
-                <pre>
-{`useEffect
-→ after paint
-
-useLayoutEffect
-→ before paint`}
-                </pre>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ===================================================== */}
-        {/* useContext */}
-        {/* ===================================================== */}
-
-        <section style={sectionStyle}>
-          <h2 style={headingStyle}>✅ useContext</h2>
-
-          <div style={descStyle}>
-            <p>
-              Shares global state without prop drilling.
-            </p>
-
-            <div style={successStyle}>
-              💡 Used for:
-              theme, auth, language
-            </div>
-          </div>
-
-          <div style={cardStyle}>
-            <ThemePreview />
+                </div>
+              ))
+            }
 
             <button
+              type="button"
               onClick={() =>
-                setTheme((prev) =>
-                  prev === "light"
-                    ? "dark"
-                    : "light"
-                )
+                append({ value: "" })
               }
-              style={{
-                marginTop: "15px",
-                padding: "10px 18px",
-              }}
+              style={buttonStyle}
             >
-              Toggle Theme
+              Add Skill
             </button>
 
-            <pre style={codeStyle}>
-{`const value =
-useContext(MyContext)`}
-            </pre>
-          </div>
-        </section>
 
-        {/* ===================================================== */}
-        {/* useReducer */}
-        {/* ===================================================== */}
 
-        <section style={sectionStyle}>
-          <h2 style={headingStyle}>✅ useReducer</h2>
+            {/* =========================================================
+               SUBMIT
+            ========================================================= */}
 
-          <div style={descStyle}>
+            <br />
+
+            <button
+              type="submit"
+              style={buttonStyle}
+            >
+              Submit Form
+            </button>
+
+          </form>
+        </div>
+
+
+
+        {/* =========================================================
+           CONCEPTS
+        ========================================================= */}
+
+        <div style={cardStyle}>
+
+          <h2>
+            🔥 Important Concepts
+          </h2>
+
+
+
+          <div style={infoStyle}>
+            <h3>register()</h3>
+
             <p>
-              Centralized complex state logic.
+              Connects normal inputs
+              to React Hook Form.
             </p>
 
-            <div style={successStyle}>
-              💡 Best for:
-              carts, forms, auth flows
-            </div>
-          </div>
-
-          <div style={gridStyle}>
-            <div style={cardStyle}>
-              <h3>Reducer Demo</h3>
-
-              <div style={demoStyle}>
-                <h2>{state.count}</h2>
-
-                <button
-                  onClick={() =>
-                    dispatch({ type: "increment" })
-                  }
-                >
-                  +
-                </button>
-
-                <button
-                  onClick={() =>
-                    dispatch({ type: "decrement" })
-                  }
-                  style={{
-                    marginLeft: "10px",
-                  }}
-                >
-                  -
-                </button>
-              </div>
-
-              <pre style={codeStyle}>
-{`dispatch({
- type:"increment"
-})`}
-              </pre>
-            </div>
-
-            <div style={cardStyle}>
-              <h3>Reducer Flow</h3>
-
-              <div style={demoStyle}>
-                <pre>
-{`dispatch(action)
- ↓
-reducer()
- ↓
-new state
- ↓
-re-render`}
-                </pre>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ===================================================== */}
-        {/* useSelector */}
-        {/* ===================================================== */}
-
-        <section style={sectionStyle}>
-          <h2 style={headingStyle}>✅ useSelector (Redux)</h2>
-
-          <div style={descStyle}>
-            <p>
-              Reads Redux store state inside component.
-            </p>
-
-            <div style={successStyle}>
-              💡 Re-renders component when selected value changes.
-            </div>
-
-            <div style={warningStyle}>
-              ❌ Selecting entire store causes extra renders.
-            </div>
-          </div>
-
-          <div style={cardStyle}>
             <pre style={codeStyle}>
-{`const count = useSelector(
- state => state.counter.count
-)`}
+{`<input
+ {...register("email")}
+/>`}
             </pre>
           </div>
-        </section>
 
-        {/* ===================================================== */}
-        {/* useDispatch */}
-        {/* ===================================================== */}
 
-        <section style={sectionStyle}>
-          <h2 style={headingStyle}>✅ useDispatch (Redux)</h2>
 
-          <div style={descStyle}>
+          <div style={infoStyle}>
+            <h3>Controller</h3>
+
             <p>
-              Sends actions to Redux store.
-            </p>
-
-            <div style={successStyle}>
-              💡 Used with reducers.
-            </div>
-          </div>
-
-          <div style={cardStyle}>
-            <pre style={codeStyle}>
-{`const dispatch = useDispatch()
-
-dispatch(addTodo(data))`}
-            </pre>
-          </div>
-        </section>
-
-        {/* ===================================================== */}
-        {/* useQuery */}
-        {/* ===================================================== */}
-
-        <section style={sectionStyle}>
-          <h2 style={headingStyle}>✅ useQuery (Apollo GraphQL)</h2>
-
-          <div style={descStyle}>
-            <p>
-              Fetches GraphQL data automatically.
+              Used for controlled
+              components like:
             </p>
 
             <ul>
-              <li>loading</li>
-              <li>error</li>
-              <li>data</li>
+              <li>React Select</li>
+              <li>MUI</li>
+              <li>Ant Design</li>
             </ul>
 
-            <div style={successStyle}>
-              💡 Auto caching + auto updates.
-            </div>
-          </div>
-
-          <div style={cardStyle}>
             <pre style={codeStyle}>
-{`const {
- loading,
- error,
- data
-} = useQuery(GET_USERS)
-
-if(loading) return "Loading"
-
-console.log(data)`}
+{`<Controller
+ control={control}
+ name="gender"
+ render={({ field }) => (
+   <Select {...field} />
+ )}
+/>`}
             </pre>
           </div>
-        </section>
 
-        {/* ===================================================== */}
-        {/* useMutation */}
-        {/* ===================================================== */}
 
-        <section style={sectionStyle}>
-          <h2 style={headingStyle}>✅ useMutation (Apollo)</h2>
 
-          <div style={descStyle}>
+          <div style={infoStyle}>
+            <h3>useFieldArray()</h3>
+
             <p>
-              Used for create/update/delete operations.
+              Creates dynamic fields.
             </p>
 
-            <div style={successStyle}>
-              💡 Triggered manually.
-            </div>
+            <pre style={codeStyle}>
+{`append({ value:"" })
+
+remove(index)`}
+            </pre>
+
+            <pre style={codeStyle}>
+{`FIELDS FLOW
+
+append()
+   ↓
+fields updated
+   ↓
+UI re-render`}
+            </pre>
           </div>
 
-          <div style={cardStyle}>
-            <pre style={codeStyle}>
-{`const [addUser] =
-useMutation(ADD_USER)
 
-addUser({
- variables:{
-   name:"Sai"
- }
+
+          <div style={infoStyle}>
+            <h3>Zod Schema</h3>
+
+            <p>
+              Schema-based validation.
+            </p>
+
+            <pre style={codeStyle}>
+{`const schema = z.object({
+ email: z.string().email()
 })`}
             </pre>
           </div>
-        </section>
 
-        {/* ===================================================== */}
-        {/* custom hooks */}
-        {/* ===================================================== */}
 
-        <section style={sectionStyle}>
-          <h2 style={headingStyle}>✅ Custom Hooks</h2>
 
-          <div style={descStyle}>
-            <p>
-              Reusable logic extracted into hook functions.
-            </p>
-
-            <div style={successStyle}>
-              💡 Keeps components clean.
-            </div>
-          </div>
-
-          <div style={cardStyle}>
-            <pre style={codeStyle}>
-{`function useToggle(initial){
-
- const [value,setValue] =
- useState(initial)
-
- const toggle = ()=>{
-   setValue(prev => !prev)
- }
-
- return [value,toggle]
-}`}
-            </pre>
-          </div>
-        </section>
-
-        {/* ===================================================== */}
-        {/* render count */}
-        {/* ===================================================== */}
-
-        <section style={sectionStyle}>
-          <h2 style={headingStyle}>🔥 Render Count Tracking</h2>
-
-          <div style={descStyle}>
-            <p>
-              Useful for debugging unnecessary renders.
-            </p>
-          </div>
-
-          <div style={cardStyle}>
-            <div style={demoStyle}>
-              <h3>
-                Component Render Count:
-                {renderRef.current}
-              </h3>
-            </div>
+          <div style={infoStyle}>
+            <h3>Validation Flow</h3>
 
             <pre style={codeStyle}>
-{`const renderRef = useRef(0)
-
-renderRef.current++`}
+{`Input Change
+     ↓
+register()
+     ↓
+React Hook Form
+     ↓
+zodResolver
+     ↓
+Zod Schema
+     ↓
+errors object`}
             </pre>
           </div>
-        </section>
+
+        </div>
       </div>
-    </ThemeContext.Provider>
-  );
-}
 
-function ThemePreview() {
-  const { theme } = useContext(ThemeContext);
 
-  return (
-    <div
-      style={{
-        padding: "20px",
-        borderRadius: "12px",
-        background:
-          theme === "light"
-            ? "#f3f4f6"
-            : "#1f2937",
-        color:
-          theme === "light"
-            ? "#111"
-            : "white",
-      }}
-    >
-      Current Theme: {theme}
+
+      {/* =========================================================
+         LIVE FORM VALUES
+      ========================================================= */}
+
+      <div
+        style={{
+          ...cardStyle,
+          marginTop: "40px",
+        }}
+      >
+
+        <h2>
+          👀 watch() Live Values
+        </h2>
+
+        <pre style={codeStyle}>
+{JSON.stringify(
+  watch(),
+  null,
+  2
+)}
+        </pre>
+
+      </div>
+
+
+
+      {/* =========================================================
+         INTERVIEW QUESTIONS
+      ========================================================= */}
+
+      <div
+        style={{
+          ...cardStyle,
+          marginTop: "40px",
+        }}
+      >
+
+        <h2>
+          🎯 Interview Questions
+        </h2>
+
+        <div style={gridStyle}>
+
+
+          <div style={infoStyle}>
+            <h3>
+              Why React Hook Form fast?
+            </h3>
+
+            <pre style={codeStyle}>
+{`Formik
+   ↓
+controlled inputs
+   ↓
+more re-renders
+
+React Hook Form
+   ↓
+uncontrolled refs
+   ↓
+less re-renders`}
+            </pre>
+          </div>
+
+
+
+          <div style={infoStyle}>
+            <h3>
+              When to use Controller?
+            </h3>
+
+            <pre style={codeStyle}>
+{`Use Controller for:
+
+- React Select
+- MUI
+- Ant Design
+- Third-party inputs`}
+            </pre>
+          </div>
+
+
+
+          <div style={infoStyle}>
+            <h3>
+              useFieldArray Purpose
+            </h3>
+
+            <pre style={codeStyle}>
+{`Dynamic Forms
+
+- skills
+- phone numbers
+- addresses
+- education list`}
+            </pre>
+          </div>
+
+
+
+          <div style={infoStyle}>
+            <h3>
+              zodResolver Purpose
+            </h3>
+
+            <pre style={codeStyle}>
+{`React Hook Form
+        ↓
+zodResolver
+        ↓
+Zod Validation`}
+            </pre>
+          </div>
+
+        </div>
+      </div>
     </div>
   );
 }
 
-export default ReactHooksInterviewNotes;
+export default ReactHookFormFullDemo;

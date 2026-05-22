@@ -190,6 +190,1168 @@ const CREATE_POST = gql`
 export default function GraphQLDemoApp() {
   return (
     <ApolloProvider client={client}>
+<div
+  style={{
+    width: "100%",
+    background: "#0d1117",
+    padding: "30px",
+    color: "white",
+    boxSizing: "border-box",
+    fontFamily: "sans-serif",
+  }}
+>
+
+{/* =========================================================
+    TITLE
+========================================================= */}
+
+<div style={{display:'grid', gridTemplateColumns:'repeat(2, 1fr)'}}>
+<div>
+  <h1
+  style={{
+    textAlign: "center",
+    fontSize: "42px",
+    marginBottom: "40px",
+  }}
+>
+  🚀 COMPLETE GRAPHQL FULL STACK FLOW
+</h1>
+
+<pre
+  style={{
+    background: "#161b22",
+    padding: "24px",
+    borderRadius: "14px",
+    color: "#00ff90",
+    lineHeight: "1.8",
+    fontSize: "15px",
+    marginBottom: "50px",
+    overflowX: "auto",
+    textAlign: "left",
+  }}
+>
+{`
+USER TYPES DATA IN UI
+          ↓
+useState Stores Form Data
+          ↓
+useMutation Called
+          ↓
+Apollo Client Sends Request
+          ↓
+GraphQL Server Receives Query
+          ↓
+typeDefs Validate Request
+          ↓
+Mutation Resolver Runs
+          ↓
+Database / Array Updated
+          ↓
+Resolver Returns Updated Data
+          ↓
+Apollo Cache Updates
+          ↓
+useQuery Detects Changes
+          ↓
+React Component Re-renders
+          ↓
+Updated UI Shown
+`}
+</pre>
+</div>
+
+
+<div>
+  <h1
+  style={{
+    color: "#00ff90",
+    marginBottom: "20px",
+    textAlign: "left",
+  }}
+>
+  📁 PROJECT STRUCTURE
+</h1>
+
+<pre
+  style={{
+    background: "#161b22",
+    padding: "24px",
+    borderRadius: "14px",
+    color: "#d6f6ff",
+    lineHeight: "1.7",
+    fontSize: "15px",
+    marginBottom: "60px",
+    overflowX: "auto",
+    textAlign: "left",
+  }}
+>
+{`
+FULLSTACK-GRAPHQL
+│
+├── backend
+│   │
+│   ├── server.js
+│   │
+│   ├── data
+│   │   └── users.js
+│   │
+│   ├── schema
+│   │   └── typeDefs.js
+│   │
+│   ├── resolvers
+│   │   ├── queryResolvers.js
+│   │   ├── mutationResolvers.js
+│   │   └── index.js
+│   │
+│   └── demoRequests
+│       └── graphqlRequests.js
+│
+└── frontend
+    │
+    └── src
+        │
+        ├── main.jsx
+        │
+        ├── App.jsx
+        │
+        ├── graphql
+        │   ├── fragments.js
+        │   ├── queries.js
+        │   └── mutations.js
+        │
+        └── components
+            └── GraphQLExample.jsx
+`}
+</pre>
+</div>
+</div>
+
+<h1
+  style={{
+    color: "#00ff90",
+    borderBottom: "3px solid #00ff90",
+    paddingBottom: "12px",
+    marginBottom: "35px",
+    textAlign: "left",
+  }}
+>
+  🖥️ BACKEND / SERVER
+</h1>
+
+
+
+<div style={{display: "grid",gridTemplateColumns: "repeat(2,minmax(0,1fr))",gap: "24px",alignItems: "stretch", }}>
+
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "14px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}
+>
+
+<h2
+  style={{
+    color: "#00ff90",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+  📦 data/users.js
+</h2>
+
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.6",
+    overflowX: "auto",
+    color: "#d2ffd2",
+    fontSize: "14px",
+  }}
+>
+{`
+export let users = [
+  {
+     id: "1",
+    name: "Sai",
+    age: 22,
+    city: "Hyderabad",
+  },
+  {
+    id: "2",
+    name: "Praveen",
+    age: 23,
+    city: "Chennai",
+  },
+];
+`}
+</pre>
+</div>
+
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "14px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}
+>
+
+<h2
+  style={{
+    color: "#00d9ff",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+  🧠 schema/typeDefs.js
+</h2>
+
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.6",
+    overflowX: "auto",
+    color: "#d6f6ff",
+    fontSize: "14px",
+  }}
+>
+{`import { gql } from 'graphql-tag'
+
+export const typeDefs = gql\`
+--get uses query - all users and single user too based on id
+
+  type User {
+    id: ID!
+    name: String!
+    age: Int!
+    city: String!
+  }
+
+  type Query {
+    users: [User]
+    user(id: ID!): User
+    usersByCity(
+      city: String!
+    ): [User]
+  }
+
+post/put/delete uses mutation
+  type Mutation {
+  post call
+    addUser(
+      name: String!
+      age: Int!
+      city: String!
+    ): User
+
+put call
+    updateUser(
+      id: ID!
+      city: String!
+    ): User
+
+delete call
+    deleteUser(
+      id: ID!
+    ): String
+  }
+
+\`;
+`}
+</pre>
+</div>
+
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "14px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}
+>
+
+<h2
+  style={{
+    color: "#ffd166",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+  ⚡ resolvers/queryResolvers.js
+</h2>
+
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.6",
+    overflowX: "auto",
+    color: "#fff1c1",
+    fontSize: "14px",
+  }}
+>
+{`
+import { users } from "../data/users.js";
+
+export const queryResolvers = {
+  users: () => {
+    return users;
+  },
+
+  user: (_, args) => {
+    return users.find((user) => user.id === args.id);
+  },
+
+  usersByCity: (_, args) => {
+    return users.filter((user) => user.city === args.city);
+  },
+};
+`}
+</pre>
+</div>
+
+
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "14px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}
+>
+
+<h2
+  style={{
+    color: "#ff8fab",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+  🔥 resolvers/mutationResolvers.js
+</h2>
+
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.6",
+    overflowX: "auto",
+    color: "#ffd6e0",
+    fontSize: "14px",
+  }}
+>
+{`
+import { users } from "../data/users.js";
+
+
+export const mutationResolvers = {
+  addUser: (_, args) => {
+    const newUser = {
+      id: Date.now().toString(),
+      name: args.name,
+      age: args.age,
+      city: args.city,
+    };
+
+    users.push(newUser);
+    return newUser;
+  },
+
+
+  updateUser: (_, args) => {
+    const user = users.find((u) => u.id === args.id);
+    if (!user) return null;
+    user.city = args.city;
+    return user;
+  },
+
+  deleteUser: (_, args) => {
+    const index = users.findIndex((user) =>user.id === args.id);
+    users.splice(index, 1);   know splice right splice(startdeleteIndex, deleteItemsCount) -- includes the current index too
+    return "User Deleted";
+  },
+};
+`}
+</pre>
+</div>
+
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "14px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}
+>
+
+<h2
+  style={{
+    color: "#00ffcc",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+  🧩 resolvers/index.js
+</h2>
+
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.6",
+    overflowX: "auto",
+    color: "#ccfff3",
+    fontSize: "14px",
+  }}
+>
+{`
+import { queryResolvers } from "./queryResolvers.js";
+import { mutationResolvers } from "./mutationResolvers.js";
+
+export const resolvers = {
+  Query: queryResolvers,
+  Mutation: mutationResolvers,
+};
+`}
+</pre>
+</div>
+
+
+
+{/* =========================================================
+    SERVER
+========================================================= */}
+
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "14px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}
+>
+
+<h2
+  style={{
+    color: "#ffffff",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+  🚀 server.js
+</h2>
+
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.6",
+    overflowX: "auto",
+    color: "#ffffff",
+    fontSize: "14px",
+  }}
+>
+{`
+import express from "express";
+import cors from "cors";
+import { ApolloServer } from "@apollo/server";
+import { expressMiddleware } from "@apollo/server/express4";
+import { typeDefs } from "./schema/typeDefs.js";
+import { resolvers } from "./resolvers/index.js";
+
+const app = express();
+const corsOptions = 
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+});
+
+async function startServer() {
+  await server.start();
+  app.use("/graphql",cors(),express.json(),expressMiddleware(server));  --/graphql single endpoint
+
+  --based on http method get/put/post/delete schema will be deciding the frontend schema provide details
+
+  app.listen(4000, () => {
+    console.log("http://localhost:4000/graphql");
+  });
+}
+
+startServer();
+`}
+</pre>
+</div>
+
+</div>
+
+
+<h1
+  style={{
+    color: "#ffd166",
+    marginTop: "60px",
+    marginBottom: "25px",
+    textAlign: "left",
+  }}
+>
+  📮 DEMO GRAPHQL REQUESTS-- frontend to backend
+</h1>
+
+<pre
+  style={{
+    background: "#161b22",
+    padding: "24px",
+    borderRadius: "14px",
+    color: "#fff1c1",
+    lineHeight: "1.7",
+    fontSize: "14px",
+    overflowX: "auto",
+    textAlign: "left",
+  }}
+>
+{`
+query {
+  users {
+    id
+    name
+    city
+  }
+}
+
+query {
+  user(id:"1") {
+    id
+    name
+  }
+}
+
+mutation {
+  addUser(
+    name:"Rohit"
+    age:25
+    city:"Delhi"
+  ) {
+    id
+    name
+  }
+}
+
+
+mutation {
+  updateUser(
+    id:"1"
+    city:"Mumbai"
+  ) {
+    id
+    city
+  }
+}
+`}
+</pre>
+
+
+
+{/* =========================================================
+    FRONTEND
+========================================================= */}
+
+<h1
+  style={{
+    color: "#00d9ff",
+    borderBottom: "3px solid #00d9ff",
+    paddingBottom: "12px",
+    marginTop: "70px",
+    marginBottom: "35px",
+    textAlign: "left",
+  }}
+>
+  🌍 FRONTEND / CLIENT
+</h1>
+
+
+
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns:
+      "repeat(2,minmax(0,1fr))",
+    gap: "24px",
+  }}
+>
+
+{/* =========================================================
+    MAIN JSX
+========================================================= */}
+
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "14px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}
+>
+
+<h2
+  style={{
+    color: "#00ff90",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+  🌍 main.jsx -- like index.js for global scope where redux also present
+</h2>
+
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.6",
+    overflowX: "auto",
+    color: "#d2ffd2",
+    fontSize: "14px",
+  }}
+>
+{`
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import {ApolloClient,InMemoryCache,ApolloProvider, ApolloLink} from "@apollo/client";
+
+--graphql handles single httplink 
+--HttpLink-- sends graphQL request to backend, fetch and handles http communication
+const httpLink = new HttpLink({
+  uri: "http://localhost:4000/graphql",
+});
+
+-- ApolloLink used to attach the jwt token along the request as bearer where backend could verify the jwt token
+--also handles logrequest, websockets, headers
+const authLink = new ApolloLink((operation, forward) => {
+  operation.setContext({
+    headers: {
+      authorization: localStorage.getItem("token") || "",
+    },
+  });
+
+  return forward(operation);
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+-- InMemoryCache()-- frontend cache avoid unnecessary api calls for get, share data b/w components
+  cache: new InMemoryCache(),
+});
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+
+  <ApolloProvider client={client}>
+    <provider store={reduxStore}>
+          <App />  
+    </provider>
+  </ApolloProvider>
+);
+`}
+</pre>
+</div>
+
+
+
+{/* =========================================================
+    APP
+========================================================= */}
+
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "14px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}
+>
+
+<h2
+  style={{
+    color: "#00d9ff",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+  ⚛️ App.jsx
+</h2>
+
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.6",
+    overflowX: "auto",
+    color: "#d6f6ff",
+    fontSize: "14px",
+  }}
+>
+{`
+import GraphQLExample from "./components/GraphQLExample";
+function App() {
+  return (
+    <div>
+      <GraphQLExample />
+
+    </div>
+  );
+}
+export default App;
+`}
+</pre>
+</div>
+
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "14px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}
+>
+
+<h2
+  style={{
+    color: "#ffd166",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+  🧩 graphql/fragments.js --fragments reusable things
+</h2>
+
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.6",
+    overflowX: "auto",
+    color: "#fff1c1",
+    fontSize: "14px",
+  }}
+>
+{`
+import { gql } from "@apollo/client";
+
+export const USER_FIELDS = gql\`
+  fragment UserFields on User {
+    id
+    name
+    age
+    city
+  }
+\`;
+
+
+export const USER_BASIC = gql\`
+  fragment UserBasic on User {
+    id
+    name
+  }
+\`;
+`}
+</pre>
+</div>
+
+
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "14px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}
+>
+
+<h2
+  style={{
+    color: "#ff8fab",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+  📦 graphql/queries.js
+</h2>
+
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.6",
+    overflowX: "auto",
+    color: "#ffd6e0",
+    fontSize: "14px",
+  }}
+>
+{`
+import { gql } from "@apollo/client";
+
+import {USER_FIELDS,USER_BASIC,} from "./fragments";
+
+
+export const GET_USERS = gql\`
+  \${USER_FIELDS}
+  query GetUsers {
+    users {
+      ...UserFields
+    }
+  }
+\`;
+
+
+export const GET_USER = gql\`
+  \${USER_BASIC}
+  query GetUser($id: ID!) {
+    user(id:$id) {
+      ...UserBasic
+    }
+  }
+\`;
+`}
+</pre>
+</div>
+
+
+
+{/* =========================================================
+    MUTATIONS
+========================================================= */}
+
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "14px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}
+>
+
+<h2
+  style={{
+    color: "#00ffcc",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+  🔥 graphql/mutations.js
+</h2>
+
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.6",
+    overflowX: "auto",
+    color: "#ccfff3",
+    fontSize: "14px",
+  }}
+>
+{`
+import { gql } from "@apollo/client";
+
+import {USER_FIELDS,} from "./fragments";
+
+
+export const ADD_USER = gql\`
+  \${USER_FIELDS}
+  mutation AddUser(
+    $name: String!
+    $age: Int!
+    $city: String!
+  ) {
+    addUser(
+      name:$name
+      age:$age
+      city:$city
+    ) {
+      ...UserFields
+    }
+  }
+
+\`;
+
+export const UPDATE_USER = gql\`
+  \${USER_FIELDS}
+  mutation UpdateUser(
+    $id: ID!
+    $city: String!
+  ) {
+    updateUser(
+      id:$id
+      city:$city
+    ) {
+      ...UserFields
+    }
+  }
+\`;
+`}
+</pre>
+</div>
+
+
+{/* =========================================================
+    GRAPHQL COMPONENT
+========================================================= */}
+
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "14px",
+    padding: "20px",
+    border: "1px solid #30363d",
+    gridColumn: "1 / span 2",
+  }}
+>
+
+<h2
+  style={{
+    color: "#ffffff",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+  ⚛️ components/GraphQLExample.jsx
+</h2>
+
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.7",
+    overflowX: "auto",
+    color: "#ffffff",
+    fontSize: "14px",
+  }}
+>
+{`
+import React, {useState,} from "react";
+import {useQuery,useMutation,} from "@apollo/client";
+import {GET_USERS,} from "../graphql/queries";
+
+import {ADD_USER, UPDATE_USER,} from "../graphql/mutations";
+
+const GraphQLExample = () => {
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [city, setCity] = useState("");
+
+
+  /* ======================================
+      FETCH USERS
+  ====================================== */
+
+  const {loading,error,data,} = useQuery(GET_USERS);
+
+
+  /* ======================================
+      MUTATIONS
+  ====================================== */
+
+  const [addUser] = useMutation(ADD_USER);
+
+  const [updateUser] = useMutation(UPDATE_USER);
+
+
+  /* ======================================
+      LOADING
+  ====================================== */
+
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
+
+  /* ======================================
+      ERROR
+  ====================================== */
+
+  if (error) {
+    return <h1>Error...</h1>;
+  }
+
+  /* ======================================
+      JSX UI
+  ====================================== */
+
+  return (
+    <div>
+      <h1>Users List</h1>
+      {/* ================================
+          DATA COMES FROM data.users
+          THROUGH useQuery
+      ================================= */}
+
+      {data.users.map((user) => (
+        <div key={user.id}>
+          {/* ============================
+              UI INJECTION
+          ============================ */}
+
+          <h2>{user.name}</h2>
+          <p>{user.age} </p>
+          <p> {user.city}</p>
+
+          {/* ============================
+              UPDATE USER
+          ============================ */}
+
+          <button onClick={() => updateUser({
+                variables: {
+                  id: user.id,
+                  city: "Mumbai",
+                },
+              })
+            }
+          >
+            Move Mumbai
+          </button>
+
+        </div>
+      ))}
+
+
+
+      {/* =================================
+          FORM INPUTS
+      ================================= */}
+
+      <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)}/>
+      <input type="number" placeholder="Age" value={age} onChange={(e) => setAge(e.target.value)}/>
+      <input type="text" placeholder="City" value={city} onChange={(e) => setCity(e.target.value)}/>
+
+      {/* =================================
+          SEND DATA TO BACKEND
+      ================================= */}
+
+      <button onClick={() =>addUser({
+            variables: {
+              name,
+              age: Number(age),
+              city,
+            },
+          })
+        }
+      >
+        Add User
+      </button>
+    </div>
+  );
+};
+
+export default GraphQLExample;
+`}
+</pre>
+</div>
+
+</div>
+
+
+
+{/* =========================================================
+    IMPORTANT NOTES
+========================================================= */}
+
+<h1
+  style={{
+    color: "#ffd166",
+    marginTop: "70px",
+    marginBottom: "25px",
+    textAlign: "left",
+  }}
+>
+  📚 IMPORTANT NOTES
+</h1>
+
+<pre
+  style={{
+    background: "#161b22",
+    padding: "24px",
+    borderRadius: "14px",
+    color: "#fff1c1",
+    lineHeight: "1.8",
+    fontSize: "15px",
+    overflowX: "auto",
+    textAlign: "left",
+  }}
+>
+{`
+=========================================
+APOLLO CLIENT
+=========================================
+Acts Like Global GraphQL Store
+Same Like Redux Provider
+<ApolloProvider client={client}>
+
+=========================================
+useQuery
+=========================================
+Automatically Fetches Data
+const {data} = useQuery(GET_USERS);
+
+=========================================
+useMutation
+=========================================
+Used To Send Data To Backend
+addUser({variables:{
+    name,
+    age,
+    city
+  }
+})
+
+=========================================
+FRAGMENTS
+=========================================
+Reusable GraphQL Fields
+fragment UserFields on User {
+  id
+  name
+  age
+}
+
+=========================================
+DATA FLOW
+=========================================
+Frontend
+   ↓
+Apollo Client
+   ↓
+GraphQL Query
+   ↓
+Resolver
+   ↓
+Database
+   ↓
+Response
+   ↓
+Apollo Cache
+   ↓
+UI Updates
+
+=========================================
+UI INJECTION
+=========================================
+{data.users.map((user)=>(
+  <h1>{user.name}</h1>
+))}
+
+=========================================
+GRAPHQL VARIABLES
+=========================================
+query GetUser($id: ID!)
+mutation AddUser(
+  $name: String!
+)
+`}
+</pre>
+
+</div>
       <ImageBanner/>
       <GraphQLNotes />
       <GraphQLArchitecture />
