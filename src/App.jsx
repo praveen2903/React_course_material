@@ -83,6 +83,7 @@ import DragBallWithHandlers from './arraycomponentsandRef/DragBallWithHandlers'
 import DragBallWithRef from './arraycomponentsandRef/DragBallWithRef'
 import Kubernetes from './mistakesInHooks/Kubernetes'
 import JwtTokens from './mistakesInHooks/JwtTokens'
+import ReactHookFormFullDemo from './mistakesInHooks/ReactHooksInterviewNotes.jsx'
 
 function App() {
 
@@ -106,6 +107,7 @@ function App() {
       <button onClick={() => setTabs("redux") }>Redux</button>
       <button onClick={() => setTabs('graphql')}>Graph QL</button>
       <button onClick={() => setTabs('typescript')}>TypeScript</button>
+      <button onClick={() => setTabs('react-hooks')}>React Hook Form</button>
       <button onClick={() => setTabs("advanced")}>Advanced</button>
       <button onClick={() => setTabs("modernInfiniteScroll")}>Modern Infinite scroll</button>
       <button onClick={() => setTabs("oldInfiniteScroll")}>old Infinite scroll</button>
@@ -125,6 +127,14 @@ function App() {
         <>
         <div>-------------------------------------------------------------------------------------------------------------------</div>
         <JwtTokens/>
+        </>
+      )
+    }
+    {
+      tabs==='react-hooks' && (
+        <>
+        <div>-------------------------------------------------------------------------------------------------------------------</div>
+        <ReactHookFormFullDemo/>
         </>
       )
     }
