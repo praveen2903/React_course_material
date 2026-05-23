@@ -7,6 +7,8 @@ const StarRatingFractions = () => {
 
 
     const calculateValue =(event, index) =>{
+
+        // generally you can store that event in ref by attaching ref to the dom by ref={(element)=> indexRef.current= element}
         const rect = event.currentTarget.getBoundingClientRect(); //give position of element in dom like one circle of index
 
         const widthOccupied= event.clientX- rect.left;  
@@ -48,6 +50,7 @@ const StarRatingFractions = () => {
 <pre>
 {`OnMouseMove -- calculate the targeted circle area and how much width occupied
 const calculateValue =(event, index) =>{
+// generally you can store that event in ref by attaching ref to the dom by ref={(element)=> indexRef.current= element}
     const rect = event.currentTarget.getBoundingClientRect();
     const widthOccupied= event.clientX- rect.left;  
     const percentOccupied= widthOccupied / rect.width;

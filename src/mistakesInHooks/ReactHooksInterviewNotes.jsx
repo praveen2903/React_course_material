@@ -1,4 +1,3 @@
-import React from "react";
 import {
   useForm,
   Controller,
@@ -203,6 +202,38 @@ function ReactHookFormFullDemo() {
         useFieldArray, multi select,
         schema validation and live form state
       </p>
+      <p>React hook form -- useful when the form input doesn't cause any rerenders and onSubmit only the form submits and navigate
+        and also it helps to add the error schema using zodResolver
+      </p>
+      <code>
+        <pre>
+          {
+            `
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(userSchema),
+
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      age: "",
+      gender: null,
+      technologies: [],
+      skills: [
+        { value: "" },
+      ],
+    },
+  });`
+          }
+        </pre>
+      </code>
       <div style={gridStyle}>
         {/* =========================================================
            FORM SECTION
