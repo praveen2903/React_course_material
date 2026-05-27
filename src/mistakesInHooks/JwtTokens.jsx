@@ -687,6 +687,396 @@ app.use(cors({
         </pre>
       </section>
 </div>
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(2,1fr)",
+    gap: "20px",
+    marginTop: "30px",
+  }}
+>
+
+  {/* =====================================================
+      LEFT SIDE
+  ===================================================== */}
+
+  <section style={styles.section}>
+
+    <h2 style={styles.subTitle}>
+      ⚡ Backend Redis Cache API Flow
+    </h2>
+
+    <pre style={styles.code}>
+{`
+Client Request
+      ↓
+GET /products
+      ↓
+Check Redis Cache
+
+redis.get("products")
+
+      ↓
+
+Cache HIT ?
+   YES
+      ↓
+Return Cached Data
+
+   NO
+      ↓
+Fetch From PostgreSQL
+      ↓
+Store Data In Redis
+      ↓
+Return Response
+
+
+
+WHY CACHE?
+
+PostgreSQL
+   ↓
+Disk Read
+   ↓
+Slower
+
+Redis
+   ↓
+RAM Memory
+   ↓
+Super Fast
+
+
+
+CACHE INVALIDATION
+
+CREATE PRODUCT
+UPDATE PRODUCT
+DELETE PRODUCT
+
+      ↓
+
+Delete Old Cache
+
+redis.del("products")
+
+      ↓
+
+Next API Call
+Gets Fresh Data
+`}
+    </pre>
+
+  </section>
+
+
+
+  {/* =====================================================
+      RIGHT SIDE
+  ===================================================== */}
+
+  <section style={styles.section}>
+
+    <h2 style={styles.subTitle}>
+      🧠 Express + Redis Cache API
+    </h2>
+
+    <pre style={styles.code}>
+{`
+app.get("/products", async (req, res) => {
+
+    try {
+      const cachedProducts = await redis.get("products");
+
+      // =====================================
+      // CACHE HIT
+      // =====================================
+
+      if (cachedProducts) {
+        console.log( "⚡ Data from Redis Cache");
+        return res.json(JSON.parse(cachedProducts));
+      }
+
+      // =====================================
+      // CACHE MISS
+      // =====================================
+      console.log("🐘 Data from PostgreSQL");
+
+      const result = await pool.query("SELECT * FROM products");
+
+
+      // =====================================
+      // STORE IN REDIS
+      // EX = Expire Time
+      // 300 seconds = 5 mins
+      // =====================================
+
+      await redis.set("products",
+        JSON.stringify(result.rows),
+        "EX",
+        300
+      );
+
+      // =====================================
+      // SEND RESPONSE
+      // =====================================
+
+      return res.json(result.rows);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({message: "Server Error"});
+    }
+  }
+);`}
+    </pre>
+  </section>
+</div>
+
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(2,1fr)",
+    gap: "20px",
+    marginTop: "30px",
+  }}
+>
+
+  {/* =====================================================
+      LEFT SIDE
+  ===================================================== */}
+
+  <section style={styles.section}>
+
+    <h2 style={styles.subTitle}>
+      ⚡ Redis Cache Keys Explained
+    </h2>
+
+    <pre style={styles.code}>
+{`
+REDIS STORES DATA
+IN KEY → VALUE FORMAT
+
+
+
+EXAMPLES
+
+"products"
+      ↓
+All Products List
+
+
+
+"product:1"
+      ↓
+Single Product With ID 1
+
+
+
+"product:25"
+      ↓
+Single Product With ID 25
+
+
+
+"user:10"
+      ↓
+Single User Data
+
+
+
+=====================================
+
+WHY "products" KEY?
+
+await redis.set(
+  "products",
+  JSON.stringify(data)
+)
+
+This means:
+
+KEY   = "products"
+
+VALUE = all products array
+
+
+
+=====================================
+
+WHERE DOES CACHE STORE?
+
+Inside Redis RAM Memory
+
+NOT PostgreSQL
+
+
+
+=====================================
+
+FLOW
+
+Client Request
+      ↓
+GET /products
+      ↓
+redis.get("products")
+
+If exists
+   ↓
+Return cached products
+
+If not exists
+   ↓
+Fetch PostgreSQL data
+   ↓
+redis.set("products",data)
+   ↓
+Save into Redis memory
+   ↓
+Return response
+
+
+
+=====================================
+
+CACHE EXPIRE
+
+"EX", 300
+
+Means:
+
+Delete cache after 300 seconds
+(5 minutes)
+
+
+
+=====================================
+
+CACHE INVALIDATION
+
+CREATE PRODUCT
+UPDATE PRODUCT
+DELETE PRODUCT
+
+      ↓
+
+redis.del("products")
+
+Old cache removed
+
+Next request gets fresh DB data
+`}
+    </pre>
+
+  </section>
+
+
+
+  {/* =====================================================
+      RIGHT SIDE
+  ===================================================== */}
+
+  <section style={styles.section}>
+
+    <h2 style={styles.subTitle}>
+      🧠 Cache All Products + Single Product
+    </h2>
+
+    <pre style={styles.code}>
+{`// ============================================
+// GET ALL PRODUCTS
+// CACHE KEY = "products"
+// ============================================
+app.get( "/products", async (req, res) => {
+    // CHECK CACHE
+    const cachedProducts = await redis.get("products");
+
+    // CACHE HIT
+
+    if (cachedProducts) {
+      console.log("⚡ Products From Cache");
+      return res.json(JSON.parse(cachedProducts));
+    }
+
+    // CACHE MISS
+
+    const result = await pool.query("SELECT * FROM products");
+
+    // STORE CACHE
+    await redis.set(
+      "products",
+      JSON.stringify(result.rows),
+      "EX",
+      300
+    );
+    return res.json(result.rows);
+  }
+);
+
+// ============================================
+// GET SINGLE PRODUCT
+// CACHE KEY = product:id
+// EXAMPLE = product:5
+// ============================================
+
+app.get("/products/:id", async (req, res) => {
+    const { id } = req.params;
+
+    //dynamic cache key
+    const cacheKey = \`product:\${id}\`;
+
+    const cachedProduct = await redis.get(cacheKey);
+
+    // CACHE HIT
+    if (cachedProduct) {
+      console.log("⚡ Single Product From Cache");
+      return res.json(JSON.parse(cachedProduct));
+    }
+
+    // CACHE MISS
+
+    const result = await pool.query("SELECT * FROM products WHERE id=$1",[id]);
+
+    const product = result.rows[0];
+    // STORE SINGLE PRODUCT
+
+    await redis.set(
+      cacheKey,
+      JSON.stringify(product),
+      "EX",
+      300
+    );
+    return res.json(product);
+
+  }
+);
+
+// ============================================
+// UPDATE PRODUCT
+// CLEAR OLD CACHE
+// ============================================
+app.put("/products/:id" ,async (req, res) => {
+    const { id } = req.params;
+    // UPDATE DATABASE
+
+    await pool.query("UPDATE products SET name=$1 WHERE id=$2", ["Iphone", id]);
+
+    // DELETE CACHE
+
+    await redis.del("products");
+
+    await redis.del(\`product:\${id}\`);
+
+    return res.json({success: true,});
+  }
+);
+`}
+    </pre>
+
+  </section>
+
+</div>
 
       {/* ================================================= */}
       {/* REDIS FLOW */}
