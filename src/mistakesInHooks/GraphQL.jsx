@@ -221,7 +221,7 @@ export default function GraphQLDemoApp() {
   style={{
     background: "#161b22",
     padding: "24px",
-    borderRadius: "14px",
+    borderRadius: "12px",
     color: "#00ff90",
     lineHeight: "1.8",
     fontSize: "15px",
@@ -276,7 +276,7 @@ Updated UI Shown
   style={{
     background: "#161b22",
     padding: "24px",
-    borderRadius: "14px",
+    borderRadius: "12px",
     color: "#d6f6ff",
     lineHeight: "1.7",
     fontSize: "15px",
@@ -326,7 +326,7 @@ FULLSTACK-GRAPHQL
 </div>
 </div>
 
-<h1
+<h2
   style={{
     color: "#00ff90",
     borderBottom: "3px solid #00ff90",
@@ -336,140 +336,384 @@ FULLSTACK-GRAPHQL
   }}
 >
   🖥️ BACKEND / SERVER
-</h1>
+</h2>
 
 
+
+<div style={{display:'grid', gridTemplateColumns: 'repeat(3, 1fr)'}}>
+  <div
+    style={{
+      background: "#161b22",
+      borderRadius: "12px",
+      padding: "20px",
+      border: "1px solid #30363d",
+    }}
+  >
+
+  <h2
+    style={{
+      color: "#00ff90",
+      marginBottom: "18px",
+      textAlign: "left",
+    }}
+  >
+    📦 Request format incoming
+  </h2>
+
+  <pre
+    style={{
+      margin: 0,
+      textAlign: "left",
+      lineHeight: "1.6",
+      overflowX: "auto",
+      color: "#d2ffd2",
+      fontSize: "12px",
+    }}
+  >
+  {` How the request is read from frontend
+  --based on which we write typeDef schemas
+
+  // GET ALL USERS
+{
+  "query": "
+    query {
+      users {
+        id
+        name
+        age
+        city
+      }
+    }
+  "
+}
+
+// GET SINGLE USER
+{
+  "query": "
+    query GetUser($id: ID!) {
+      user(id: $id) {
+        id
+        name
+        age
+        city
+      }
+    }
+  ",
+  "variables": {
+    "id": "1"
+  }
+}
+
+// GET USERS BY CITY
+{
+  "query": "
+    query UsersByCity($city: String!) {
+      usersByCity(city: $city) {
+        id
+        name
+        city
+      }
+    }
+  ",
+  "variables": {
+    "city": "Chennai"
+  }
+}
+
+// POST → ADD USER
+{
+  "query": "
+    mutation AddUser(
+      $name: String!,
+      $age: Int!,
+      $city: String!
+    ) {
+      addUser(
+        name: $name,
+        age: $age,
+        city: $city
+      ) {
+        id
+        name
+        age
+        city
+      }
+    }
+  ",
+  "variables": {
+    "name": "Rahul",
+    "age": 25,
+    "city": "Bangalore"
+  }
+}
+
+// PUT → UPDATE USER
+{
+  "query": "
+    mutation UpdateUser(
+      $id: ID!,
+      $city: String!
+    ) {
+      updateUser(
+        id: $id,
+        city: $city
+      ) {
+        id
+        name
+        city
+      }
+    }
+  ",
+  "variables": {
+    "id": "1",
+    "city": "Mumbai"
+  }
+}
+
+
+// DELETE USER
+{
+  "query": "
+    mutation DeleteUser($id: ID!) {
+      deleteUser(id: $id)
+    }
+  ",
+  "variables": {
+    "id": "2"
+  }
+}
+
+--input means send success or failure not data
+{
+  "query": "
+    mutation Register(
+      $input: RegisterInput!
+    ) {
+      register(input: $input) {
+        success
+        message
+      }
+    }
+  ",
+
+  "variables": {
+    "input": {
+      "username": "Sai",
+      "email": "sai@gmail.com",
+      "password": "123456"
+    }
+  }
+}`}
+  </pre>
+  </div>
+
+  <div
+    style={{
+      background: "#161b22",
+      borderRadius: "12px",
+      padding: "20px",
+      border: "1px solid #30363d",
+    }}
+  >
+
+  <h2
+    style={{
+      color: "#00d9ff",
+      marginBottom: "18px",
+      textAlign: "left",
+    }}
+  >
+    🧠 schema/typeDefs.js -- read the request and arrange and provide to resolver
+  </h2>
+    <div>
+      <pre
+    style={{
+      margin: 0,
+      textAlign: "left",
+      lineHeight: "1.6",
+      overflowX: "auto",
+      color: "#d6f6ff",
+      fontSize: "12px",
+    }}
+  >
+  {`import { gql } from 'graphql-tag'
+
+  export const typeDefs = gql\`
+  --get uses query - all users
+
+    type User {
+      id: ID!
+      name: String!
+      age: Int!
+      city: String!
+    }
+
+    --both get by city and Id in single typedef schema
+    type Query {
+      users: [User]
+      user(id: ID!): User
+      usersByCity(
+        city: String!
+      ): [User]
+    
+
+  post/put/delete uses mutation
+    type Mutation {
+  --> post call
+      addUser(
+        name: String!
+        age: Int!
+        city: String!
+      ): User
+
+  -->put call
+      updateUser(
+        id: ID!
+        city: String!
+      ): User
+
+  -->delete call
+      deleteUser(
+        id: ID!
+      ): String
+    }
+
+  \`;
+  `}
+  </pre>
+    </div>
+  </div>
+  <div   style={{
+    background: "#161b22",
+    borderRadius: "12px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}>
+    <pre
+    style={{
+      margin: 0,
+      textAlign: "left",
+      lineHeight: "1.6",
+      overflowX: "auto",
+      color: "#d6f6ff",
+      fontSize: "12px",
+    }}
+>
+{`import { gql } from 'graphql-tag'
+
+export const typeDefs = gql\`
+  enum UserRole {
+    user
+    admin
+  }
+  type User {
+    id: Int!
+    username: String!
+    email: String!
+    role: UserRole!
+    created_at: String
+  }
+  type Product {
+    id: Int!
+    name: String!
+    description: String
+    price: Float!
+    category: String
+    created_by: Int
+    created_by_username: String
+    created_at: String
+    updated_at: String
+  }
+
+  type AuthResponse {
+    success: Boolean!
+    message: String!
+    accessToken: String
+    refreshToken: String
+    user: User
+  }
+
+  type ProductsResponse {
+    success: Boolean!
+    source: String!
+    products: [Product!]!
+  }
+
+  type ProductResponse {
+    success: Boolean!
+    message: String
+    source: String
+    product: Product
+  }
+
+  type SuccessResponse {
+    success: Boolean!
+    message: String!
+  }
+
+  -- type - describes output/response data  
+  ( can be added to other to send to frontend)
+
+  --input - describes input/request data
+(only to the post mutation no giving back any data)
+
+  input RegisterInput {
+    username: String!
+    email: String!
+    password: String!
+  }
+
+  input LoginInput {
+    email: String!
+    password: String!
+  }
+
+  input RefreshInput {
+    refreshToken: String!
+  }
+
+  input ProductInput {
+    name: String!
+    description: String
+    price: Float!
+    category: String
+  }
+
+  input ProductUpdateInput {
+    name: String
+    description: String
+    price: Float
+    category: String
+  }
+
+  type Query {
+    me: AuthResponse!
+    products: ProductsResponse!
+    product(id: Int!): ProductResponse!
+  }
+
+  type Mutation {
+    login(input: LoginInput!): AuthResponse!
+    register(input: RegisterInput!): AuthResponse!
+    refresh(input: RefreshInput!): AuthResponse!
+    logout(refreshToken: String!): SuccessResponse!
+
+    createProduct(input: ProductInput!): ProductResponse!
+    updateProduct(id: Int!, input: ProductUpdateInput!): ProductResponse!
+    deleteProduct(id: Int!): ProductResponse!
+  }
+`}
+</pre>
+  </div>
+</div>
 
 <div style={{display: "grid",gridTemplateColumns: "repeat(2,minmax(0,1fr))",gap: "24px",alignItems: "stretch", }}>
 
 <div
   style={{
     background: "#161b22",
-    borderRadius: "14px",
-    padding: "20px",
-    border: "1px solid #30363d",
-  }}
->
-
-<h2
-  style={{
-    color: "#00ff90",
-    marginBottom: "18px",
-    textAlign: "left",
-  }}
->
-  📦 data/users.js
-</h2>
-
-<pre
-  style={{
-    margin: 0,
-    textAlign: "left",
-    lineHeight: "1.6",
-    overflowX: "auto",
-    color: "#d2ffd2",
-    fontSize: "14px",
-  }}
->
-{`
-export let users = [
-  {
-     id: "1",
-    name: "Sai",
-    age: 22,
-    city: "Hyderabad",
-  },
-  {
-    id: "2",
-    name: "Praveen",
-    age: 23,
-    city: "Chennai",
-  },
-];
-`}
-</pre>
-</div>
-
-<div
-  style={{
-    background: "#161b22",
-    borderRadius: "14px",
-    padding: "20px",
-    border: "1px solid #30363d",
-  }}
->
-
-<h2
-  style={{
-    color: "#00d9ff",
-    marginBottom: "18px",
-    textAlign: "left",
-  }}
->
-  🧠 schema/typeDefs.js
-</h2>
-
-<pre
-  style={{
-    margin: 0,
-    textAlign: "left",
-    lineHeight: "1.6",
-    overflowX: "auto",
-    color: "#d6f6ff",
-    fontSize: "14px",
-  }}
->
-{`import { gql } from 'graphql-tag'
-
-export const typeDefs = gql\`
---get uses query - all users and single user too based on id
-
-  type User {
-    id: ID!
-    name: String!
-    age: Int!
-    city: String!
-  }
-
-  type Query {
-    users: [User]
-    user(id: ID!): User
-    usersByCity(
-      city: String!
-    ): [User]
-  }
-
-post/put/delete uses mutation
-  type Mutation {
-  post call
-    addUser(
-      name: String!
-      age: Int!
-      city: String!
-    ): User
-
-put call
-    updateUser(
-      id: ID!
-      city: String!
-    ): User
-
-delete call
-    deleteUser(
-      id: ID!
-    ): String
-  }
-
-\`;
-`}
-</pre>
-</div>
-
-<div
-  style={{
-    background: "#161b22",
-    borderRadius: "14px",
-    padding: "20px",
+    borderRadius: "12px",
+    padding: ",0px",
     border: "1px solid #30363d",
   }}
 >
@@ -481,7 +725,7 @@ delete call
     textAlign: "left",
   }}
 >
-  ⚡ resolvers/queryResolvers.js
+  ⚡ resolvers/queryResolvers.js --sample json
 </h2>
 
 <pre
@@ -491,7 +735,7 @@ delete call
     lineHeight: "1.6",
     overflowX: "auto",
     color: "#fff1c1",
-    fontSize: "14px",
+    fontSize: "12px",
   }}
 >
 {`
@@ -518,7 +762,7 @@ export const queryResolvers = {
 <div
   style={{
     background: "#161b22",
-    borderRadius: "14px",
+    borderRadius: "12px",
     padding: "20px",
     border: "1px solid #30363d",
   }}
@@ -531,7 +775,7 @@ export const queryResolvers = {
     textAlign: "left",
   }}
 >
-  🔥 resolvers/mutationResolvers.js
+  🔥 resolvers/mutationResolvers.js --like seperate or not 
 </h2>
 
 <pre
@@ -541,7 +785,7 @@ export const queryResolvers = {
     lineHeight: "1.6",
     overflowX: "auto",
     color: "#ffd6e0",
-    fontSize: "14px",
+    fontSize: "12px",
   }}
 >
 {`
@@ -579,24 +823,433 @@ export const mutationResolvers = {
 </pre>
 </div>
 
+
 <div
   style={{
     background: "#161b22",
-    borderRadius: "14px",
+    borderRadius: "12px",
     padding: "20px",
     border: "1px solid #30363d",
   }}
 >
 
-<h2
+<h3
+  style={{
+    color: "#ff8fab",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+   Pool.js -- like repo layer manage database and caching
+</h3>
+
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.6",
+    overflowX: "auto",
+    color: "#ffd6e0",
+    fontSize: "12px",
+  }}
+>
+{`
+const { Pool } = require("pg");
+require("dotenv").config();
+
+// ============================================
+// PostgreSQL Pool Connection
+// ============================================
+
+export const pool = new Pool({
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+});
+
+pool.on("connect", () => {
+  console.log("✅ Connected to PostgreSQL");
+});
+
+pool.on("error", (err) => {
+  console.error(
+    "❌ PostgreSQL Error:",
+    err.message
+  );
+});
+
+============================================
+ Initialize Database Tables
+============================================
+export const initDB = async () => {
+  try {
+
+    await pool.query('
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(50) UNIQUE NOT NULL,
+        email VARCHAR(100) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        role VARCHAR(10) DEFAULT 'user'
+        CHECK (
+          role IN ('user', 'admin')
+        ),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    ');
+
+    console.log("✅ users table ready");
+
+    await pool.query('
+      CREATE TABLE IF NOT EXISTS products (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        description TEXT,
+        price DECIMAL(10,2) NOT NULL,
+        category VARCHAR(50),
+        created_by INTEGER REFERENCES users(id)
+        ON DELETE SET NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    ');
+
+    console.log("✅ products table ready");
+    await pool.query('
+      CREATE TABLE IF NOT EXISTS refresh_tokens (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        token TEXT NOT NULL,
+        expires_at TIMESTAMP NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    ');
+    console.log("✅ refresh_tokens table ready");
+  } catch (err) {
+    console.error("❌ Database init error:",err.message);
+    throw err;
+  }
+};
+
+`}
+</pre>
+</div>
+
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "12px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}
+>
+
+<h3
+  style={{
+    color: "#ff8fab",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+   Resolvers.js -- talk to db
+</h3>
+
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.6",
+    overflowX: "auto",
+    color: "#ffd6e0",
+    fontSize: "12px",
+  }}
+>
+{`import bcrypt from "bcryptjs";
+
+import {findUserByEmail, findUserById, createUser,
+} from "../models/userModel.js";
+
+import { getAllProducts, getProductById, getProductsByCategory,
+  createProduct,updateProduct,deleteProduct,
+} from "../models/productModel.js";
+
+export const resolvers = {
+  // ====================================
+  // GET REQUESTS
+  // ====================================
+  Query: {
+
+    me: async (_, __, ctx) => {
+      const user = await findUserById(ctx.user.id);
+      return {success: true,user,};
+    },
+
+    products: async () => {
+      const products = await getAllProducts();
+      return {success: true,products,};
+    },
+
+    product: async (_,{ id }) => {
+      const product =await getProductById(id);
+      return {success: true,product,};
+    },
+
+    productsByCategory: async (_,{ category }) => {
+        const products = await getProductsByCategory(category);
+        return {success: true,products,};
+      },
+  },
+
+  // ====================================
+  // POST / PUT / DELETE
+  // ====================================
+
+  Mutation: {
+    // ==================================
+    // REGISTER
+    // ==================================
+
+    register: async (_,{ input }) => {
+      const hashedPassword = await bcrypt.hash(input.password, 10);
+      const user = await createUser(input.username, input.email, hashedPassword);
+      return { success: true, user,};
+    },
+
+    // ==================================
+    // LOGIN
+    // ==================================
+
+    login: async ( _,{ input } ) => {
+      const user =await findUserByEmail(input.email);
+      return {success: true,user,};
+    },
+
+    // ==================================
+    // POST
+    // ==================================
+
+    createProduct: async (_,{ input }) => {
+      const product = await createProduct(input.name, input.price,input.category);
+      return {success: true,product,};
+    },
+
+    // ==================================
+    // PUT
+    // ==================================
+
+    updateProduct: async ( _, { id, input }) => {
+      const product = await updateProduct(id,input.name,input.price);
+      return {success: true,product,};
+    },
+
+    // ==================================
+    // DELETE
+    // ==================================
+
+    deleteProduct: async (_,{ id }) => {
+      await deleteProduct(id);
+      return {success: true,message: "Deleted successfully",};
+    },
+  },
+};`}
+</pre>
+</div>
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "12px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}
+>
+
+<h3
+  style={{
+    color: "#ff8fab",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+   UserModal.js -- give queries to resolver
+</h3>
+
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.6",
+    overflowX: "auto",
+    color: "#ffd6e0",
+    fontSize: "12px",
+  }}
+>
+{`import { pool } from "../config/pool.js";
+
+export const findUserByEmail = async (email) => {
+  const result = await pool.query(
+    'SELECT * FROM users WHERE email=$1',[email]
+  );
+  return result.rows[0];
+};
+
+export const findUserById = async (id) => {
+  const result = await pool.query(
+    'SELECT id,username,email,role
+     FROM users WHERE id=$1', [id]
+  );
+  return result.rows[0];
+
+
+export const createUser = async(username,email,password) => {
+  const result = await pool.query(
+  ' INSERT INTO users(username,email,password)
+    VALUES($1,$2,$3) RETURNING *',
+    [username, email, password,]
+  );
+  return result.rows[0];
+};`}
+</pre>
+</div>
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "12px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}
+>
+
+<h3
+  style={{
+    color: "#ff8fab",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+   ProductModal.js -- give queries to resolver
+</h3>
+
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.6",
+    overflowX: "auto",
+    color: "#ffd6e0",
+    fontSize: "12px",
+  }}
+>
+{`import { pool } from "../config/pool.js";
+
+export const getAllProducts = async () => {
+    const result = await pool.query(\`SELECT * FROM products\`);
+    return result.rows;
+  };
+
+export const getProductById = async (id) => {
+    const result= await pool.query(\` SELECT * FROM products WHERE id=$1\`,[id]);
+    return result.rows[0];
+  };
+
+export const getProductsByCategory = async (category) => {
+    const result = await pool.query(
+        \`SELECT * FROM products WHERE category=$1\`,[category]
+      );
+    return result.rows;
+  };
+
+export const createProduct =async ( name,price, category) => {
+    const result = await pool.query(
+        \`INSERT INTO products( name,price, category) VALUES($1,$2,$3) RETURNING *\`,
+        [name, price,category,]
+      );
+    return result.rows[0];
+  };
+
+
+export const updateProduct =async (id,name,price) => {
+    const result = await pool.query(
+        \`UPDATE products SET name=$1, price=$2 WHERE id=$3 RETURNING *\`,
+        [name,price,id,]
+      );
+    return result.rows[0];
+  };
+
+export const deleteProduct = async (id) => {
+    const result = await pool.query(
+        \`DELETE FROM productsWHERE id=$1 RETURNING *\`, [id]
+      );
+    return result.rows[0];
+  };`}
+</pre>
+</div>
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "12px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}
+>
+
+<h3
+  style={{
+    color: "#ff8fab",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+   Tokenmodal -- store JWT refresh token in the db
+</h3>
+
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.6",
+    overflowX: "auto",
+    color: "#ffd6e0",
+    fontSize: "12px",
+  }}
+>
+{`import { pool } from "../config/pool.js";
+
+export const saveRefreshToken = async (userId,token,expiresAt) => {
+    await pool.query(\`INSERT INTO refresh_tokens(user_id,token,expires_at)
+      VALUES($1,$2,$3)\`,
+      [userId,token,expiresAt,]
+    );
+  };
+
+export const deleteRefreshToken = async (token) => {
+    await pool.query(
+      \`DELETE FROM refresh_tokens WHERE token=$1\`, [token]
+    );
+  };`}
+</pre>
+</div>
+
+
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "12px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}
+>
+
+<h4
   style={{
     color: "#00ffcc",
     marginBottom: "18px",
     textAlign: "left",
   }}
 >
-  🧩 resolvers/index.js
-</h2>
+  🧩 resolvers/index.js -- if query and mutation written seperately
+</h4>
 
 <pre
   style={{
@@ -605,13 +1258,12 @@ export const mutationResolvers = {
     lineHeight: "1.6",
     overflowX: "auto",
     color: "#ccfff3",
-    fontSize: "14px",
+    fontSize: "12px",
   }}
 >
 {`
 import { queryResolvers } from "./queryResolvers.js";
 import { mutationResolvers } from "./mutationResolvers.js";
-
 export const resolvers = {
   Query: queryResolvers,
   Mutation: mutationResolvers,
@@ -620,16 +1272,10 @@ export const resolvers = {
 </pre>
 </div>
 
-
-
-{/* =========================================================
-    SERVER
-========================================================= */}
-
 <div
   style={{
-    background: "#161b22",
-    borderRadius: "14px",
+    background: "#161b12",
+    borderRadius: "12px",
     padding: "20px",
     border: "1px solid #30363d",
   }}
@@ -652,7 +1298,7 @@ export const resolvers = {
     lineHeight: "1.6",
     overflowX: "auto",
     color: "#ffffff",
-    fontSize: "14px",
+    fontSize: "12px",
   }}
 >
 {`
@@ -664,9 +1310,34 @@ import { typeDefs } from "./schema/typeDefs.js";
 import { resolvers } from "./resolvers/index.js";
 
 const app = express();
-const corsOptions = 
+// ============================================
+// server.js
+// ============================================
 
-const server = new ApolloServer({
+import express from "express";
+import cors from "cors";
+const app = express();
+
+// ============================================
+// CORS
+// ============================================
+
+app.use(cors({// frontend url
+    origin:"http://localhost:5173",
+    // cookies / auth headers
+    credentials: true,
+    // allowed methods
+    methods: ["GET","POST","PUT","DELETE",],
+    // allowed headers
+    allowedHeaders: ["Content-Type", "Authorization",],
+  })
+);
+
+// ============================================
+// BODY PARSER
+// ============================================
+app.use(express.json());
+const server = new ApolloServer({  -- read and assign to schema and resolver map
   typeDefs,
   resolvers,
 });
@@ -688,70 +1359,6 @@ startServer();
 </div>
 
 </div>
-
-
-<h1
-  style={{
-    color: "#ffd166",
-    marginTop: "60px",
-    marginBottom: "25px",
-    textAlign: "left",
-  }}
->
-  📮 DEMO GRAPHQL REQUESTS-- frontend to backend
-</h1>
-
-<pre
-  style={{
-    background: "#161b22",
-    padding: "24px",
-    borderRadius: "14px",
-    color: "#fff1c1",
-    lineHeight: "1.7",
-    fontSize: "14px",
-    overflowX: "auto",
-    textAlign: "left",
-  }}
->
-{`
-query {
-  users {
-    id
-    name
-    city
-  }
-}
-
-query {
-  user(id:"1") {
-    id
-    name
-  }
-}
-
-mutation {
-  addUser(
-    name:"Rohit"
-    age:25
-    city:"Delhi"
-  ) {
-    id
-    name
-  }
-}
-
-
-mutation {
-  updateUser(
-    id:"1"
-    city:"Mumbai"
-  ) {
-    id
-    city
-  }
-}
-`}
-</pre>
 
 
 
@@ -790,13 +1397,13 @@ mutation {
 <div
   style={{
     background: "#161b22",
-    borderRadius: "14px",
+    borderRadius: "12px",
     padding: "20px",
     border: "1px solid #30363d",
   }}
 >
 
-<h2
+<hf
   style={{
     color: "#00ff90",
     marginBottom: "18px",
@@ -804,7 +1411,7 @@ mutation {
   }}
 >
   🌍 main.jsx -- like index.js for global scope where redux also present
-</h2>
+</hf>
 
 <pre
   style={{
@@ -813,7 +1420,7 @@ mutation {
     lineHeight: "1.6",
     overflowX: "auto",
     color: "#d2ffd2",
-    fontSize: "14px",
+    fontSize: "12px",
   }}
 >
 {`
@@ -824,12 +1431,14 @@ import {ApolloClient,InMemoryCache,ApolloProvider, ApolloLink} from "@apollo/cli
 
 --graphql handles single httplink 
 --HttpLink-- sends graphQL request to backend, fetch and handles http communication
+
 const httpLink = new HttpLink({
   uri: "http://localhost:4000/graphql",
 });
 
 -- ApolloLink used to attach the jwt token along the request as bearer where backend could verify the jwt token
 --also handles logrequest, websockets, headers
+
 const authLink = new ApolloLink((operation, forward) => {
   operation.setContext({
     headers: {
@@ -842,7 +1451,8 @@ const authLink = new ApolloLink((operation, forward) => {
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
--- InMemoryCache()-- frontend cache avoid unnecessary api calls for get, share data b/w components
+
+  -- InMemoryCache()-- frontend cache avoid unnecessary api calls for get, share data b/w components
   cache: new InMemoryCache(),
 });
 
@@ -867,13 +1477,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 <div
   style={{
     background: "#161b22",
-    borderRadius: "14px",
+    borderRadius: "12px",
     padding: "20px",
     border: "1px solid #30363d",
   }}
 >
 
-<h2
+<div
   style={{
     color: "#00d9ff",
     marginBottom: "18px",
@@ -881,7 +1491,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   }}
 >
   ⚛️ App.jsx
-</h2>
+</div>
 
 <pre
   style={{
@@ -890,7 +1500,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     lineHeight: "1.6",
     overflowX: "auto",
     color: "#d6f6ff",
-    fontSize: "14px",
+    fontSize: "12px",
   }}
 >
 {`
@@ -904,6 +1514,145 @@ function App() {
   );
 }
 export default App;
+
+
+-------------------------------------------------------------------------------
+Sample -- graphql whole at once like types and sending graphql link to backend
+--------------------------------------------------------------------------------
+import { gql } from "@apollo/client";
+import {useQuery,useMutation} from "@apollo/client/react";
+
+const GET_PRODUCTS = gql\`
+  query {
+    products {
+      products {
+        id
+        name
+        price
+      }
+    }
+  }
+\`;
+
+const CREATE_PRODUCT = gql\`
+  mutation (
+    $input: ProductInput!
+  ) {
+    createProduct(
+      input: $input
+    ) {
+      product {
+        id
+        name
+      }
+    }
+  }
+\`;
+
+const UPDATE_PRODUCT = gql\`
+  mutation (
+    $id: Int!,
+    $input: ProductUpdateInput!
+  ) {
+    updateProduct(
+      id: $id,
+      input: $input
+    ) {
+      product {
+        id,
+        name,
+        price
+      }
+    }
+  }
+\`;
+
+const DELETE_PRODUCT = gql\`
+  mutation (
+    $id: Int!
+  ) {
+
+    deleteProduct(
+      id: $id
+    ) {
+      success
+      message
+    }
+  }
+\`;
+
+function App() {
+-- useMutation & UseQuery to httplink and to backend
+
+  const {data, loading, error,} = useQuery(GET_PRODUCTS);
+  const [createProduct] = useMutation(CREATE_PRODUCT);
+  const [updateProduct] = useMutation(UPDATE_PRODUCT);
+  const [deleteProduct] = useMutation(DELETE_PRODUCT);
+
+  const handleCreate =async () => {
+      const response =
+        await createProduct({
+          variables: {
+            input: {
+              name: "iPhone",
+              price: 99999,
+              category: "Mobiles",
+            },
+          },
+        });
+    };
+
+  const handleUpdate = async () => {
+      const response = await updateProduct({
+          variables: {
+            id: 1,
+            input: {
+              name: "Samsung S25",
+              price: 85000,
+            },
+          },
+        });
+    };
+
+  const handleDelete = async () => {
+      const response = await deleteProduct({
+          variables: {
+            id: 1,
+          },
+        });
+    };
+
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
+  if (error) {
+    return <h1>Error...</h1>;
+  }
+
+  return (
+    <div>
+      <h1>GraphQL CRUD</h1>
+      {data?.products?.products?.map((item) => (
+          <div key={item.id}>
+            <h3>{item.name}</h3>
+            <p>₹{item.price}</p>
+          </div>
+        ))
+      }
+
+      --post
+      <button onClick={handleCreate}>Create Product</button>
+
+      -- put
+      <button onClick={handleUpdate}> Update Product</button>
+
+      --delete
+      <button onClick={handleDelete}>Delete Product</button>
+    </div>
+  );
+}
+
+export default App;
 `}
 </pre>
 </div>
@@ -911,7 +1660,7 @@ export default App;
 <div
   style={{
     background: "#161b22",
-    borderRadius: "14px",
+    borderRadius: "12px",
     padding: "20px",
     border: "1px solid #30363d",
   }}
@@ -934,7 +1683,7 @@ export default App;
     lineHeight: "1.6",
     overflowX: "auto",
     color: "#fff1c1",
-    fontSize: "14px",
+    fontSize: "12px",
   }}
 >
 {`
@@ -964,7 +1713,7 @@ export const USER_BASIC = gql\`
 <div
   style={{
     background: "#161b22",
-    borderRadius: "14px",
+    borderRadius: "12px",
     padding: "20px",
     border: "1px solid #30363d",
   }}
@@ -987,7 +1736,7 @@ export const USER_BASIC = gql\`
     lineHeight: "1.6",
     overflowX: "auto",
     color: "#ffd6e0",
-    fontSize: "14px",
+    fontSize: "12px",
   }}
 >
 {`
@@ -1027,7 +1776,7 @@ export const GET_USER = gql\`
 <div
   style={{
     background: "#161b22",
-    borderRadius: "14px",
+    borderRadius: "12px",
     padding: "20px",
     border: "1px solid #30363d",
   }}
@@ -1050,7 +1799,7 @@ export const GET_USER = gql\`
     lineHeight: "1.6",
     overflowX: "auto",
     color: "#ccfff3",
-    fontSize: "14px",
+    fontSize: "12px",
   }}
 >
 {`
@@ -1093,6 +1842,184 @@ export const UPDATE_USER = gql\`
 \`;
 `}
 </pre>
+
+</div>
+
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "12px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}
+>
+
+<h4
+  style={{
+    color: "#00ffcc",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+graphql/schemaFrontend.js-- whole query, mutation and fragments
+</h4>
+
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.6",
+    overflowX: "auto",
+    color: "#ccfff3",
+    fontSize: "12px",
+  }}
+>
+{`import { gql } from "@apollo/client";
+
+// Use fragments to keep queries/selection sets tidy.
+export const USER_FIELDS = gql\`
+  fragment UserFields on User {
+    id
+    username
+    email
+    role
+    created_at
+  }
+\`;
+
+export const PRODUCT_FIELDS = gql\`
+  fragment ProductFields on Product {
+    id
+    name
+    description
+    price
+    category
+    created_by
+    created_by_username
+    created_at
+    updated_at
+  }
+\`;
+
+export const LOGIN_MUTATION = gql\`
+  \${USER_FIELDS}
+  mutation Login($input: LoginInput!) {
+    login(input: $input) {
+      success
+      message
+      accessToken
+      refreshToken
+      user {
+        ...UserFields
+      }
+    }
+  }
+\`;
+
+export const REGISTER_MUTATION = gql\`
+  \${USER_FIELDS}
+  mutation Register($input: RegisterInput!) {
+    register(input: $input) {
+      success
+      message
+      accessToken
+      refreshToken
+      user {
+        ...UserFields
+      }
+    }
+  }
+\`;
+
+export const REFRESH_MUTATION = gql\`
+  \${USER_FIELDS}
+  mutation Refresh($input: RefreshInput!) {
+    refresh(input: $input) {
+      success
+      message
+      accessToken
+      refreshToken
+      user {
+        ...UserFields
+      }
+    }
+  }
+\`;
+
+export const LOGOUT_MUTATION = gql\`
+  mutation Logout($refreshToken: String!) {
+    logout(refreshToken: $refreshToken) {
+      success
+      message
+    }
+  }
+\`;
+
+export const ME_QUERY = gql\`
+  \${USER_FIELDS}
+  query Me {
+    me {
+      success
+      message
+      user {
+        ...UserFields
+      }
+    }
+  }
+\`;
+
+export const PRODUCTS_QUERY = gql\`
+  \${PRODUCT_FIELDS}
+  query Products {
+    products {
+      success
+      source
+      products {
+        ...ProductFields
+      }
+    }
+  }
+\`;
+
+export const CREATE_PRODUCT_MUTATION = gql\`
+  \${PRODUCT_FIELDS}
+  mutation CreateProduct($input: ProductInput!) {
+    createProduct(input: $input) {
+      success
+      message
+      product {
+        ...ProductFields
+      }
+    }
+  }
+\`;
+
+export const UPDATE_PRODUCT_MUTATION = gql\`
+  \${PRODUCT_FIELDS}
+  mutation UpdateProduct($id: Int!, $input: ProductUpdateInput!) {
+    updateProduct(id: $id, input: $input) {
+      success
+      message
+      product {
+        ...ProductFields
+      }
+    }
+  }
+\`;
+
+export const DELETE_PRODUCT_MUTATION = gql\`
+  mutation DeleteProduct($id: Int!) {
+    deleteProduct(id: $id) {
+      success
+      message
+      product {
+        id
+      }
+    }
+  }
+\`;`}
+</pre>
+
 </div>
 
 
@@ -1103,7 +2030,7 @@ export const UPDATE_USER = gql\`
 <div
   style={{
     background: "#161b22",
-    borderRadius: "14px",
+    borderRadius: "12px",
     padding: "20px",
     border: "1px solid #30363d",
     gridColumn: "1 / span 2",
@@ -1127,14 +2054,12 @@ export const UPDATE_USER = gql\`
     lineHeight: "1.7",
     overflowX: "auto",
     color: "#ffffff",
-    fontSize: "14px",
+    fontSize: "12px",
   }}
 >
-{`
-import React, {useState,} from "react";
+{`import React, {useState,} from "react";
 import {useQuery,useMutation,} from "@apollo/client";
 import {GET_USERS,} from "../graphql/queries";
-
 import {ADD_USER, UPDATE_USER,} from "../graphql/mutations";
 
 const GraphQLExample = () => {
@@ -1142,43 +2067,16 @@ const GraphQLExample = () => {
   const [age, setAge] = useState("");
   const [city, setCity] = useState("");
 
-
-  /* ======================================
-      FETCH USERS
-  ====================================== */
-
   const {loading,error,data,} = useQuery(GET_USERS);
-
-
-  /* ======================================
-      MUTATIONS
-  ====================================== */
-
   const [addUser] = useMutation(ADD_USER);
-
   const [updateUser] = useMutation(UPDATE_USER);
-
-
-  /* ======================================
-      LOADING
-  ====================================== */
 
   if (loading) {
     return <h1>Loading...</h1>;
   }
-
-  /* ======================================
-      ERROR
-  ====================================== */
-
   if (error) {
     return <h1>Error...</h1>;
   }
-
-  /* ======================================
-      JSX UI
-  ====================================== */
-
   return (
     <div>
       <h1>Users List</h1>
@@ -1189,17 +2087,9 @@ const GraphQLExample = () => {
 
       {data.users.map((user) => (
         <div key={user.id}>
-          {/* ============================
-              UI INJECTION
-          ============================ */}
-
           <h2>{user.name}</h2>
           <p>{user.age} </p>
           <p> {user.city}</p>
-
-          {/* ============================
-              UPDATE USER
-          ============================ */}
 
           <button onClick={() => updateUser({
                 variables: {
@@ -1211,23 +2101,12 @@ const GraphQLExample = () => {
           >
             Move Mumbai
           </button>
-
         </div>
       ))}
-
-
-
-      {/* =================================
-          FORM INPUTS
-      ================================= */}
 
       <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)}/>
       <input type="number" placeholder="Age" value={age} onChange={(e) => setAge(e.target.value)}/>
       <input type="text" placeholder="City" value={city} onChange={(e) => setCity(e.target.value)}/>
-
-      {/* =================================
-          SEND DATA TO BACKEND
-      ================================= */}
 
       <button onClick={() =>addUser({
             variables: {
@@ -1251,13 +2130,9 @@ export default GraphQLExample;
 
 </div>
 
-
-
-{/* =========================================================
-    IMPORTANT NOTES
-========================================================= */}
-
-<h1
+<div style ={{display:'grid', gridTemplateColumns:'repeat(2, 1fr'}}>
+  <div>
+    <h1
   style={{
     color: "#ffd166",
     marginTop: "70px",
@@ -1268,88 +2143,110 @@ export default GraphQLExample;
   📚 IMPORTANT NOTES
 </h1>
 
-<pre
+    <pre
+      style={{
+        background: "#161b22",
+        padding: "24px",
+        borderRadius: "12px",
+        color: "#fff1c1",
+        lineHeight: "1.8",
+        fontSize: "15px",
+        overflowX: "auto",
+        textAlign: "left",
+      }}
+    >
+    {`Acts Like Global GraphQL Store
+    Same Like Redux Provider
+    <ApolloProvider client={client}>
+
+    Automatically Fetches Data
+    const {data} = useQuery(GET_USERS);
+
+    Used To Send Data To Backend
+    addUser({variables:{
+        name,
+        age,
+        city
+      }
+    })
+
+    Reusable GraphQL Fields
+    fragment UserFields on User {
+      id
+      name
+      age
+    }
+
+    Frontend
+      ↓
+    Apollo Client
+      ↓
+    GraphQL Query
+      ↓
+    Resolver
+      ↓
+    Database
+      ↓
+    Response
+      ↓
+    Apollo Cache
+      ↓
+    UI Updates
+    {data.users.map((user)=>(
+      <h1>{user.name}</h1>
+    ))}
+
+    query GetUser($id: ID!)
+    mutation AddUser(
+      $name: String!
+    )
+    `}
+    </pre>
+  </div>
+  <div>
+    <h3
   style={{
-    background: "#161b22",
-    padding: "24px",
-    borderRadius: "14px",
-    color: "#fff1c1",
-    lineHeight: "1.8",
-    fontSize: "15px",
-    overflowX: "auto",
+    color: "#ffd166",
+    marginTop: "70px",
+    marginBottom: "25px",
     textAlign: "left",
   }}
 >
-{`
-=========================================
-APOLLO CLIENT
-=========================================
-Acts Like Global GraphQL Store
-Same Like Redux Provider
-<ApolloProvider client={client}>
+AuthLink is used to attach the JWT/other secret token to the httpLink
+</h3>
 
-=========================================
-useQuery
-=========================================
-Automatically Fetches Data
-const {data} = useQuery(GET_USERS);
-
-=========================================
-useMutation
-=========================================
-Used To Send Data To Backend
-addUser({variables:{
-    name,
-    age,
-    city
+    <pre
+      style={{
+        background: "#161b22",
+        padding: "24px",
+        borderRadius: "12px",
+        color: "#fff1c1",
+        lineHeight: "1.8",
+        fontSize: "15px",
+        overflowX: "auto",
+        textAlign: "left",
+      }}
+    >
+    {`import {ApolloClient,InMemoryCache,HttpLink,ApolloLink,} from "@apollo/client";
+const httpLink = new HttpLink({uri:"http://localhost:4000/graphql",});
+const authLink =new ApolloLink((operation, forward) => {
+    const token = localStorage.getItem("token");
+    operation.setContext({
+      headers: {
+        Authorization: token ? \`Bearer \${token}\`: "",
+      },
+    });
+    return forward(operation);
   }
-})
+);
 
-=========================================
-FRAGMENTS
-=========================================
-Reusable GraphQL Fields
-fragment UserFields on User {
-  id
-  name
-  age
-}
-
-=========================================
-DATA FLOW
-=========================================
-Frontend
-   ↓
-Apollo Client
-   ↓
-GraphQL Query
-   ↓
-Resolver
-   ↓
-Database
-   ↓
-Response
-   ↓
-Apollo Cache
-   ↓
-UI Updates
-
-=========================================
-UI INJECTION
-=========================================
-{data.users.map((user)=>(
-  <h1>{user.name}</h1>
-))}
-
-=========================================
-GRAPHQL VARIABLES
-=========================================
-query GetUser($id: ID!)
-mutation AddUser(
-  $name: String!
-)
-`}
-</pre>
+const client = new ApolloClient({
+    link: authLink.concat( httpLink) (or) from[httpLink, authLink],
+    cache: new InMemoryCache(),
+  });`}
+    </pre>
+  </div>
+</div>
 
 </div>
       <ImageBanner/>
@@ -2665,7 +3562,7 @@ const styles = {
   card: {
     padding: "25px",
     marginBottom: "30px",
-    borderRadius: "14px",
+    borderRadius: "12px",
     background: "#ffffff",
     boxShadow:
       "0 4px 12px rgba(0,0,0,0.08)",
