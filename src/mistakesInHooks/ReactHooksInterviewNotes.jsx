@@ -205,10 +205,64 @@ function ReactHookFormFullDemo() {
       <p>React hook form -- useful when the form input doesn't cause any rerenders and onSubmit only the form submits and navigate
         and also it helps to add the error schema using zodResolver
       </p>
-      <code>
-        <pre>
-          {
-            `
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns:
+      "1fr 1fr",
+    gap: "24px",
+    marginTop: "30px",
+    alignItems: "stretch",
+  }}
+>
+
+  {/* =====================================================
+      LEFT SIDE
+  ===================================================== */}
+
+  <div
+    style={{
+      background: "#f8fafc",
+      padding: "24px",
+      borderRadius: "16px",
+      borderLeft:
+        "6px solid #2563eb",
+    }}
+  >
+    <pre
+      style={{
+        background: "#111827",
+        color: "#38bdf8",
+        padding: "18px",
+        borderRadius: "12px",
+        marginTop: "20px",
+        lineHeight: "1.8",
+        overflowX: "auto",
+      }}
+    >
+{`import {
+  useForm,
+  Controller,
+  useFieldArray,
+} from "react-hook-form";
+import Select from "react-select";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const genderOptions = [
+  { value: "male", label: "Male" },
+  { value: "female", label: "Female" },
+];
+const techOptions = [
+  { value: "react", label: "React" },
+  { value: "node", label: "Node JS" },
+  { value: "graphql", label: "GraphQL" },
+  { value: "redux", label: "Redux" },
+];
+
+function ReactHookFormFullDemo() {
+
+
   const {
     register,
     handleSubmit,
@@ -230,10 +284,195 @@ function ReactHookFormFullDemo() {
         { value: "" },
       ],
     },
-  });`
-          }
-        </pre>
-      </code>
+  });
+
+  const {fields,append,remove,} = useFieldArray({control,name: "skills",});
+
+  const onSubmit = (data) => {
+    console.log(data);
+    alert(JSON.stringify(data, null, 2));
+    reset();
+  };
+return (
+      <div style={gridStyle}>
+        <div style={cardStyle}>
+          <h2>
+            ✅ Registration Form
+          </h2>
+          <form onSubmit={handleSubmit(onSubmit)}>
+
+            <label>Name</label>
+
+            <input
+              {...register("name")}
+              placeholder="Enter name"
+            />
+
+            <p>{errors.name?.message}</p>
+            <label>Email</label>
+
+            <input
+              {...register("email")}
+              placeholder="Enter email"
+            />
+
+            <p> {errors.email?.message}</p>
+
+
+            <label>Password</label>
+
+            <input type="password"
+              {...register("password")}
+              placeholder="Enter password"
+            />
+
+            <p>{errors.password?.message}</p>
+
+            <label>Age</label>
+
+            <input type="number"
+              {...register("age")}
+              placeholder="Enter age"
+            />
+
+            <p>{errors.age?.message}</p>
+
+{/* =========================================================
+    CONTROLLER- 
+========================================================= */}
+
+            <label> Gender (Controller)</label>
+
+            <Controller
+              control={control}
+              name="gender"
+              render={({ field }) => (
+                <Select {...field}
+                  options={genderOptions}
+                  placeholder="Select Gender"
+                />
+              )}
+            />
+
+            <p style={errorStyle}>
+              {errors.gender?.message}
+            </p>
+
+
+
+            {/* =========================================================
+               MULTI SELECT
+            ========================================================= */}
+
+            <label style={labelStyle}>
+              Technologies (Multi Select)
+            </label>
+
+            <Controller control={control}
+              name="technologies"
+              render={({ field }) => (
+                <Select {...field} isMulti
+                  options={techOptions}
+                  placeholder="Select Technologies"
+                />
+              )}
+            />
+
+            <p>{errors.technologies?.message}</p>
+
+
+            <label style={labelStyle}>
+              Skills (useFieldArray)
+            </label>
+
+            {fields.map((field, index) => (
+                <div key={field.id}>
+                  <input placeholder="Enter Skill"
+                    {...register(\`skills.\${index}.value\`)}
+                  />
+
+                  <button type="button" onClick={() =>remove(index)}>
+                    Remove
+                  </button>
+
+                </div>
+              ))
+            }
+
+            <button type="button" onClick={() =>append({ value: "" })}>
+              Add Skill
+            </button>
+
+            <br />
+
+            <button type="submit">
+              Submit Form
+            </button>
+
+          </form>
+        </div>
+  )`}
+    </pre>
+
+  </div>
+
+
+
+  {/* =====================================================
+      RIGHT SIDE
+  ===================================================== */}
+
+  <pre
+    style={{
+      background: "#161b22",
+      padding: "24px",
+      borderRadius: "16px",
+      color: "#fff1c1",
+      lineHeight: "1.8",
+      fontSize: "15px",
+      overflowX: "auto",
+      textAlign: "left",
+      margin: 0,
+    }}
+  >
+{`/* =========================================================
+   ZOD SCHEMA
+========================================================= */
+
+import { z } from "zod";
+
+const userSchema = z.object({
+  name: z.string().min(3, "Minimum 3 characters"),
+  email: z.string().email("Invalid email"),
+  password: z.string().min(6, "Minimum 6 characters"),
+  age: z.coerce.number().min(18, "Must be 18+"),
+  gender: z.object({
+    value: z.string(),
+    label: z.string(),
+  }),
+  technologies: z.array(
+      z.object({
+        value: z.string(),
+        label: z.string(),
+      })
+    )
+    .min(1, "Select technologies"),
+
+  skills: z
+    .array(
+      z.object({
+        value: z
+          .string()
+          .min(2, "Skill too short"),
+      })
+    )
+    .min(1, "Add at least one skill"),
+});
+
+`}
+  </pre>
+
+</div>
       <div style={gridStyle}>
         {/* =========================================================
            FORM SECTION

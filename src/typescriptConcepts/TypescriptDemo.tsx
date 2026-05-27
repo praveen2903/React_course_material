@@ -1,31 +1,16 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
+import React, {useCallback,useEffect,useMemo,useReducer,useRef,useState} from "react";
 
 function TypeVsInterface() {
   return (
     <div style={styles.card}>
-
-      <h1>
-        🚀 Type vs Interface Complete Guide
-      </h1>
-
-      <p>
-        Both <b>type</b> and <b>interface</b>
-        are used to define data structures in TypeScript.
+      <h1>🚀 Type vs Interface Complete Guide</h1>
+      <p> Both <b>type</b> and <b>interface</b>
+      are used to define data structures in TypeScript.
       </p>
-
       <p>
         They look similar initially,
         but internally they are VERY different.
       </p>
-
-      {/* ===================================================== */}
 
       <h2>
         🔥 1. Basic Object Example
