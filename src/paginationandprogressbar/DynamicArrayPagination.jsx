@@ -36,6 +36,25 @@ import { useMemo, useState } from "react"
     //currentData = filterData.slicee(startPage, startPage+pagesize) --(start =0, slice till 5) like wise array [[0,4], [5,9]....]    
     return (
         <>
+        <code style={{textAlign:'left'}}>
+            <pre>
+        {`---How to filter & sort data in the pagination table
+
+const filterData= useMemo(()=>{
+    return data.filter((item)=>{
+        const matchSearch= item.name.toLowerCase().includes(search.toLowerCase());
+        const matchAge = filterAge ==="All"? true : Number(item.age)===Number(filterAge);
+        return matchSearch && matchAge;
+    })
+}, [data, filterAge, search])
+
+const sortData= ()=> filterData.sort((a,b)=> a.age-b.age);
+
+const totalPages = Math.ceil(filterData.length/ pageSize);
+const startPage= (pageNumber-1) * pageSize;                                 //0, 5,10 like wise
+const currentData = filterData.slice(startPage, startPage + pageSize);`}
+            </pre>
+            </code>
             <div>Dynamic Array and Pagination *** </div>
             <div style={{display:'flex', gap:'20px'}}>
                 <input type="text" value={search} onChange={(e)=> setSearch(e.target.value)}/>

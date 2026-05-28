@@ -84,6 +84,7 @@ import DragBallWithRef from './arraycomponentsandRef/DragBallWithRef'
 import Kubernetes from './mistakesInHooks/Kubernetes'
 import JwtTokens from './mistakesInHooks/JwtTokens'
 import ReactHookFormFullDemo from './mistakesInHooks/ReactHooksInterviewNotes.jsx'
+import RefTypes from './UseRefComponents/RefTypes'
 
 function App() {
 
@@ -359,6 +360,8 @@ function App() {
       {
         tabs==='useRefcomponents' && (
           <>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          <RefTypes/>
           <div>------------------------------------------------------------------------------------------------------------------</div>
           <StorePreviousValue/>
           <div>------------------------------------------------------------------------------------------------------------------</div>
