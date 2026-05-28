@@ -3,6 +3,615 @@ import React, {useCallback,useEffect,useMemo,useReducer,useRef,useState} from "r
 function TypeVsInterface() {
   return (
     <div style={styles.card}>
+      <Section id="js-vs-ts" title="JavaScript vs TypeScript">
+  <h3 style={styles.heading3}>
+    What is JavaScript?
+  </h3>
+
+  <p style={styles.text}>
+    JavaScript is a dynamic scripting language used to build web applications.
+  </p>
+
+  <pre style={styles.code}>
+{`function add(a, b) {
+  return a + b
+}
+console.log(add(10, 20))
+console.log(add("10", 20))`}
+  </pre>
+
+  <h3 style={styles.heading3}>
+    Problem in JavaScript
+  </h3>
+
+  <p style={styles.text}>
+    JavaScript does not check types before execution.
+  </p>
+
+  <pre style={styles.code}>
+{`console.log(add("10", 20))
+// Output:"1020"`}
+  </pre>
+
+  <div style={styles.warning}>
+    Unexpected bugs can happen at runtime.
+  </div>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    What is TypeScript?
+  </h3>
+
+  <p style={styles.text}>
+    TypeScript is JavaScript + static typing.
+  </p>
+
+  <pre style={styles.code}>
+{`function add:a: number, b: number): number {
+  return a + b
+}
+
+console.log(add(10, 20))
+console.log(add("10", 20))
+`}
+  </pre>
+
+  <div style={styles.error}>
+    TypeScript gives compile-time error before running.
+  </div>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    Why TypeScript is Powerful
+  </h3>
+
+  <ul style={styles.list}>
+    <li>Prevents runtime bugs</li>
+    <li>Better autocomplete</li>
+    <li>Safer refactoring</li>
+    <li>Better developer experience</li>
+    <li>Excellent for large projects</li>
+  </ul>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    JavaScript vs TypeScript Table
+  </h3>
+
+  <table style={styles.table}>
+    <thead>
+      <tr>
+        <th style={styles.th}>
+          Feature
+        </th>
+
+        <th style={styles.th}>
+          JavaScript
+        </th>
+
+        <th style={styles.th}>
+          TypeScript
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr>
+        <td style={styles.td}>
+          Typing
+        </td>
+
+        <td style={styles.td}>
+          Dynamic
+        </td>
+
+        <td style={styles.td}>
+          Static
+        </td>
+      </tr>
+
+      <tr>
+        <td style={styles.td}>
+          Error Checking
+        </td>
+
+        <td style={styles.td}>
+          Runtime
+        </td>
+
+        <td style={styles.td}>
+          Compile Time
+        </td>
+      </tr>
+
+      <tr>
+        <td style={styles.td}>
+          IDE Support
+        </td>
+
+        <td style={styles.td}>
+          Basic
+        </td>
+
+        <td style={styles.td}>
+          Excellent
+        </td>
+      </tr>
+
+      <tr>
+        <td style={styles.td}>
+          Learning Curve
+        </td>
+
+        <td style={styles.td}>
+          Easier
+        </td>
+
+        <td style={styles.td}>
+          Medium
+        </td>
+      </tr>
+
+      <tr>
+        <td style={styles.td}>
+          Best For
+        </td>
+
+        <td style={styles.td}>
+          Small Apps
+        </td>
+
+        <td style={styles.td}>
+          Medium/Large Apps
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    Real World Example
+  </h3>
+
+  <pre style={styles.code}>
+{`// JavaScript
+
+const user = {
+  name: "Sai"
+}
+console.log(
+  user.age.toFixed(2)
+)
+// Runtime crash
+`}
+  </pre>
+
+  <pre style={styles.code}>
+{`// TypeScript
+type User = {
+  name: string
+  age: number
+}
+const user: User = {
+  name: "Sai"
+}
+
+// Property 'age' missing
+`}
+  </pre>
+
+  <div style={styles.success}>
+    TypeScript catches bugs before deployment.
+  </div>
+
+</Section>
+
+{/* =========================================================
+    OPTIONAL CHAINING
+========================================================= */}
+
+<Section
+  id="optional-chaining"
+  title="Optional Chaining"
+>
+  <h3 style={styles.heading3}>
+    What is Optional Chaining?
+  </h3>
+
+  <p style={styles.text}>
+    Optional chaining safely accesses deeply nested values
+    without crashing if something is null or undefined.
+  </p>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    Problem Without Optional Chaining
+  </h3>
+
+  <pre style={styles.code}>
+{`const user = {
+  profile: null
+}
+console.log(user.profile.address.city)`}
+  </pre>
+
+  <div style={styles.error}>
+    Cannot read properties of null
+  </div>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    Solution
+  </h3>
+
+  <pre style={styles.code}>
+{`const user = {
+  profile: null
+}
+
+console.log(user.profile?.address?.city)`}
+  </pre>
+
+  <pre style={styles.code}>
+{`// Output: undefined`}
+  </pre>
+
+  <div style={styles.success}>
+    Instead of crashing,
+    it safely returns undefined.
+  </div>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    Internally Similar To
+  </h3>
+
+  <pre style={styles.code}>
+{`user.profile?.address
+// Similar to:
+user.profile === null || user.profile === undefined ? undefined : user.profile.address`}
+  </pre>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    Function Optional Chaining
+  </h3>
+
+  <pre style={styles.code}>
+{`const user = {
+  greet() {
+    console.log("Hello")
+  }
+}
+user.greet?.()
+`}
+  </pre>
+
+  <p style={styles.text}>
+    Prevents errors if function does not exist.
+  </p>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    Array Optional Chaining
+  </h3>
+
+  <pre style={styles.code}>
+{`const users = null
+console.log(users?.[0])
+`}
+  </pre>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    Real API Example
+  </h3>
+
+  <pre style={styles.code}>
+{`fetch("/api/user").then((res) => res.json()).then((data) => {
+    console.log(data?.user?.profile?.name)
+  })`}
+  </pre>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    Optional Chaining vs AND Operator
+  </h3>
+
+  <pre style={styles.code}>
+{`// Old approach
+user &&user.profile && user.profile.address
+
+// Modern approach
+user?.profile?.address
+`}
+  </pre>
+
+  <div style={styles.warning}>
+    Optional chaining makes nested access cleaner and safer.
+  </div>
+
+</Section>
+
+{/* =========================================================
+    GENERICS
+========================================================= */}
+
+<Section
+  id="generics-detailed"
+  title="Generics Detailed"
+>
+  <h3 style={styles.heading3}>
+    What are Generics?
+  </h3>
+
+  <p style={styles.text}>
+    Generics allow reusable and type-safe functions,
+    components, and utilities.
+  </p>
+
+  <p style={styles.text}>
+    Think of generics as placeholders for types.
+  </p>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    Problem Without Generics
+  </h3>
+
+  <pre style={styles.code}>
+{`function identity(value: any) {
+  return value
+}
+`}
+  </pre>
+
+  <div style={styles.warning}>
+    any removes all type safety.
+  </div>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    Generic Solution
+  </h3>
+
+  <pre style={styles.code}>
+{`function identity<T>(value: T): T {
+  return value
+}
+`}
+  </pre>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    Usage
+  </h3>
+
+  <pre style={styles.code}>
+{`identity<string>("Sai")
+identity<number>(100)
+identity<boolean>(true)
+`}
+  </pre>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    How Generic Flow Works
+  </h3>
+
+  <pre style={styles.code}>
+{`identity<string>("Hello")
+
+T -> string
+value -> string
+return -> string
+`}
+  </pre>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    Generic Arrays
+  </h3>
+
+  <pre style={styles.code}>
+{`function getFirst<T>(arr: T[]): T {
+  return arr[0]
+}
+`}
+  </pre>
+
+  <pre style={styles.code}>
+{`getFirst<number>([10, 20, 30])
+
+getFirst<string>(["a","b"])
+`}
+  </pre>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    Multiple Generics
+  </h3>
+
+  <pre style={styles.code}>
+{`function pair<K, V>(key: K,value: V) {
+  return {key,value}
+}
+`}
+  </pre>
+
+  <pre style={styles.code}>
+{`const result = pair<string,number>("age",25)`}
+  </pre>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    Generic Interfaces
+  </h3>
+
+  <pre style={styles.code}>
+{`interface ApiResponse<T> {
+  success: boolean
+  data: T
+}
+`}
+  </pre>
+
+  <pre style={styles.code}>
+{`interface User {
+  name: string
+  age: number
+}
+
+const response: ApiResponse<User> = {
+  success: true,
+  data: {
+    name: "Sai",
+    age: 25
+  }
+}
+`}
+  </pre>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    Generic React Example
+  </h3>
+
+  <pre style={styles.code}>
+{` Like for the event delegation lists this way you assign
+type ListProps<T> = {
+  items: T[]
+  render: (item: T) => React.ReactNode
+}
+
+function List<T>({items,render}: ListProps<T>) {
+  return (
+    <div>
+      {items.map(render)}
+    </div>
+  )
+}`}
+  </pre>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    Generic Constraints
+  </h3>
+
+  <pre style={styles.code}>
+{`function printLength<T extends {length:number}>(item:T
+) {
+ console.log(item.length)
+}`}
+  </pre>
+
+  <h3 style={styles.heading3}>
+    Valid Examples
+  </h3>
+
+  <pre style={styles.code}>
+{`printLength("hello")
+printLength([1,2,3])`}
+  </pre>
+
+  <h3 style={styles.heading3}>
+    Invalid Example
+  </h3>
+
+  <pre style={styles.code}>
+{`printLength(100)
+// Error:
+// number has no length
+`}
+  </pre>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    keyof with Generics
+  </h3>
+
+  <pre style={styles.code}>
+{`function getValue<T,K extends keyof T>(obj:T,key:K) {
+ return obj[key]
+}
+`}
+  </pre>
+
+  <pre style={styles.code}>
+{`const user = {
+  name:"Sai",
+  age:25
+}
+getValue(user, "name")`}
+  </pre>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    Real World Usage
+  </h3>
+
+  <ul style={styles.list}>
+    <li>React hooks</li>
+    <li>API responses</li>
+    <li>Reusable utilities</li>
+    <li>Redux</li>
+    <li>Axios responses</li>
+    <li>React Query</li>
+  </ul>
+
+  {/* ======================================== */}
+
+  <h3 style={styles.heading3}>
+    Interview Notes
+  </h3>
+
+  <ul style={styles.list}>
+    <li>
+      Generics preserve type safety
+    </li>
+
+    <li>
+      any removes type safety
+    </li>
+
+    <li>
+      extends adds constraints
+    </li>
+
+    <li>
+      keyof works great with generics
+    </li>
+
+    <li>
+      Generics are heavily used in React
+    </li>
+  </ul>
+
+</Section>
       <h1>🚀 Type vs Interface Complete Guide</h1>
       <p> Both <b>type</b> and <b>interface</b>
       are used to define data structures in TypeScript.

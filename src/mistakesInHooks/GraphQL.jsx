@@ -200,22 +200,483 @@ export default function GraphQLDemoApp() {
     fontFamily: "sans-serif",
   }}
 >
+<div style={styles.card}>
 
+  <h2 style={{color:'black'}}>🚀 GraphQL Resolver Naming + TypeDefs Flow and naming conventions (explains whole server code)</h2>
+  <br/>
+  <p style={{color:'black'}}>
+    In GraphQL,
+    <b> typeDefs </b>define the API structure,
+    while
+    <b> resolvers </b> provide the actual data.
+  </p>
+
+  {/* ====================================================== */}
+
+  <h2 style={{color:'black'}}>🔥 1. How GraphQL Works Internally</h2>
+
+  <pre style={styles.code}>
+{`Frontend Query
+      ↓
+GraphQL Schema (typeDefs)
+      ↓
+Resolver Executes
+      ↓
+Database/API Call
+      ↓
+Return Data
+      ↓
+GraphQL Sends Response`}
+  </pre>
+
+  {/* ====================================================== */}
+
+  <h2>🔥 2. Your typeDefs</h2>
+
+  <p>
+    typeDefs define:
+  </p>
+
+  <ul style={styles.list}>
+    <li>What queries exist</li>
+    <li>What mutations exist</li>
+    <li>What fields are available</li>
+    <li>What data types are returned</li>
+  </ul>
+
+  <pre style={styles.code}>
+{`type Query {
+  products: ProductsResponse
+  product(id: ID!): ProductResponse
+  productsByCategory(category: String!): ProductsResponse
+}`}
+  </pre>
+
+  <div style={styles.warning}>
+    This ONLY defines the structure.
+    No real data comes from here.
+  </div>
+
+  {/* ====================================================== */}
+
+  <h2>🔥 3. Resolver Provides Data</h2>
+
+  <pre style={styles.code}>
+{`const resolvers = {
+  Query: {
+    products: async () => {
+      const products = await getAllProducts();
+      return {success: true, products,};
+    },
+  },
+}`}
+  </pre>
+
+  <p>
+    Resolver runs actual logic.
+  </p>
+
+  {/* ====================================================== */}
+
+  <h2>🔥 4. How GraphQL Connects typeDefs + Resolver</h2>
+
+  <p>
+    GraphQL matches by:
+  </p>
+
+  <pre style={styles.code}>
+{`typeDefs field name
+        ↓
+resolver field name`}
+  </pre>
+
+  <h3>Example</h3>
+
+  <pre style={styles.code}>
+{`type Query {
+  products: ProductsResponse
+}`}
+  </pre>
+
+  <pre style={styles.code}>
+{`Query: {
+  products: async () => {
+    ...
+  }
+
+}`}
+  </pre>
+
+  <div style={styles.success}>
+    Both names MUST match.
+  </div>
+
+  {/* ====================================================== */}
+
+  <h2>🔥 5. Your Resolver Naming</h2>
+
+  <pre style={styles.code}>
+{`products, product, productsByCategory`}
+  </pre>
+
+  <p>
+    These names are GOOD because they are:
+  </p>
+
+  <ul style={styles.list}>
+    <li>Readable</li>
+    <li>Predictable</li>
+    <li>REST-like</li>
+    <li>Easy for frontend developers</li>
+  </ul>
+
+  {/* ====================================================== */}
+
+  <h2>🔥 6. Common Naming Conventions</h2>
+
+  <table style={styles.table}>
+    <thead>
+      <tr>
+        <th style={styles.th}>
+          Operation
+        </th>
+
+        <th style={styles.th}>
+          Convention
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr>
+        <td style={styles.td}>
+          Get all
+        </td>
+
+        <td style={styles.td}>
+          products
+        </td>
+      </tr>
+
+      <tr>
+        <td style={styles.td}>
+          Get one
+        </td>
+
+        <td style={styles.td}>
+          product
+        </td>
+      </tr>
+
+      <tr>
+        <td style={styles.td}>
+          Filter
+        </td>
+
+        <td style={styles.td}>
+          productsByCategory
+        </td>
+      </tr>
+
+      <tr>
+        <td style={styles.td}>
+          Create
+        </td>
+
+        <td style={styles.td}>
+          createProduct
+        </td>
+      </tr>
+
+      <tr>
+        <td style={styles.td}>
+          Update
+        </td>
+
+        <td style={styles.td}>
+          updateProduct
+        </td>
+      </tr>
+
+      <tr>
+        <td style={styles.td}>
+          Delete
+        </td>
+
+        <td style={styles.td}>
+          deleteProduct
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  {/* ====================================================== */}
+
+  <h2>🔥 7. Complete Flow Example</h2>
+
+  <h3>Frontend Request Query</h3>
+
+  <pre style={styles.code}>
+{`query {
+  products {
+    success
+    products {
+      id
+      title
+    }
+  }
+}`}
+  </pre>
+
+  {/* ====================================================== */}
+
+  <h3>GraphQL Looks Into typeDefs</h3>
+
+  <pre style={styles.code}>
+{`type Product {
+  id: Int
+  title: String
+}
+type ProductsResponse {
+  success: Boolean
+  products: [Product]
+}
+
+type Query {
+  products: ProductsResponse
+}`}
+  </pre>
+
+  <p>
+    GraphQL understands:
+  </p>
+  <ul style={styles.list}>
+    <li>A query called products exists</li>
+    <li>It returns ProductsResponse</li>
+  </ul>
+
+  {/* ====================================================== */}
+
+  <h3>Then Resolver Executes</h3>
+
+  <pre style={styles.code}>
+{`products: async () => {
+  const products = await getAllProducts();
+  return {success: true, products,};
+}`}
+  </pre>
+
+  {/* ====================================================== */}
+
+  <h3>Database Function Runs-- better to keep db execution out of resolver so use modals or other for this sql execution</h3>
+
+  <pre style={styles.code}>
+{`async function getAllProducts() {
+  return db.query("SELECT * FROM products");
+}`}
+  </pre>
+
+  {/* ====================================================== */}
+
+  <h3>Final Response Sent</h3>
+
+  <pre style={styles.code}>
+{`{
+  "data": {
+    "products": {
+      "success": true,
+      "products": [
+        {
+          "id": 1,
+          "title": "Laptop"
+        }
+      ]
+    }
+  }
+}`}
+  </pre>
+
+  {/* ====================================================== */}
+
+  <h2>🔥 8. Why Resolver Names Matter</h2>
+
+  <p>
+    Resolver names become your API.
+  </p>
+
+  <p>
+    Frontend developers directly use these names.
+  </p>
+
+  <pre style={styles.code}>
+{`query {
+  products
+  product
+  productsByCategory
+}`}
+  </pre>
+
+  <div style={styles.warning}>
+    Bad naming makes APIs confusing.
+  </div>
+
+  {/* ====================================================== */}
+
+  <h2>🔥 9. Query vs Mutation Naming</h2>
+
+  <table style={styles.table}>
+    <thead>
+      <tr>
+        <th style={styles.th}>
+          Query
+        </th>
+
+        <th style={styles.th}>
+          Mutation
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr>
+        <td style={styles.td}>
+          products
+        </td>
+
+        <td style={styles.td}>
+          createProduct
+        </td>
+      </tr>
+
+      <tr>
+        <td style={styles.td}>
+          product
+        </td>
+
+        <td style={styles.td}>
+          updateProduct
+        </td>
+      </tr>
+
+      <tr>
+        <td style={styles.td}>
+          users
+        </td>
+
+        <td style={styles.td}>
+          deleteUser
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  {/* ====================================================== */}
+
+  <h2>🔥 10. Important Internal Concept</h2>
+
+  <p>
+    GraphQL does NOT automatically fetch database data.
+  </p>
+
+  <p>
+    Resolvers are mandatory because they tell GraphQL:
+  </p>
+
+  <pre style={styles.code}>
+{`"HOW to get the data"`}
+  </pre>
+
+  <p>
+    typeDefs only tell GraphQL:
+  </p>
+
+  <pre style={styles.code}>
+{`"WHAT the data looks like"`}
+  </pre>
+
+  {/* ====================================================== */}
+
+  <h2>🔥 11. Simple Mental Model</h2>
+
+  <table style={styles.table}>
+    <thead>
+      <tr>
+        <th style={styles.th}>
+          Part
+        </th>
+
+        <th style={styles.th}>
+          Responsibility
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr>
+        <td style={styles.td}>
+          typeDefs
+        </td>
+
+        <td style={styles.td}>
+          API contract/schema
+        </td>
+      </tr>
+
+      <tr>
+        <td style={styles.td}>
+          Resolvers
+        </td>
+
+        <td style={styles.td}>
+          Business logic/data fetching
+        </td>
+      </tr>
+
+      <tr>
+        <td style={styles.td}>
+          Database
+        </td>
+
+        <td style={styles.td}>
+          Actual storage
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+
+
+  <h2>🔥 12. Golden Rule</h2>
+
+  <div style={styles.box}>
+    <pre style={styles.code}>
+{`typeDefs:Defines WHAT exists
+Resolvers: Defines HOW data is fetched
+Database: Stores actual data`}
+    </pre>
+  </div>
+
+</div>
 {/* =========================================================
     TITLE
 ========================================================= */}
 
 <div style={{display:'grid', gridTemplateColumns:'repeat(2, 1fr)'}}>
 <div>
-  <h1
+  <h3
   style={{
     textAlign: "center",
     fontSize: "42px",
     marginBottom: "40px",
   }}
 >
-  🚀 COMPLETE GRAPHQL FULL STACK FLOW
-</h1>
+  🚀 GraphQL flow -- from user request to user response
+</h3>
 
 <pre
   style={{
@@ -230,30 +691,40 @@ export default function GraphQLDemoApp() {
     textAlign: "left",
   }}
 >
-{`
-USER TYPES DATA IN UI
+{`USER TYPES DATA IN UI    
+(keep mutation and query types for sending the requests)
           ↓
-useState Stores Form Data
+useState Stores Form Data  
+(suppose here form sent as input in mutation if any other data useState stores in respective type)
           ↓
-useMutation Called
+useMutation Called         
+(for sending post/put/delete data)
           ↓
-Apollo Client Sends Request
+Apollo Client Sends Request 
+(through httpLink single url)
           ↓
-GraphQL Server Receives Query
+GraphQL Server Receives Query  
+(upon recieving query check query or mutation and validate with typeDef schemas)
           ↓
 typeDefs Validate Request
           ↓
-Mutation Resolver Runs
+Mutation Resolver Runs       
+(typeDef validation run resolvers where it uses pool/other db calling it is like repository layer)
           ↓
 Database / Array Updated
           ↓
-Resolver Returns Updated Data
+Resolver Returns Updated Data   
+(db returns the results neatly)
           ↓
-Apollo Cache Updates
+Apollo Cache Updates     
+(InMemoryCache for repeated requests we can have policies too)
           ↓
-useQuery Detects Changes
+useQuery Detects Changes 
+(this removes use of useEffect at fetching directly calls and gives states like data,loading,error)
           ↓
 React Component Re-renders
+(like useEffect, useQuery runs post the browers paints and rerenders and repaints the DOM) 
+(if no this effect use useLayoutEffect)
           ↓
 Updated UI Shown
 `}
@@ -292,19 +763,21 @@ FULLSTACK-GRAPHQL
 │   │
 │   ├── server.js
 │   │
-│   ├── data
-│   │   └── users.js
-│   │
-│   ├── schema
+│   ├── schema    (validate the incoming request and build resolvers for each type)
 │   │   └── typeDefs.js
 │   │
-│   ├── resolvers
+│   ├── resolvers      (better not having the sql queries in this so call modals which have queries)
 │   │   ├── queryResolvers.js
 │   │   ├── mutationResolvers.js
 │   │   └── index.js
 │   │
-│   └── demoRequests
-│       └── graphqlRequests.js
+│   |└── demoRequests
+│   |   └── graphqlRequests.js
+|   |
+|   |└──Modals           (provide methods with the sql query so the resolvers can be modularized)
+|       └──UserModals.js
+|       └──ProductModals.js
+|       └──AuthModals.js
 │
 └── frontend
     │
@@ -315,7 +788,7 @@ FULLSTACK-GRAPHQL
         ├── App.jsx
         │
         ├── graphql
-        │   ├── fragments.js
+        │   ├── fragments.js  (Repeated Fields can be given can be used in other queries/ mutations)
         │   ├── queries.js
         │   └── mutations.js
         │
@@ -338,8 +811,6 @@ FULLSTACK-GRAPHQL
   🖥️ BACKEND / SERVER
 </h2>
 
-
-
 <div style={{display:'grid', gridTemplateColumns: 'repeat(3, 1fr)'}}>
   <div
     style={{
@@ -357,7 +828,7 @@ FULLSTACK-GRAPHQL
       textAlign: "left",
     }}
   >
-    📦 Request format incoming
+    📦 Request format-- incoming frontend to backend
   </h2>
 
   <pre
@@ -372,33 +843,28 @@ FULLSTACK-GRAPHQL
   >
   {` How the request is read from frontend
   --based on which we write typeDef schemas
-
   // GET ALL USERS
 {
-  "query": "
-    query {
+  "query": "query {
       users {
         id
         name
         age
         city
       }
-    }
-  "
+    }"
 }
 
 // GET SINGLE USER
 {
-  "query": "
-    query GetUser($id: ID!) {
+  "query": "query GetUser($id: ID!) {
       user(id: $id) {
         id
         name
         age
         city
       }
-    }
-  ",
+    }",
   "variables": {
     "id": "1"
   }
@@ -406,15 +872,13 @@ FULLSTACK-GRAPHQL
 
 // GET USERS BY CITY
 {
-  "query": "
-    query UsersByCity($city: String!) {
+  "query": "query UsersByCity($city: String!) {
       usersByCity(city: $city) {
         id
         name
         city
       }
-    }
-  ",
+    }",
   "variables": {
     "city": "Chennai"
   }
@@ -422,8 +886,7 @@ FULLSTACK-GRAPHQL
 
 // POST → ADD USER
 {
-  "query": "
-    mutation AddUser(
+  "query": "mutation AddUser(
       $name: String!,
       $age: Int!,
       $city: String!
@@ -438,8 +901,7 @@ FULLSTACK-GRAPHQL
         age
         city
       }
-    }
-  ",
+    }",
   "variables": {
     "name": "Rahul",
     "age": 25,
@@ -449,8 +911,7 @@ FULLSTACK-GRAPHQL
 
 // PUT → UPDATE USER
 {
-  "query": "
-    mutation UpdateUser(
+  "query": "mutation UpdateUser(
       $id: ID!,
       $city: String!
     ) {
@@ -462,8 +923,7 @@ FULLSTACK-GRAPHQL
         name
         city
       }
-    }
-  ",
+    }",
   "variables": {
     "id": "1",
     "city": "Mumbai"
@@ -473,11 +933,9 @@ FULLSTACK-GRAPHQL
 
 // DELETE USER
 {
-  "query": "
-    mutation DeleteUser($id: ID!) {
+  "query": "mutation DeleteUser($id: ID!) {
       deleteUser(id: $id)
-    }
-  ",
+    }",
   "variables": {
     "id": "2"
   }
@@ -485,8 +943,7 @@ FULLSTACK-GRAPHQL
 
 --input means send success or failure not data
 {
-  "query": "
-    mutation Register(
+  "query": "mutation Register(
       $input: RegisterInput!
     ) {
       register(input: $input) {
@@ -507,82 +964,6 @@ FULLSTACK-GRAPHQL
   </pre>
   </div>
 
-  <div
-    style={{
-      background: "#161b22",
-      borderRadius: "12px",
-      padding: "20px",
-      border: "1px solid #30363d",
-    }}
-  >
-
-  <h2
-    style={{
-      color: "#00d9ff",
-      marginBottom: "18px",
-      textAlign: "left",
-    }}
-  >
-    🧠 schema/typeDefs.js -- read the request and arrange and provide to resolver
-  </h2>
-    <div>
-      <pre
-    style={{
-      margin: 0,
-      textAlign: "left",
-      lineHeight: "1.6",
-      overflowX: "auto",
-      color: "#d6f6ff",
-      fontSize: "12px",
-    }}
-  >
-  {`import { gql } from 'graphql-tag'
-
-  export const typeDefs = gql\`
-  --get uses query - all users
-
-    type User {
-      id: ID!
-      name: String!
-      age: Int!
-      city: String!
-    }
-
-    --both get by city and Id in single typedef schema
-    type Query {
-      users: [User]
-      user(id: ID!): User
-      usersByCity(
-        city: String!
-      ): [User]
-    
-
-  post/put/delete uses mutation
-    type Mutation {
-  --> post call
-      addUser(
-        name: String!
-        age: Int!
-        city: String!
-      ): User
-
-  -->put call
-      updateUser(
-        id: ID!
-        city: String!
-      ): User
-
-  -->delete call
-      deleteUser(
-        id: ID!
-      ): String
-    }
-
-  \`;
-  `}
-  </pre>
-    </div>
-  </div>
   <div   style={{
     background: "#161b22",
     borderRadius: "12px",
@@ -601,11 +982,26 @@ FULLSTACK-GRAPHQL
 >
 {`import { gql } from 'graphql-tag'
 
+--Just like TypeScript need to types to each in GraphQL typeDef Schemas
+
 export const typeDefs = gql\`
+===================================================
+  -- type - describes output/response data  
+  ( can be added to other to send to frontend)
+
+  --input - describes input/request data
+(only to the post mutation no giving back any data)
+
+
+-- !- non-null & Required, ?-optional 
+===================================================
+/* setting the types used to give response by query like DTOs */
+
   enum UserRole {
     user
     admin
   }
+
   type User {
     id: Int!
     username: String!
@@ -613,6 +1009,7 @@ export const typeDefs = gql\`
     role: UserRole!
     created_at: String
   }
+
   type Product {
     id: Int!
     name: String!
@@ -651,12 +1048,6 @@ export const typeDefs = gql\`
     message: String!
   }
 
-  -- type - describes output/response data  
-  ( can be added to other to send to frontend)
-
-  --input - describes input/request data
-(only to the post mutation no giving back any data)
-
   input RegisterInput {
     username: String!
     email: String!
@@ -686,18 +1077,24 @@ export const typeDefs = gql\`
     category: String
   }
 
+  /* request reading things done*/
+======================================================
+
+--> 3 get queries, me, products, productById
+
   type Query {
     me: AuthResponse!
     products: ProductsResponse!
     product(id: Int!): ProductResponse!
   }
 
+--> 7 mutation resolvers post,put and delete 
+
   type Mutation {
     login(input: LoginInput!): AuthResponse!
     register(input: RegisterInput!): AuthResponse!
     refresh(input: RefreshInput!): AuthResponse!
     logout(refreshToken: String!): SuccessResponse!
-
     createProduct(input: ProductInput!): ProductResponse!
     updateProduct(id: Int!, input: ProductUpdateInput!): ProductResponse!
     deleteProduct(id: Int!): ProductResponse!
@@ -705,10 +1102,192 @@ export const typeDefs = gql\`
 `}
 </pre>
   </div>
+  
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "12px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}
+>
+
+<h3
+  style={{
+    color: "#ff8fab",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+   Resolvers.js -- talk to db
+</h3>
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.6",
+    overflowX: "auto",
+    color: "#ffd6e0",
+    fontSize: "12px",
+  }}
+>
+{`import bcrypt from "bcryptjs";
+
+import {findUserByEmail, findUserById, createUser,} from "../models/userModel.js";
+
+import { getAllProducts, getProductById, getProductsByCategory,createProduct,
+updateProduct,deleteProduct,} from "../models/productModel.js";
+
+export const resolvers = {
+
+---> Query handles the get methods
+
+  Query: {
+
+  (Note:- ctx means context. initial Graphql server request
+  -- context preserved by default
+
+In GraphQL, context is a shared object passed to every resolver.
+It is mainly used for:
+Logged-in user data, JWT authentication, Database access, Redis
+DataLoaders, Request information)
+
+    me: async (_, __, ctx) => {
+      const user = await findUserById(ctx.user.id);
+      return {success: true,user,};
+    },
+
+    products: async () => {
+      const products = await getAllProducts();
+      return {success: true,products,};
+    },
+
+    product: async (_,{ id }) => {
+      const product =await getProductById(id);
+      return {success: true,product,};
+    },
+
+    productsByCategory: async (_,{ category }) => {
+        const products = await getProductsByCategory(category);
+        return {success: true,products,};
+      },
+  },
+
+===============
+
+  Mutation: {
+--> Register post query
+    register: async (_,{ input }) => {
+      const hashedPassword = await bcrypt.hash(input.password, 10);
+      const user = await createUser(input.username, input.email, hashedPassword);
+      return { success: true, user,};
+    },
+
+--> Login Post request adding refresh token if needed but login always post
+
+    login: async ( _,{ input } ) => {
+      const user =await findUserByEmail(input.email);
+      return {success: true,user,};
+    },
+
+--POST
+
+    createProduct: async (_,{ input }) => {
+      const product = await createProduct(input.name, input.price,input.category);
+      return {success: true,product,};
+    },
+
+--Put query
+
+    updateProduct: async ( _, { id, input }) => {
+      const product = await updateProduct(id,input.name,input.price);
+      return {success: true,product,};
+    },
+
+-->Delete
+
+    deleteProduct: async (_,{ id }) => {
+      await deleteProduct(id);
+      return {success: true,message: "Deleted successfully",};
+    },
+  },
+};`}
+</pre>
+</div>
 </div>
 
-<div style={{display: "grid",gridTemplateColumns: "repeat(2,minmax(0,1fr))",gap: "24px",alignItems: "stretch", }}>
+<div style={{display: "grid",gridTemplateColumns: "repeat(3,minmax(0,1fr))",gap: "24px",alignItems: "stretch", }}>
 
+  <div
+    style={{
+      background: "#161b22",
+      borderRadius: "12px",
+      padding: "20px",
+      border: "1px solid #30363d",
+    }}
+  >
+
+  <h2
+    style={{
+      color: "#00d9ff",
+      marginBottom: "18px",
+      textAlign: "left",
+    }}
+  >
+    🧠 schema/typeDefs.js -- read the request and arrange and provide to resolver-demo
+    Validate the incoming request using typedef schema
+  </h2>
+    <div>
+      <pre
+    style={{
+      margin: 0,
+      textAlign: "left",
+      lineHeight: "1.6",
+      overflowX: "auto",
+      color: "#d6f6ff",
+      fontSize: "12px",
+    }}
+  >
+  {`import { gql } from 'graphql-tag'
+
+--setting user type
+    type User {
+        id: ID!
+        name: String!
+        age: Int!
+        city: String!
+    }
+
+--for query resolver need to execute 3 users, userById, usersByCity
+    type Query {
+      users: [User]
+      user(id: ID!): User
+      usersByCity(
+        city: String!
+      ): [User]
+    
+-- 3 mutation resolver queries 
+    type Mutation {
+      addUser(
+        name: String!
+        age: Int!
+        city: String!
+      ): User
+      updateUser(
+        id: ID!
+        city: String!
+      ): User
+
+      deleteUser(
+        id: ID!
+      ): String
+    }
+
+  \`;
+  `}
+  </pre>
+    </div>
+  </div>
 <div
   style={{
     background: "#161b22",
@@ -738,36 +1317,20 @@ export const typeDefs = gql\`
     fontSize: "12px",
   }}
 >
-{`
-import { users } from "../data/users.js";
-
+{`import { users } from "../data/users.js";
 export const queryResolvers = {
   users: () => {
     return users;
   },
-
   user: (_, args) => {
     return users.find((user) => user.id === args.id);
   },
-
   usersByCity: (_, args) => {
     return users.filter((user) => user.city === args.city);
   },
 };
 `}
 </pre>
-</div>
-
-
-<div
-  style={{
-    background: "#161b22",
-    borderRadius: "12px",
-    padding: "20px",
-    border: "1px solid #30363d",
-  }}
->
-
 <h2
   style={{
     color: "#ff8fab",
@@ -788,10 +1351,7 @@ export const queryResolvers = {
     fontSize: "12px",
   }}
 >
-{`
-import { users } from "../data/users.js";
-
-
+{`import { users } from "../data/users.js";
 export const mutationResolvers = {
   addUser: (_, args) => {
     const newUser = {
@@ -800,11 +1360,9 @@ export const mutationResolvers = {
       age: args.age,
       city: args.city,
     };
-
     users.push(newUser);
     return newUser;
   },
-
 
   updateUser: (_, args) => {
     const user = users.find((u) => u.id === args.id);
@@ -815,7 +1373,9 @@ export const mutationResolvers = {
 
   deleteUser: (_, args) => {
     const index = users.findIndex((user) =>user.id === args.id);
-    users.splice(index, 1);   know splice right splice(startdeleteIndex, deleteItemsCount) -- includes the current index too
+    users.splice(index, 1);   
+    know splice right splice(startdeleteIndex, deleteItemsCount) 
+    -- includes the current index too
     return "User Deleted";
   },
 };
@@ -823,6 +1383,45 @@ export const mutationResolvers = {
 </pre>
 </div>
 
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "12px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}
+>
+
+<h4
+  style={{
+    color: "#00ffcc",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+  🧩 resolvers/index.js -- if query and mutation written seperately
+</h4>
+
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.6",
+    overflowX: "auto",
+    color: "#ccfff3",
+    fontSize: "12px",
+  }}
+>
+{`
+import { queryResolvers } from "./queryResolvers.js";
+import { mutationResolvers } from "./mutationResolvers.js";
+export const resolvers = {
+  Query: queryResolvers,
+  Mutation: mutationResolvers,
+};
+`}
+</pre>
+</div>
 
 <div
   style={{
@@ -937,125 +1536,6 @@ export const initDB = async () => {
 </pre>
 </div>
 
-<div
-  style={{
-    background: "#161b22",
-    borderRadius: "12px",
-    padding: "20px",
-    border: "1px solid #30363d",
-  }}
->
-
-<h3
-  style={{
-    color: "#ff8fab",
-    marginBottom: "18px",
-    textAlign: "left",
-  }}
->
-   Resolvers.js -- talk to db
-</h3>
-
-<pre
-  style={{
-    margin: 0,
-    textAlign: "left",
-    lineHeight: "1.6",
-    overflowX: "auto",
-    color: "#ffd6e0",
-    fontSize: "12px",
-  }}
->
-{`import bcrypt from "bcryptjs";
-
-import {findUserByEmail, findUserById, createUser,
-} from "../models/userModel.js";
-
-import { getAllProducts, getProductById, getProductsByCategory,
-  createProduct,updateProduct,deleteProduct,
-} from "../models/productModel.js";
-
-export const resolvers = {
-  // ====================================
-  // GET REQUESTS
-  // ====================================
-  Query: {
-
-    me: async (_, __, ctx) => {
-      const user = await findUserById(ctx.user.id);
-      return {success: true,user,};
-    },
-
-    products: async () => {
-      const products = await getAllProducts();
-      return {success: true,products,};
-    },
-
-    product: async (_,{ id }) => {
-      const product =await getProductById(id);
-      return {success: true,product,};
-    },
-
-    productsByCategory: async (_,{ category }) => {
-        const products = await getProductsByCategory(category);
-        return {success: true,products,};
-      },
-  },
-
-  // ====================================
-  // POST / PUT / DELETE
-  // ====================================
-
-  Mutation: {
-    // ==================================
-    // REGISTER
-    // ==================================
-
-    register: async (_,{ input }) => {
-      const hashedPassword = await bcrypt.hash(input.password, 10);
-      const user = await createUser(input.username, input.email, hashedPassword);
-      return { success: true, user,};
-    },
-
-    // ==================================
-    // LOGIN
-    // ==================================
-
-    login: async ( _,{ input } ) => {
-      const user =await findUserByEmail(input.email);
-      return {success: true,user,};
-    },
-
-    // ==================================
-    // POST
-    // ==================================
-
-    createProduct: async (_,{ input }) => {
-      const product = await createProduct(input.name, input.price,input.category);
-      return {success: true,product,};
-    },
-
-    // ==================================
-    // PUT
-    // ==================================
-
-    updateProduct: async ( _, { id, input }) => {
-      const product = await updateProduct(id,input.name,input.price);
-      return {success: true,product,};
-    },
-
-    // ==================================
-    // DELETE
-    // ==================================
-
-    deleteProduct: async (_,{ id }) => {
-      await deleteProduct(id);
-      return {success: true,message: "Deleted successfully",};
-    },
-  },
-};`}
-</pre>
-</div>
 <div
   style={{
     background: "#161b22",
@@ -1232,45 +1712,6 @@ export const deleteRefreshToken = async (token) => {
 </div>
 
 
-<div
-  style={{
-    background: "#161b22",
-    borderRadius: "12px",
-    padding: "20px",
-    border: "1px solid #30363d",
-  }}
->
-
-<h4
-  style={{
-    color: "#00ffcc",
-    marginBottom: "18px",
-    textAlign: "left",
-  }}
->
-  🧩 resolvers/index.js -- if query and mutation written seperately
-</h4>
-
-<pre
-  style={{
-    margin: 0,
-    textAlign: "left",
-    lineHeight: "1.6",
-    overflowX: "auto",
-    color: "#ccfff3",
-    fontSize: "12px",
-  }}
->
-{`
-import { queryResolvers } from "./queryResolvers.js";
-import { mutationResolvers } from "./mutationResolvers.js";
-export const resolvers = {
-  Query: queryResolvers,
-  Mutation: mutationResolvers,
-};
-`}
-</pre>
-</div>
 
 <div
   style={{
@@ -1366,7 +1807,7 @@ startServer();
     FRONTEND
 ========================================================= */}
 
-<h1
+<h2
   style={{
     color: "#00d9ff",
     borderBottom: "3px solid #00d9ff",
@@ -1377,15 +1818,12 @@ startServer();
   }}
 >
   🌍 FRONTEND / CLIENT
-</h1>
-
-
+</h2>
 
 <div
   style={{
     display: "grid",
-    gridTemplateColumns:
-      "repeat(2,minmax(0,1fr))",
+    gridTemplateColumns: "repeat(2,minmax(0,1fr))",
     gap: "24px",
   }}
 >
@@ -1427,44 +1865,121 @@ startServer();
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import {ApolloClient,InMemoryCache,ApolloProvider, ApolloLink} from "@apollo/client";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  ApolloLink,
+  HttpLink,
+} from "@apollo/client";
+import { Provider } from "react-redux";
+import { reduxStore } from "./redux/store";
 
---graphql handles single httplink 
---HttpLink-- sends graphQL request to backend, fetch and handles http communication
+=========================================================
+   HttpLink is responsible for:
+
+   - Sending GraphQL requests
+   - Handling HTTP communication
+   - Connecting frontend to backend GraphQL server
+
+   GraphQL usually works with a SINGLE endpoint:
+
+   http://localhost:4000/graphql
+
+========================================================= */
 
 const httpLink = new HttpLink({
   uri: "http://localhost:4000/graphql",
 });
 
--- ApolloLink used to attach the jwt token along the request as bearer where backend could verify the jwt token
---also handles logrequest, websockets, headers
+==================================================
+   ApolloLink is middleware for GraphQL requests.
 
+   Common Uses:
+   -------------
+   - Attach JWT token
+   - Add authorization headers
+   - Logging requests
+   - Error handling
+   - WebSocket handling
+   - Request modification
+
+========================================================= */
 const authLink = new ApolloLink((operation, forward) => {
-  operation.setContext({
-    headers: {
-      authorization: localStorage.getItem("token") || "",
-    },
-  });
+    /* =========================================
+       Read token from localStorage
+    ========================================= */
+    const token = localStorage.getItem("token");
 
-  return forward(operation);
-});
+    /* =========================================
+       Attach token to headers
+    ========================================= */
+    operation.setContext({
+      headers: {
+        authorization: token? \`Bearer \${token}\`: "",
+      },
+    });
+    /* =========================================
+       Continue request to next link
+    ========================================= */
+    return forward(operation);
+  }
+);
 
 const client = new ApolloClient({
+
+=========================================
+     authLink.concat(httpLink)
+     Flow:
+     ------
+     authLink
+        ↓
+     attach JWT token
+        ↓
+     httpLink
+        ↓
+     send request to backend
+  =========================================
   link: authLink.concat(httpLink),
 
-  -- InMemoryCache()-- frontend cache avoid unnecessary api calls for get, share data b/w components
+=======================================================
+     InMemoryCache
+=======================================================
+     Apollo frontend cache system.
+     Purpose:
+     --------
+     - Avoid unnecessary API calls
+     - Store GraphQL responses locally
+     - Share data between components
+     - Improve performance
+     - Faster UI rendering
+
+     Example:
+     --------
+
+     First Query
+         ↓
+     Fetches from backend
+         ↓
+     Stores in cache
+         ↓
+     Next Query
+         ↓
+     Uses cached data
+
+  ======================================================= */
   cache: new InMemoryCache(),
+
 });
-
-ReactDOM.createRoot(document.getElementById("root")).render(
-
+ReactDOM.createRoot(
+  document.getElementById("root")
+      ).render(
   <ApolloProvider client={client}>
-    <provider store={reduxStore}>
-          <App />  
-    </provider>
+    <Provider store={reduxStore}>
+      <App />
+    </Provider>
   </ApolloProvider>
-);
-`}
+);`}
 </pre>
 </div>
 
@@ -1509,7 +2024,6 @@ function App() {
   return (
     <div>
       <GraphQLExample />
-
     </div>
   );
 }
@@ -1517,7 +2031,7 @@ export default App;
 
 
 -------------------------------------------------------------------------------
-Sample -- graphql whole at once like types and sending graphql link to backend
+Sample -- graphql whole at once like types and sending graphql link to backend- whole demo
 --------------------------------------------------------------------------------
 import { gql } from "@apollo/client";
 import {useQuery,useMutation} from "@apollo/client/react";
@@ -1668,59 +2182,6 @@ export default App;
 
 <h2
   style={{
-    color: "#ffd166",
-    marginBottom: "18px",
-    textAlign: "left",
-  }}
->
-  🧩 graphql/fragments.js --fragments reusable things
-</h2>
-
-<pre
-  style={{
-    margin: 0,
-    textAlign: "left",
-    lineHeight: "1.6",
-    overflowX: "auto",
-    color: "#fff1c1",
-    fontSize: "12px",
-  }}
->
-{`
-import { gql } from "@apollo/client";
-
-export const USER_FIELDS = gql\`
-  fragment UserFields on User {
-    id
-    name
-    age
-    city
-  }
-\`;
-
-
-export const USER_BASIC = gql\`
-  fragment UserBasic on User {
-    id
-    name
-  }
-\`;
-`}
-</pre>
-</div>
-
-
-<div
-  style={{
-    background: "#161b22",
-    borderRadius: "12px",
-    padding: "20px",
-    border: "1px solid #30363d",
-  }}
->
-
-<h2
-  style={{
     color: "#ff8fab",
     marginBottom: "18px",
     textAlign: "left",
@@ -1742,17 +2203,26 @@ export const USER_BASIC = gql\`
 {`
 import { gql } from "@apollo/client";
 
-import {USER_FIELDS,USER_BASIC,} from "./fragments";
+export const USER_FIELDS = gql\`
+  fragment UserFields on User {
+    id
+    name
+    age
+    city
+  }\`;
+
+export const USER_BASIC = gql\`
+  fragment UserBasic on User {
+    id
+    name\`;
 
 
 export const GET_USERS = gql\`
-  \${USER_FIELDS}
+  \${USER_FIELDS}            -- declaring the fragment
   query GetUsers {
     users {
-      ...UserFields
-    }
-  }
-\`;
+      ...UserFields          -- giving fields
+    }\`;
 
 
 export const GET_USER = gql\`
@@ -1761,8 +2231,7 @@ export const GET_USER = gql\`
     user(id:$id) {
       ...UserBasic
     }
-  }
-\`;
+  }\`;
 `}
 </pre>
 </div>
@@ -1804,12 +2273,10 @@ export const GET_USER = gql\`
 >
 {`
 import { gql } from "@apollo/client";
-
 import {USER_FIELDS,} from "./fragments";
 
-
 export const ADD_USER = gql\`
-  \${USER_FIELDS}
+  \${USER_FIELDS}          -- declaration
   mutation AddUser(
     $name: String!
     $age: Int!
@@ -1820,7 +2287,7 @@ export const ADD_USER = gql\`
       age:$age
       city:$city
     ) {
-      ...UserFields
+      ...UserFields       -- usage like fields would be there
     }
   }
 
@@ -1838,8 +2305,7 @@ export const UPDATE_USER = gql\`
     ) {
       ...UserFields
     }
-  }
-\`;
+  }\`;
 `}
 </pre>
 
@@ -1877,6 +2343,7 @@ graphql/schemaFrontend.js-- whole query, mutation and fragments
 {`import { gql } from "@apollo/client";
 
 // Use fragments to keep queries/selection sets tidy.
+
 export const USER_FIELDS = gql\`
   fragment UserFields on User {
     id
@@ -1884,8 +2351,7 @@ export const USER_FIELDS = gql\`
     email
     role
     created_at
-  }
-\`;
+  }\`;
 
 export const PRODUCT_FIELDS = gql\`
   fragment ProductFields on Product {
@@ -1898,8 +2364,7 @@ export const PRODUCT_FIELDS = gql\`
     created_by_username
     created_at
     updated_at
-  }
-\`;
+  }\`;
 
 export const LOGIN_MUTATION = gql\`
   \${USER_FIELDS}
@@ -1913,8 +2378,7 @@ export const LOGIN_MUTATION = gql\`
         ...UserFields
       }
     }
-  }
-\`;
+  }\`;
 
 export const REGISTER_MUTATION = gql\`
   \${USER_FIELDS}
@@ -1928,8 +2392,7 @@ export const REGISTER_MUTATION = gql\`
         ...UserFields
       }
     }
-  }
-\`;
+  }\`;
 
 export const REFRESH_MUTATION = gql\`
   \${USER_FIELDS}
@@ -1943,8 +2406,7 @@ export const REFRESH_MUTATION = gql\`
         ...UserFields
       }
     }
-  }
-\`;
+  }\`;
 
 export const LOGOUT_MUTATION = gql\`
   mutation Logout($refreshToken: String!) {
@@ -1952,8 +2414,7 @@ export const LOGOUT_MUTATION = gql\`
       success
       message
     }
-  }
-\`;
+  }\`;
 
 export const ME_QUERY = gql\`
   \${USER_FIELDS}
@@ -1965,8 +2426,7 @@ export const ME_QUERY = gql\`
         ...UserFields
       }
     }
-  }
-\`;
+  }\`;
 
 export const PRODUCTS_QUERY = gql\`
   \${PRODUCT_FIELDS}
@@ -1978,8 +2438,7 @@ export const PRODUCTS_QUERY = gql\`
         ...ProductFields
       }
     }
-  }
-\`;
+  }\`;
 
 export const CREATE_PRODUCT_MUTATION = gql\`
   \${PRODUCT_FIELDS}
@@ -1991,8 +2450,7 @@ export const CREATE_PRODUCT_MUTATION = gql\`
         ...ProductFields
       }
     }
-  }
-\`;
+  }\`;
 
 export const UPDATE_PRODUCT_MUTATION = gql\`
   \${PRODUCT_FIELDS}
@@ -2004,8 +2462,7 @@ export const UPDATE_PRODUCT_MUTATION = gql\`
         ...ProductFields
       }
     }
-  }
-\`;
+  }\`;
 
 export const DELETE_PRODUCT_MUTATION = gql\`
   mutation DeleteProduct($id: Int!) {
@@ -2016,17 +2473,185 @@ export const DELETE_PRODUCT_MUTATION = gql\`
         id
       }
     }
-  }
-\`;`}
+  }\`;`}
 </pre>
 
 </div>
 
+<div
+  style={{
+    background: "#161b22",
+    borderRadius: "12px",
+    padding: "20px",
+    border: "1px solid #30363d",
+  }}
+>
+
+<h4
+  style={{
+    color: "#00ffcc",
+    marginBottom: "18px",
+    textAlign: "left",
+  }}
+>
+graphql/ProductPage.jsx -- implementing queries and mutations for sending request to backend
+</h4>
+
+<pre
+  style={{
+    margin: 0,
+    textAlign: "left",
+    lineHeight: "1.6",
+    overflowX: "auto",
+    color: "#ccfff3",
+    fontSize: "12px",
+  }}
+>
+{`import React, {useState} from "react";
+
+import { useQuery,useMutation} from "@apollo/client";
+
+import {PRODUCTS_QUERY, CREATE_PRODUCT_MUTATION, UPDATE_PRODUCT_MUTATION,DELETE_PRODUCT_MUTATION,
+} from "./graphql/schemaFrontend";
+
+function ProductPage() {
+  const [formData, setFormData] = useState({name: "",description: "",price: "",category: "",});
+  const [editingId, setEditingId] = useState(null);
+  const {data, loading, error} = useQuery(PRODUCTS_QUERY,
+    {
+      fetchPolicy: "cache-first",  //cache first before get from server
+    }
+  );
+
+refetchQueries-- the response form the server for mutations need refetchQueries to save
+
+  const [createProduct, {loading:createLoading,}] = useMutation(CREATE_PRODUCT_MUTATION, 
+  {
+    refetchQueries: [PRODUCTS_QUERY,],
+  }
+  );
+
+  const [updateProduct,{loading:updateLoading,}] = useMutation(UPDATE_PRODUCT_MUTATION,
+    {
+      refetchQueries: [PRODUCTS_QUERY,],
+    }
+  );
+
+  const [deleteProduct] = useMutation(DELETE_PRODUCT_MUTATION,
+    {
+      refetchQueries: [PRODUCTS_QUERY],
+    }
+  );
+
+  async function handleCreate() {
+    try {
+      await createProduct({variables: {
+          input: {
+            name: formData.name,
+            description: formData.description,
+            price:Number(formData.price),
+            category: formData.category,
+          },
+        },
+      });
+
+      setFormData({name: "", description: "",price: "",category: ""});
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleUpdate() {
+    try {
+      await updateProduct({
+        variables: {
+          id:editingId,
+          input: {
+            name:formData.name,
+            description:formData.description,
+            price:Number(formData.price),
+            category:formData.category,
+          },
+        },
+      });
+      setEditingId(null);
+      setFormData({name: "", description: "", price: "",category: ""});
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleDelete(id) {
+    try {
+      await deleteProduct({variables: {id}});
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  if (loading) {
+    return (<h2> Loading...</h2>);
+  }
+  if (error) {
+    return (<h2>  Something went wrong</h2>);
+  }
+  const products = data?.products?.products || [];
+  
+  return (
+  <>
+      <input placeholder="Name" value={formData.name}
+        onChange={(e) => setFormData({...formData, name:e.target.value})}/>
+      <input placeholder="Description" value={formData.description}
+        onChange={(e) => setFormData({...formData, description:e.target.value})}/>
+
+      <input placeholder="Price" type="number" value={formData.price}
+        onChange={(e) =>setFormData({...formData, price:e.target.value,})}/>
+      <input placeholder="Category" value={formData.category}
+        onChange={(e) => setFormData({...formData, category:e.target.value})}/>
+
+      {!editingId && (
+        <button onClick={handleCreate}> { createLoading ? "Creating..." : "Create Product" } </button>
+      )}
+      {editingId && (
+        <button onClick={handleUpdate}>{updateLoading ? "Updating..." : "Update Product"}</button>
+      )}
+    </div>
+    <div>
+      {products.map((product) => (
+          <div key={product.id}>
+            <h3>{product.name}</h3>
+            <p>{product.description}</p>
+            <p>₹ {product.price}</p>
+            <p>{product.category}</p>
+
+            <button onClick={() => {
+                setEditingId(product.id);
+                setFormData({
+                  name:product.name,
+                  description: product.description,
+                  price:product.price,
+                  category:product.category,
+                });
+              }}>
+              Edit
+            </button>
+
+            <button onClick={() =>handleDelete(product.id)}>Delete</button>
+          </div>
+        )
+      )}
+    </div>
+  </div>
+  </>
+  );
+}
+export default ProductPage;`}
+</pre>
+
+</div>
 
 {/* =========================================================
     GRAPHQL COMPONENT
 ========================================================= */}
-
 <div
   style={{
     background: "#161b22",
@@ -2067,7 +2692,7 @@ const GraphQLExample = () => {
   const [age, setAge] = useState("");
   const [city, setCity] = useState("");
 
-  const {loading,error,data,} = useQuery(GET_USERS);
+  const {loading,error,data} = useQuery(GET_USERS);
   const [addUser] = useMutation(ADD_USER);
   const [updateUser] = useMutation(UPDATE_USER);
 
@@ -2080,18 +2705,13 @@ const GraphQLExample = () => {
   return (
     <div>
       <h1>Users List</h1>
-      {/* ================================
-          DATA COMES FROM data.users
-          THROUGH useQuery
-      ================================= */}
-
       {data.users.map((user) => (
         <div key={user.id}>
           <h2>{user.name}</h2>
           <p>{user.age} </p>
           <p> {user.city}</p>
 
-          <button onClick={() => updateUser({
+          <button onClick ={() => updateUser({
                 variables: {
                   id: user.id,
                   city: "Mumbai",
@@ -3564,8 +4184,8 @@ const styles = {
     marginBottom: "30px",
     borderRadius: "12px",
     background: "#ffffff",
-    boxShadow:
-      "0 4px 12px rgba(0,0,0,0.08)",
+    color:'black',
+    boxShadow:"0 4px 12px rgba(0,0,0,0.08)",
     fontFamily: "Arial",
     textAlign: 'left',
     width: '100%'
@@ -3574,16 +4194,19 @@ const styles = {
   box: {
     padding: "15px",
     background: "#f4f4f4",
+    color: 'black',
     borderRadius: "10px",
     marginBottom: "15px",
   },
 
   code: {
     background: "#f4f4f4",
+    color: 'black',
     padding: "15px",
     borderRadius: "10px",
     overflowX: "auto",
     marginTop: "15px",
+    color:'black',
     lineHeight: 1.6,
   },
 
@@ -3619,6 +4242,7 @@ const styles = {
   success: {
     padding: "20px",
     background: "#d4edda",
+    color: 'black',
     borderRadius: "10px",
     marginTop: "10px",
   },
@@ -3626,6 +4250,7 @@ const styles = {
   warning: {
     padding: "15px",
     background: "#fff3cd",
+    color: 'black',
     borderRadius: "10px",
     marginBottom: "15px",
   },
@@ -3640,6 +4265,7 @@ const styles = {
 
   userCard: {
     padding: "15px",
+    color: 'black',
     borderRadius: "10px",
     background: "#f8f8f8",
   },
@@ -3648,6 +4274,7 @@ const styles = {
     marginTop: "20px",
     padding: "20px",
     background: "#f4f4f4",
+    color: 'black',
     borderRadius: "10px",
   },
 
@@ -3665,12 +4292,13 @@ const styles = {
   th: {
     border: "1px solid #ccc",
     padding: "12px",
-    background: "#f4f4f4",
+    background: "#f4f4f4",color: 'black',
     textAlign: "left",
   },
 
   td: {
     border: "1px solid #ccc",
+    color: 'black',
     padding: "12px",
   },
 };

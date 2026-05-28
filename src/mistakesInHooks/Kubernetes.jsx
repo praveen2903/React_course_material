@@ -8,6 +8,8 @@ import kubernetesDocker from "../assets/kubernetes_docker.png";
 import cloudBackend from "../assets/cloud_in_backend.png";
 import cloudServices from "../assets/cloud_services.png";
 import cloudFlare from "../assets/clouldflare_usage.png";
+import kubernetesConcepts from '../assets/kubernetes_concepts.png';
+import kubernetesBlueprint from '../assets/kubernetes_bluepirnt.png'
 
 function ImageBanner() {
   const images = [
@@ -105,20 +107,14 @@ const styles = {
 
 const Kubernetes = () => {
   return (
+    <>
     <div style={styles.page}>
       <h2 style={styles.title}>
         ☸️ Docker + Kubernetes + DevOps 
       </h2>
-
       <p>
-        Complete DevOps deployment flow with
-        Docker containers, Kubernetes,
-        cloud deployment, pods, services,
-        ingress, scaling and snippets.
+        Complete DevOps deployment flow with Docker containers, Kubernetes, cloud deployment, pods, services, ingress, scaling and snippets.
       </p>
-
-      <ImageBanner />
-
       {/* ========================================= */}
       {/* FLOW */}
       {/* ========================================= */}
@@ -129,8 +125,7 @@ const Kubernetes = () => {
         </h2>
 
         <pre style={styles.code}>
-{`
-Frontend React App
+{`Frontend React App
         ↓
 Docker Container
         ↓
@@ -142,12 +137,11 @@ Kubernetes Cluster
         ↓
 Pods Created
         ↓
-Service Exposes Pods
+Service Exposes Pods for communication
         ↓
 Ingress / Load Balancer
         ↓
-Users Access Website
-`}
+Users Access Website`}
         </pre>
       </section>
 
@@ -163,25 +157,24 @@ Users Access Website
         <div style={styles.grid}>
           <pre style={styles.code}>
 {`
-🐳 Docker
+🐳 Docker--Solves the "It Works on My Machine" -- create containers
+ It is used to ensure that software runs exactly the same way, regardless of the underlying computer,operating system, or server environment
 
-✅ Creates containers
+✅ Creates containers--packages, dependencies into lightweight units
 ✅ Packages app
 ✅ Runs isolated apps
 ✅ Lightweight VM alternative
-
-Example:
-React App
-Node Backend
-PostgreSQL
-
+Example: React App, Node Backend, PostgreSQL
 all run inside containers
 `}
           </pre>
 
           <pre style={styles.code}>
 {`
-☸️ Kubernetes
+☸️ Kubernetes-- an open-source platform that automates the deployment, scaling, and management of containerized applications. 
+It acts like an orchestra conductor for microservices, providing features like automated rollouts, self-healing, and load balancing across various cloud or on-premises environments
+
+Building blocks - cluster, pod, controlpane, node, services
 
 ✅ Manages containers
 ✅ Auto scaling
@@ -189,9 +182,7 @@ all run inside containers
 ✅ Load balancing
 ✅ Rolling deployments
 
-Docker creates containers
-Kubernetes manages them
-`}
+Docker creates containers & Kubernetes manages them`}
           </pre>
         </div>
       </section>
@@ -207,63 +198,31 @@ Kubernetes manages them
 
         <div style={styles.grid}>
           <pre style={styles.code}>
-{`
-🐳 IMAGE
-
-Blueprint/template
-
-Example:
-node:20
-postgres:15
-
-Contains:
-OS + Runtime + Libraries
-`}
+{`🐳 IMAGE: Blueprint/template
+Example: node:20, postgres:15
+Contains: OS + Runtime + Libraries`}
           </pre>
 
           <pre style={styles.code}>
-{`
-📦 CONTAINER
-
-Running instance of image
-
+{`📦 CONTAINER: Running instance of image
 Image
    ↓
 docker run
    ↓
-Container
-`}
+Container`}
+          </pre>
+
+          <pre style={styles.code}>
+{`📁 VOLUME: Persistent storage
+
+If Without volumes: Container deleted ->Data lost
+With volume: Data survives in volumes`}
           </pre>
 
           <pre style={styles.code}>
 {`
-📁 VOLUME
-
-Persistent storage
-
-Without volumes:
-Container deleted
-   ↓
-Data lost
-
-With volume:
-Data survives
-`}
-          </pre>
-
-          <pre style={styles.code}>
-{`
-🌍 PORT MAPPING
-
-Container port exposed
-
-Example:
-
-5173:5173
-
-localhost:5173
-   ↓
-container:5173
+🌍 PORT MAPPING: Container port exposed
+Example: 5173:5173, localhost:5173 -> container:5173
 `}
           </pre>
         </div>
@@ -275,52 +234,176 @@ container:5173
 
       <section style={styles.section}>
         <h2 style={styles.subTitle}>
-          📄 Dockerfile
+          📄 Dockerfile (Builds image, deals with how can container be built and in text file)
         </h2>
+        <ul>
+        <li> Docker file contains instructions to assemble single docker image</li>
+        <li>Why it's needed: It automates the process of installing software, copying code, and setting up the environment for your application.</li>
+        <li>Key Function: You use the docker build command to turn a Dockerfile into a portable image.</li>
+        <li>Best for: Defining the internal configuration of a single service (e.g., a React dependencies and code in container)</li>
+        </ul>
+        
 
-        <div style={styles.grid}>
-          <pre style={styles.code}>
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns:
+      "repeat(auto-fit,minmax(320px,1fr))",
+    gap: "20px",
+    marginTop: "20px",
+  }}
+>
+
+  {/* =======================================================
+      SIMPLE DOCKERFILE
+  ======================================================= */}
+
+  <pre style={styles.code}>
 {`
-FROM node:20
 
+project/
+│
+├── client/
+│   ├── Dockerfile
+│   ├── .dockerignore
+│   ├── package.json
+│   └── src/
+│
+├── server/
+│   ├── Dockerfile
+│   ├── .dockerignore
+│   ├── package.json
+│   └── src/
+│
+├── .env
+│
+└── docker-compose.yml
+
+==============================
+FROM node:20
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 5000
+CMD ["npm","start"]
+
+
+==============================================================
+From node:20 --set base image
+Label maintainer= "------"/ Label build_number = \${build} -- metadata to image
+Env app_env = 'prod' --- Define Environment variables
+workDir /app ----- set working directory
+copy ./app ---- copy files into image like package.json or any code ones
+Run        --- post installation runs image
+Expose --- assign a port
+CMD ['npm','start']------- set default command to run
+Entrypoint ['npm', 'start']-- set entry point
+User appUser -- switch to non-root user
+Arg build_number -- define arguments can be added by kubernetes yaml files
+volume ['/data'] -- create mount point
+`}
+  </pre>
+<pre style={styles.code}>
+{`FROM node:20 AS base
+
+LABEL maintainer="praveen"
+LABEL project="fullstack-app"
+ARG BUILD_NUMBER=1
+ENV NODE_ENV=production
+ENV PORT=5000
+ENV APP_ENV=prod
 WORKDIR /app
 
+# ================= dependencies =================
+FROM base AS dependencies
 COPY package*.json ./
-
 RUN npm install
 
+# ================= build =================
+FROM dependencies AS build
 COPY . .
+# RUN npm run build
 
+# ================= production =================
+FROM node:20-slim AS production
+WORKDIR /app
+COPY --from=dependencies /app/node_modules ./node_modules
+COPY --from=build /app .
+RUN useradd -m appUser
+USER appUser
+VOLUME ["/app/uploads"]
 EXPOSE 5000
-
-CMD ["npm","start"]
+ENTRYPOINT ["npm"]
+CMD ["start"]
 `}
-          </pre>
+</pre>
 
-          <pre style={styles.code}>
+  {/* =======================================================
+      EXPLANATION
+  ======================================================= */}
+
+  <pre style={styles.code}>
 {`
-🔥 Explanation
-
-FROM
-→ base image
-
-WORKDIR
-→ inside container folder
-
-COPY
-→ copies files
-
-RUN
-→ executes commands
-
-EXPOSE
-→ opens port
-
-CMD
-→ start command
+🔥 Dockerfile Full Explanation
+================================
+FROM -- Base operating system/image
+Example: FROM node:20
+Means: Use official Node.js image
+================================
+WORKDIR -- Working directory inside container
+Example: WORKDIR /app
+Means: All future commands run inside /app
+================================
+COPY-- Copies files from local machine to docker container
+Example: COPY . .
+Means: Copy entire project
+================================
+RUN: Executes commands while building
+Example: RUN npm install
+Means: Install dependencies
+================================
+EXPOSE: Documents/open container port
+Example: EXPOSE 5000
+Means: Backend runs on port 5000
+================================
+CMD: Default startup command
+Example: CMD ["npm","start]
+Means: Runs app when container starts
+================================
+AS base: Names build stage
+Example: FROM node:20 AS base
+Now reusable later
+================================
+FROM base AS build--- Uses previous stage
+Avoids duplicate setup
+================================
+COPY --from=build: Copies files from another stage
+Example: COPY --from=build /app .
+Means: Take built files from build stage
+================================
+node:20: Smaller optimized production image
+Better for deployment
+================================
+Without Multi Stage: Large image size, Includes unnecessary files
+With Multi Stage:- Smaller image, Faster deployment, More optimized, Production ready
+===============================
+🔥 Docker Build Flow
+---------------------
+BASE
+  ↓
+DEPENDENCIES
+  ↓
+BUILD
+  ↓
+PRODUCTION
+Frontend: Usually served with nginx
+Backend: Node + Express container
+Database: Separate postgres container
+Redis: Separate redis container
 `}
-          </pre>
-        </div>
+  </pre>
+</div>
       </section>
 
       {/* ========================================= */}
@@ -334,8 +417,7 @@ CMD
 
         <div style={styles.grid}>
           <pre style={styles.code}>
-{`
-# build image
+{`# build image
 docker build -t myapp .
 
 # run container
@@ -353,8 +435,7 @@ docker rm container_id
           </pre>
 
           <pre style={styles.code}>
-{`
-# see images
+{`# see images
 docker images
 
 # remove image
@@ -376,45 +457,38 @@ docker exec -it container_id bash
 
       <section style={styles.section}>
         <h2 style={styles.subTitle}>
-          ⚡ docker-compose.yml
+          ⚡ docker-compose.yml (orchestrator of docker containers in yaml file & allows multiple containers to interact)
         </h2>
-
+        <ul>
+          <li>Docker compose is atool for defining and running multi-container applications using a single YAML file</li>
+          <li>Why it's needed: Most modern apps require multiple services to work together (e.g., a frontend, a backend, and a database). Without Compose, you would have to manually run dozens of complex docker run commands.</li>
+          <li>Key Function: You use the docker compose up command to start your entire stack at once, including networks and volumes.</li>
+          <li>by using docker.compose we have 3 different containers for server, frontend, database and allow them to run at a time instead of starting manually</li>
+        </ul>
         <div style={styles.grid}>
           <pre style={styles.code}>
-{`
-version: "3"
-
+{`version: "3"
 services:
-
   frontend:
     build: ./frontend
-
     ports:
       - "5173:5173"
-
   backend:
     build: ./backend
-
     ports:
       - "5000:5000"
-
   postgres:
     image: postgres
-
     environment:
       POSTGRES_PASSWORD: postgres
-
     ports:
       - "5432:5432"
 `}
           </pre>
-
           <pre style={styles.code}>
 {`
 🔥 Why Docker Compose?
-
 Instead of starting:
-
 frontend
 backend
 database
@@ -422,7 +496,6 @@ database
 manually one by one
 
 single command:
-
 docker-compose up
 `}
           </pre>
@@ -432,413 +505,2420 @@ docker-compose up
       {/* ========================================= */}
       {/* KUBERNETES */}
       {/* ========================================= */}
-
+<img src={kubernetesConcepts} alt="img"/>
       <section style={styles.section}>
         <h2 style={styles.subTitle}>
           ☸️ Kubernetes Important Concepts
         </h2>
 
-        <div style={styles.grid}>
-          <pre style={styles.code}>
-{`
-☸️ CLUSTER
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns:
+      "repeat(auto-fit,minmax(260px,1fr))",
+    gap: "18px",
+    marginTop: "20px",
+  }}
+>
 
-Collection of machines
+  <pre style={styles.code}>
+{`☸️ CLUSTER
+============
+Collection of machines/nodes running Kubernetes.
 
 Contains:
-Master Node
-Worker Nodes
+-----------
+• Master Node    • Worker Nodes
+
+Responsibilities:
+------------------
+• Manage containers • Scheduling
+• Scaling           • Networking
+
+Example:
+---------
+1 cluster may contain:
+- 5 worker nodes
+- 200 pods
 `}
-          </pre>
+  </pre>
 
-          <pre style={styles.code}>
-{`
-📦 POD
+  <pre style={styles.code}>
+{`🧠 MASTER NODE
+================
+Controls the cluster.
 
-Smallest deployable unit
+Main Components:
+-----------------
+• API Server    
+• Scheduler
+• Controller Manager
+• ETCD Database
+
+Responsibilities:
+------------------
+• Assign pods    
+• Monitor cluster
+• Handle deployments
+• Maintain desired state`}
+  </pre>
+
+  <pre style={styles.code}>
+{`🖥️ WORKER NODE
+=================
+Machine where apps run.
 
 Contains:
-1 or more containers
+-----------
+• Pods
+• Containers
+• kubelet
+• container runtime
 
+Responsibilities:
+------------------
+• Runs application containers
+• Communicates with master
+• Handles pod execution`}
+  </pre>
+
+  <pre style={styles.code}>
+{`📦 POD
+=========
+Smallest deployable unit in Kubernetes.
+Contains:
+-----------
+• One or more containers
+• Shared networking
+• Shared storage
 Usually:
+----------
 1 app container per pod
-`}
-          </pre>
 
-          <pre style={styles.code}>
-{`
-⚙️ DEPLOYMENT
+Important:
+------------
+Pods are temporary.
 
-Manages pods
+Destroyed/recreated often the Persistance volume claim  (pv claim) manage storage.
 
+pv, pv controller -- pv -gives storage class, pvc-- checks and gives data to new pods.
+
+Deployment manages`}
+  </pre>
+
+  <pre style={styles.code}>
+{`⚙️ DEPLOYMENT
+================
+Manages pods automatically.
 Features:
-Auto healing
-Scaling
-Rolling updates
-`}
-          </pre>
+-----------
+• Auto healing of pods
+• Auto scaling of pods
+• Rolling updates
+• Rollbacks
 
-          <pre style={styles.code}>
-{`
-🌍 SERVICE
+Responsibilities:
+-------------------
+Keeps desired number of pods always running.
+Example: 3 React app pods`}
+  </pre>
 
-Exposes pods
+  <pre style={styles.code}>
+{`🌍 SERVICE
+=============
+Exposes pods to network.
 
 Without service:
-Pods inaccessible
+-----------------
+Pods inaccessible.
+
+Types provided by services:
+---------------------------
+• ClusterIP
+• NodePort
+• LoadBalancer
+
+Responsibilities:
+-------------------
+• Stable networking
+• Load balancing
+• Pod communication`}
+  </pre>
+
+  <pre style={styles.code}>
+{`📈 HPA (Horizontal Pod AutoScaler)
+=========
+Automatically increases or decreases pods.
+
+Based On:
+-----------
+• CPU usage
+• Memory usage
+• Custom metrics
+
+Example:
+----------
+2 pods → 10 pods
+during heavy traffic
 `}
-          </pre>
-        </div>
+  </pre>
+
+  <pre style={styles.code}>
+{`🗂️ CONFIGMAP
+===============
+Stores non-sensitive configuration data.
+
+Examples:
+-----------
+• API URLs
+• App settings
+• Environment configs
+
+Usage:
+--------
+Inject config into pods
+without rebuilding image.
+`}
+  </pre>
+
+  <pre style={styles.code}>
+{`🔐 SECRET
+============
+Stores sensitive data.
+
+Examples:
+-----------
+• JWT secrets
+• Database passwords
+• API keys
+
+Important:
+------------
+More secure than ConfigMap.
+`}
+  </pre>
+
+  <pre style={styles.code}>
+{`💾 VOLUME
+============
+Persistent storage for pods.
+
+Why Needed?
+-------------
+Pods are temporary.
+
+Stores:
+---------
+• Images     • Uploads
+• Logs       • Database files
+
+Without volumes:
+------------------
+Data lost after pod restart.`}
+  </pre>
+
+  <pre style={styles.code}>
+{`🌐 INGRESS
+=============
+HTTP/HTTPS entry point to cluster.
+
+Responsibilities:
+-------------------
+• Route traffic
+• SSL termination
+• Domain mapping
+
+Example:
+----------
+api.app.com → backend
+app.com → frontend`}
+  </pre>
+
+  <pre style={styles.code}>
+{`🐳 CONTAINER
+===============
+Lightweight isolated app environment.
+
+Contains:
+-----------
+• App code
+• Runtime
+• Dependencies
+
+Examples:
+-----------
+• Node container
+• Redis container
+• PostgreSQL container`}
+  </pre>
+
+  <pre style={styles.code}>
+{`📦 IMAGE
+===========
+Blueprint/template used to create containers.
+
+Contains:
+-----------
+• Code
+• Dependencies
+• OS libraries
+
+Example: node:20, nginx:alpine
+`}
+  </pre>
+
+  <pre style={styles.code}>
+{`⚡ KUBELET
+=============
+Agent running on every worker node.
+
+Responsibilities:
+-------------------
+• Talks to master
+• Starts containers
+• Monitors pods
+`}
+  </pre>
+
+  <pre style={styles.code}>
+{`🗃️ ETCD
+===========
+Key-value database of Kubernetes cluster.
+
+Stores:
+---------
+• Cluster state
+• Pod info
+• Configurations
+• Secrets
+
+Very important: Cluster brain/database.`}
+  </pre>
+
+  <pre style={styles.code}>
+{`🚀 NAMESPACE  (same cluster)
+===============
+Logical separation inside same Kubernetes cluster.
+
+Used For:
+-----------
+• Dev environment
+• Testing
+• Production
+
+Benefits:
+-----------
+• Isolation
+• Resource grouping
+• Better organization
+
+Example:
+----------
+frontend-dev
+backend-prod
+`}
+  </pre>
+
+  <pre style={styles.code}>
+{`📋 REPLICASET
+================
+Ensures fixed number of pods always run.
+
+Example:
+----------
+Desired Pods = 3
+
+If 1 pod crashes:
+------------------
+ReplicaSet creates new pod.
+
+Usually managed by:
+--------------------
+Deployment
+`}
+  </pre>
+
+  <pre style={styles.code}>
+{`🔄 ROLLING UPDATE
+===================
+Updates app without downtime.
+
+Flow:
+-------
+Old pods removed slowly
+New pods added gradually
+
+Benefits:
+-----------
+• Zero downtime
+• Safe deployments
+• Easy rollback
+`}
+  </pre>
+
+  <pre style={styles.code}>
+{`⏪ ROLLBACK
+=============
+Reverts deployment to previous stable version.
+
+Used When:
+------------
+• Deployment fails
+• Bugs introduced
+• App crashes
+
+Command: kubectl rollout undo
+`}
+  </pre>
+
+  <pre style={styles.code}>
+{`📊 DAEMONSET
+===============
+Runs one pod on every worker node.
+
+Used For:
+-----------
+• Monitoring agents
+• Logging agents
+• Security tools
+
+Examples: Prometheus
+`}
+  </pre>
+
+  <pre style={styles.code}>
+{`🛢️ STATEFULSET
+=================
+Used for stateful apps.
+Examples:
+-----------
+• PostgreSQL
+• MongoDB
+• Redis
+• Kafka
+
+Features:
+-----------
+• Stable hostname
+• Persistent storage
+• Ordered deployment`}
+  </pre>
+
+  <pre style={styles.code}>
+{`⏰ CRONJOB
+=============
+Runs scheduled jobs.
+
+Examples:
+-----------
+• Daily backups
+• Report generation
+• Cleanup scripts
+
+Similar To: Linux cron jobs
+`}
+  </pre>
+
+  <pre style={styles.code}>
+{`⚡ JOB
+=========
+Runs task once and exits.
+
+Examples:
+-----------
+• Database migration
+• Batch processing
+• Data import
+
+Behavior: Completes and stops.`}
+  </pre>
+
+  <pre style={styles.code}>
+{`📡 API SERVER
+================
+Main entry point of Kubernetes cluster.
+
+Responsibilities:
+-------------------
+• Receives requests
+• Validates configs
+• Communicates with ETCD
+
+All kubectl commands go through API server.
+`}
+  </pre>
+
+  <pre style={styles.code}>
+{`🧠 SCHEDULER
+===============
+Decides where pods run.
+
+Checks:
+---------
+• CPU
+• Memory
+• Node health
+• Constraints
+
+Responsibilities: Assigns pod to worker node.
+`}
+  </pre>
+
+  <pre style={styles.code}>
+{`🎮 CONTROLLER MANAGER
+========================
+Maintains desired state.
+
+Example:
+----------
+Desired Pods = 5
+Current Pods = 3
+
+Controller creates: 2 new pods
+`}
+  </pre>
+
+  <pre style={styles.code}>
+{`🔗 KUBEPROXY
+===============
+Handles pod networking.
+
+Responsibilities:
+-------------------
+• Load balancing
+• Network routing
+• Service communication
+
+Runs on: Every worker node`}
+  </pre>
+
+  <pre style={styles.code}>
+{`📦 HELM 
+===========
+Package manager for Kubernetes.
+
+Similar To: npm for react, helm for Kubernetes
+
+Used For:
+-----------
+• Install apps
+• Reusable templates
+• Version management
+`}
+  </pre>
+
+  <pre style={styles.code}>
+{`🧪 READINESS PROBE
+====================
+Checks whether pod is ready for traffic.
+
+If failed:
+------------
+Service won't send traffic.`}
+  </pre>
+
+  <pre style={styles.code}>
+{`❤️ LIVENESS PROBE
+===================
+Checks whether app inside pod is alive.
+
+If failed: Kubernetes restarts pod.
+`}
+  </pre>
+
+  <pre style={styles.code}>
+{`📈 RESOURCE LIMITS
+====================
+Controls CPU and memory.
+
+Types:
+-------
+• Requests
+• Limits
+
+Benefits:
+-----------
+• Prevent crashes
+• Avoid resource abuse`}
+  </pre>
+
+  <pre style={styles.code}>
+{`🌍 LOAD BALANCER
+===================
+Distributes traffic across pods.
+
+Benefits:
+-----------
+• High availability
+• Scalability
+• Fault tolerance`}
+  </pre>
+
+  <pre style={styles.code}>
+{`🧱 NODE SELECTOR
+===================
+Forces pod to run on specific nodes.
+
+Example:
+----------
+GPU workloads only on GPU nodes
+`}
+  </pre>
+<pre style={styles.code}>
+{`🌍 INGRESS
+==============
+Ingress exposes HTTP/HTTPS routes from outside cluster to internal services.
+
+Responsibilities:
+-------------------
+• Route traffic
+• Domain mapping
+• SSL termination
+• Path based routing
+
+Example:
+---------- 
+api.app.com  -> backend
+app.com      -> frontend
+
+Without ingress: Need separate LoadBalancer for every service.
+
+Ingress acts like Central traffic router
+`}
+</pre>
+
+<pre style={styles.code}>
+{`🚦 INGRESS CONTROLLER
+=======================
+Ingress itself is only configuration rules.
+
+Ingress Controller is the actual component that implements those rules.
+
+Responsibilities:
+-------------------
+• Reads ingress configs
+• Routes incoming traffic
+• Manages reverse proxy
+• Handles SSL
+
+Popular Controllers:
+---------------------
+• NGINX Ingress
+• Traefik
+• HAProxy
+• AWS ALB
+
+Important: Without ingress controller, Ingress resource does nothing.
+`}
+</pre>
+<pre style={styles.code}>
+{`🔥 NGINX
+===========
+NGINX is a very fast web server and reverse proxy server.
+
+Used For:
+-----------
+• Serve frontend apps
+• Reverse proxy
+• Load balancing
+• SSL handling
+• API gateway
+• Static file hosting
+
+Pronounced: "Engine-X"
+
+===========================
+Browser Request
+       ↓
+     NGINX
+       ↓
+React / Node / API / Pods
+
+==================================================
+
+🔥 WHAT NGINX DOES
+====================
+
+1. Serves frontend files
+--------------------------------
+React build files HTML/CSS/JS
+
+2. Reverse Proxy
+------------------
+Routes requests to backend.
+Example: /api -> Node backend
+
+3. Load Balancing
+-------------------
+Distributes traffic across servers.
+
+Example: Request 1 -> Server A,
+Request 2 -> Server B
+
+4. SSL Termination
+--------------------
+Handles HTTPS certificates.
+
+5. Caching
+-------------
+Stores responses for faster loading.
+
+==================================================
+
+🔥 WITHOUT NGINX
+==================
+
+Client directly calls backend.
+
+Problems:
+----------
+• No load balancing
+• Hard SSL management
+• Poor scalability
+• Exposes backend directly
+`}
+</pre>
+<pre style={styles.code}>
+  {`WITH NGINX
+================
+Client
+  ↓
+NGINX
+  ↓
+Backend Servers
+
+Benefits:
+-----------
+• Faster
+• Secure
+• Scalable
+• Centralized routing
+
+==================================================
+🔥 REVERSE PROXY
+==================
+NGINX sits between client and backend.
+
+Client thinks: Talking to same server.
+
+But NGINX internally routes to actual backend server.
+
+==================================================
+
+🔥 REAL WORLD EXAMPLE
+======================
+
+Frontend: React App
+Backend: Node.js API
+
+Flow:
+-------
+Browser
+   ↓
+NGINX
+   ↓
+React Static Files
+
+Browser -> /api/users
+   ↓
+NGINX
+   ↓
+Node Backend`}
+</pre>
+<pre style={styles.code}>
+  {`🔥 NGINX CONFIG EXAMPLE
+=========================
+server {
+  listen 80;
+  location / {
+    root /usr/share/nginx/html;
+    index index.html;
+  }
+  location /api {
+    proxy_pass http://localhost:5000;
+  }
+}
+
+==================================================
+
+🔥 NGINX IN KUBERNETES
+========================
+
+NGINX commonly used as:
+• Ingress Controller
+• Reverse Proxy
+• Load Balancer
+
+Flow:
+-------
+Internet
+   ↓
+NGINX Ingress
+   ↓
+Kubernetes Services
+   ↓
+  Pods
+
+==================================================
+
+🔥 DIFFERENCE
+===============
+
+NGINX
+------
+Actual software/server.
+
+Ingress
+---------
+Kubernetes routing rules.
+
+Ingress Controller
+-------------------
+Software implementing ingress.
+
+NGINX Ingress Controller
+-------------------------
+NGINX acting as ingress controller.`}
+</pre>
+<pre style={styles.code}>
+{`🔥 NGINX INGRESS CONTROLLER
+=============================
+Most popular ingress controller.
+Uses: NGINX reverse proxy internally.
+
+Features:
+-----------
+• Load balancing
+• SSL termination
+• Path routing
+• Rate limiting
+• Authentication
+• Rewrite rules
+
+Example Flow:
+---------------
+Browser
+   ↓
+NGINX Ingress
+   ↓
+Service
+   ↓
+Pods
+Benefits:
+-----------
+• Single public entry point
+• Better traffic management
+• Production ready`}
+</pre>
+</div>
       </section>
+  <img src={kubernetesBlueprint} alt="img"/>
 
       {/* ========================================= */}
       {/* POD YAML */}
       {/* ========================================= */}
-
       <section style={styles.section}>
-        <h2 style={styles.subTitle}>
-          📄 Pod YAML
-        </h2>
+  <h2 style={styles.subTitle}>
+    ☸️ Realtime Kubernetes Architecture
+  </h2>
 
-        <div style={styles.grid}>
-          <pre style={styles.code}>
+<div style={{display:'grid', gridTemplateColumns:'repeat(2,1fr)'}}>
+    <pre style={styles.code}>
 {`
+User Browser
+      ↓
+DNS
+      ↓
+NGINX Ingress Controller
+      ↓
+Ingress Rules
+      ↓
+frontend-service
+      ↓
+Frontend Pods
+      ↓
+backend-service
+      ↓
+Backend Pods
+      ↓
+ ┌───────────────────────┐
+ ↓                       ↓
+
+redis-service            postgres-service
+ ↓                       ↓
+
+Redis Pod                PostgreSQL Pod
+                              ↓
+                      Persistent Volume
+
+`}
+  </pre>
+  <pre style={styles.code}>
+    {`================================================
+
+🔥 Kubernetes Flow
+
+Deployment
+→ creates/manages pods
+
+Service
+→ stable networking
+
+Ingress
+→ external routing
+
+Secret
+→ passwords/tokens
+
+ConfigMap
+→ environment configs
+
+PVC
+→ persistent storage
+
+HPA
+→ auto scaling
+
+Probes
+→ health monitoring`}
+  </pre>
+</div>
+</section>
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    🌐 Kubernetes Internal Communication
+  </h2>
+
+  <div style={styles.grid}>
+
+{/* ====================================================== */}
+
+<pre style={styles.code}>
+{`
+🔥 Pod → Service → Pod Flow
+
+Frontend Pod
+      ↓
+backend-service:5000
+      ↓
+Backend Pod
+
+================================================
+
+Pods communicate using:
+
+service-name:port
+
+Examples:
+
+backend-service:5000
+redis-service:6379
+postgres-service:5432
+
+================================================
+
+Pods DO NOT use:
+❌ Pod IP directly
+
+Reason:
+Pod IP changes after restart.
+`}
+</pre>
+
+{/* ====================================================== */}
+
+<pre style={styles.code}>
+{`
+🔥 How Service DNS Created
+
 apiVersion: v1
-
-kind: Pod
+kind: Service
 
 metadata:
-  name: myapp-pod
+  name: backend-service
 
-spec:
-  containers:
-    - name: myapp
+================================================
 
-      image: myapp:latest
+Kubernetes automatically creates:
 
-      ports:
-        - containerPort: 5000
+backend-service.default.svc.cluster.local
+
+Short DNS used inside cluster:
+
+backend-service
+
+================================================
+
+Frontend can call:
+
+http://backend-service:5000
 `}
-          </pre>
+</pre>
 
-          <pre style={styles.code}>
+{/* ====================================================== */}
+
+<pre style={styles.code}>
 {`
-🔥 Important
+🔥 Internal DNS Resolution
 
-kind: Pod
-→ creates pod
+Frontend Pod
+      ↓
+backend-service
+      ↓
+Kubernetes DNS
+      ↓
+Backend Pod IPs
 
-image:
-→ docker image
+================================================
 
-containerPort:
-→ app running port
+Kubernetes automatically resolves:
+
+backend-service
+      ↓
+10.10.0.5
+10.10.0.6
+10.10.0.7
+
+================================================
+
+No manual IP management needed.
 `}
-          </pre>
-        </div>
-      </section>
+</pre>
 
-      {/* ========================================= */}
-      {/* DEPLOYMENT */}
-      {/* ========================================= */}
+  </div>
+</section>
 
-      <section style={styles.section}>
-        <h2 style={styles.subTitle}>
-          ⚡ Deployment YAML
-        </h2>
+{/* ====================================================== */}
 
-        <div style={styles.grid}>
-          <pre style={styles.code}>
-{`
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    ⚡ Frontend → Backend Communication
+  </h2>
+
+  <div style={styles.grid}>
+
+<pre style={styles.code}>
+{`# frontend deployment
+
 apiVersion: apps/v1
-
 kind: Deployment
-
 metadata:
-  name: backend-deployment
-
+  name: frontend-deployment
 spec:
-  replicas: 3
+  replicas: 2
 
   selector:
     matchLabels:
-      app: backend
-
+      app: frontend
   template:
     metadata:
       labels:
-        app: backend
-
+        app: frontend
     spec:
       containers:
-        - name: backend
-
-          image: myapp:latest
-
+        - name: frontend
+          image: frontend:v1
           ports:
-            - containerPort: 5000
-`}
-          </pre>
+            - containerPort: 3000`}
+</pre>
 
-          <pre style={styles.code}>
-{`
-🔥 replicas: 3
+<pre style={styles.code}>
+{`# backend service
 
-Creates:
-
-Pod 1
-Pod 2
-Pod 3
-
-If one crashes:
-Kubernetes auto recreates
-`}
-          </pre>
-        </div>
-      </section>
-
-      {/* ========================================= */}
-      {/* SERVICE */}
-      {/* ========================================= */}
-
-      <section style={styles.section}>
-        <h2 style={styles.subTitle}>
-          🌍 Service YAML
-        </h2>
-
-        <div style={styles.grid}>
-          <pre style={styles.code}>
-{`
 apiVersion: v1
-
 kind: Service
-
 metadata:
   name: backend-service
 
 spec:
   selector:
     app: backend
-
   ports:
-    - port: 80
-
+    - port: 5000
       targetPort: 5000
+  type: ClusterIP`}
+</pre>
 
-  type: LoadBalancer
+<pre style={styles.code}>
+{`
+🔥 React API Call
+
+fetch(
+ "http://backend-service:5000/products"
+)
+
+================================================
+
+Frontend pod sends request
+to backend-service.
+
+backend-service forwards request
+to backend pods automatically.
+
+================================================
+
+Load Balanced Between:
+
+backend-pod-1
+backend-pod-2
+backend-pod-3
 `}
-          </pre>
+</pre>
 
-          <pre style={styles.code}>
+  </div>
+</section>
+
+{/* ====================================================== */}
+
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    🌍 Service Discovery + Load Balancing
+  </h2>
+
+  <div style={styles.grid}>
+
+<pre style={styles.code}>
+{`# backend deployment
+
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: backend:v1
+`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 selector Matching
+
+Service selector:
+
+selector:
+  app: backend
+
+================================================
+
+Automatically finds:
+
+labels:
+  app: backend
+
+================================================
+
+backend-service
+      ↓
+backend-pod-1
+backend-pod-2
+backend-pod-3
+`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 Load Balancing
+
+Request 1
+    ↓
+backend-pod-1
+
+Request 2
+    ↓
+backend-pod-2
+
+Request 3
+    ↓
+backend-pod-3
+
+================================================
+
+Traffic distributed automatically.
+
+If pod crashes:
+Deployment recreates pod.
+`}
+</pre>
+
+  </div>
+</section>
+
+{/* ====================================================== */}
+
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    🧠 Backend → Redis Communication
+  </h2>
+
+  <div style={styles.grid}>
+
+<pre style={styles.code}>
+{`# redis service
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+spec:
+  selector:
+    app: redis
+  ports:
+    - port: 6379
+      targetPort: 6379
+  type: ClusterIP
+`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 Backend Redis Connection
+
+const redis = new Redis({
+  host: "redis-service",
+  port: 6379,
+});
+`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 Redis Communication Flow
+
+backend-pod
+      ↓
+redis-service:6379
+      ↓
+redis-pod
+
+================================================
+
+Used for:
+
+✔ caching
+✔ jwt blacklist
+✔ sessions
+✔ queue jobs
+
+================================================
+
+Reduces database queries.
+`}
+</pre>
+
+  </div>
+</section>
+
+{/* ====================================================== */}
+
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    🐘 Backend → PostgreSQL Communication
+  </h2>
+
+  <div style={styles.grid}>
+
+<pre style={styles.code}>
+{`# postgres service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+spec:
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
+  type: ClusterIP
+`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 PostgreSQL Connection
+
+const pool = new Pool({
+  host: "postgres-service",
+  port: 5432,
+  user: "postgres",
+  password: process.env.DB_PASSWORD,
+  database: "appdb",
+});
+`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 PostgreSQL Flow
+
+backend-pod
+      ↓
+postgres-service:5432
+      ↓
+postgres-pod
+      ↓
+Persistent Volume
+
+================================================
+
+PVC stores DB files permanently.
+
+Data survives:
+✔ restart
+✔ redeploy
+✔ crashes
+`}
+</pre>
+
+  </div>
+</section>
+
+{/* ====================================================== */}
+
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    🌐 External Internet Communication
+  </h2>
+
+  <div style={styles.grid}>
+
+<pre style={styles.code}>
+{`# ingress
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: app.praveen.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-service
+                port:
+                  number: 80`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 External Traffic Flow
+
+User Browser
+      ↓
+DNS
+      ↓
+NGINX Ingress Controller
+      ↓
+Ingress Rules
+      ↓
+frontend-service
+      ↓
+frontend-pods
+`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 API Routing
+
+app.praveen.com
+      ↓
+frontend-service
+
+api.praveen.com
+      ↓
+backend-service
+
+================================================
+
+Ingress works like:
+
+✔ reverse proxy
+✔ router
+✔ API gateway
+✔ SSL manager
+`}
+</pre>
+
+  </div>
+</section>
+
+{/* ====================================================== */}
+```jsx
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    ☁️ Real Production Kubernetes Communication Flow
+  </h2>
+
+<div style={styles.grid}>
+
+<pre style={styles.code}>
+{`
+🌍 REAL FLOW
+
+User Browser
+      ↓
+https://myapp.com
+      ↓
+DNS Provider
+(Cloudflare / Route53)
+      ↓
+Public Load Balancer
+      ↓
+NGINX Ingress Controller
+      ↓
+Ingress Rules
+      ↓
+frontend-service
+      ↓
+frontend-pod-1
+frontend-pod-2
+
+Frontend API Request
+      ↓
+http://backend-service:5000
+      ↓
+backend-pod-1
+backend-pod-2
+backend-pod-3
+
+Backend Internal Calls
+      ↓
+redis-service:6379
+postgres-service:5432
+`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 HOW URL WORKS
+
+Frontend never calls:
+
+❌ pod IP
+❌ localhost
+
+Reason:
+Pods restart frequently.
+
+Kubernetes Service creates:
+
+✔ stable DNS name
+✔ stable internal IP
+
+Examples:
+
+backend-service
+redis-service
+postgres-service
+
+Kubernetes internal DNS converts:
+
+backend-service
+      ↓
+backend pod IPs automatically
+
+So frontend can always call:
+
+http://backend-service:5000
+`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 INTERNAL COMMUNICATION
+
+Frontend Pod
+      ↓
+backend-service
+      ↓
+Backend Pods
+
+Backend Pod
+      ↓
+redis-service
+      ↓
+Redis Pod
+
+Backend Pod
+      ↓
+postgres-service
+      ↓
+Postgres Pod
+
+Kubernetes automatically handles:
+
+✔ routing
+✔ DNS
+✔ service discovery
+✔ internal networking
+✔ load balancing
+`}
+</pre>
+
+</div>
+</section>
+
+{/* ===================================================== */}
+
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    ⚡ Backend Deployment + Service Connection
+  </h2>
+
+<div style={styles.grid}>
+
+<pre style={styles.code}>
+{`# backend deployment
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: backend:v1
+          ports:
+            - containerPort: 5000`}
+</pre>
+
+<pre style={styles.code}>
+{`# backend service
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: 5000
+      targetPort: 5000
+  type: ClusterIP
+`}
+</pre>
+
+<pre style={styles.code}>
+{`🔥 HOW THEY CONNECT
+
+Deployment creates pods:
+
+backend-pod-1
+backend-pod-2
+backend-pod-3
+
+Each pod has label:
+
+app: backend
+
+Service selector:
+
+selector:
+  app: backend
+
+finds all matching pods automatically.
+
+Now service routes traffic:
+
+backend-service:5000
+      ↓
+backend-pod-1
+backend-pod-2
+backend-pod-3
+
+🔥 IMPORTANT
+
+Deployment
+→ creates/manages pods
+
+Service
+→ stable networking for pods
+`}
+</pre>
+
+</div>
+</section>
+
+{/* ===================================================== */}
+
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    🌐 Frontend Calling Backend APIs
+  </h2>
+
+<div style={styles.grid}>
+
+<pre style={styles.code}>
+{`// frontend react app
+
+fetch(
+ "http://backend-service:5000/products"
+)
+
+axios.get(
+ "http://backend-service:5000/products"
+)
+`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 WHAT HAPPENS
+
+frontend-pod
+      ↓
+backend-service
+      ↓
+Kubernetes Service
+      ↓
+One backend pod selected
+      ↓
+backend-pod-2
+`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 LOAD BALANCING
+
+backend-service automatically distributes:
+
+request 1 → pod-1
+request 2 → pod-2
+request 3 → pod-3
+
+No manual balancing needed.
+
+Kubernetes Service acts like:
+
+✔ internal load balancer
+✔ internal DNS server
+`}
+</pre>
+
+</div>
+</section>
+
+{/* ===================================================== */}
+
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    🧠 Redis Integration With Backend
+  </h2>
+
+<div style={styles.grid}>
+
+<pre style={styles.code}>
+{`# redis deployment
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7
+          ports:
+            - containerPort: 6379`}
+</pre>
+
+<pre style={styles.code}>
+{`# redis service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+spec:
+  selector:
+    app: redis
+  ports:
+    - port: 6379
+      targetPort: 6379
+  type: ClusterIP`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 BACKEND CONNECTION
+
+Backend pod connects using:
+
+redis-service:6379
+
+Example:
+
+const redis = new Redis({
+  host: "redis-service",
+  port: 6379,
+});
+
+🔥 WHY SERVICE NEEDED
+
+Redis pod IP may change.
+
+redis-service gives:
+
+✔ stable hostname
+✔ stable networking
+✔ service discovery
+`}
+</pre>
+
+</div>
+</section>
+
+{/* ===================================================== */}
+
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    🐘 PostgreSQL + Persistent Storage
+  </h2>
+
+<div style={styles.grid}>
+
+<pre style={styles.code}>
+{`# postgres deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15
+          ports:
+            - containerPort: 5432`}
+</pre>
+
+<pre style={styles.code}>
+{`# postgres service
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+spec:
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
+  type: ClusterIP`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 BACKEND DATABASE CONNECTION
+
+Backend pod connects using:
+
+postgres-service:5432
+
+Example:
+
+const pool = new Pool({
+  host: "postgres-service",
+  port: 5432,
+});
+
+🔥 WHY PVC NEEDED
+
+Without Persistent Volume:
+
+pod restart
+      ↓
+database deleted
+
+PVC stores database files permanently.
+
+Data survives:
+✔ restart
+✔ redeploy
+✔ crash
+`}
+</pre>
+
+</div>
+</section>
+
+{/* ===================================================== */}
+
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    🔐 Secrets + ConfigMap Injection
+  </h2>
+
+<div style={styles.grid}>
+
+<pre style={styles.code}>
+{`
+# secret
+
+apiVersion: v1
+kind: Secret
+
+metadata:
+  name: backend-secret
+
+type: Opaque
+
+stringData:
+  DB_PASSWORD: mypassword
+  JWT_SECRET: supersecret
+`}
+</pre>
+
+<pre style={styles.code}>
+{`
+# configmap
+
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: backend-config
+
+data:
+  PORT: "5000"
+  REDIS_HOST: redis-service
+  DB_HOST: postgres-service
+`}
+</pre>
+
+<pre style={styles.code}>
+{`
+# inject into backend pod
+
+env:
+  - name: DB_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: backend-secret
+        key: DB_PASSWORD
+
+  - name: REDIS_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: backend-config
+        key: REDIS_HOST
+`}
+</pre>
+
+</div>
+</section>
+
+{/* ===================================================== */}
+
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    🔥 Backend App Using Environment Variables
+  </h2>
+
+<div style={styles.grid}>
+
+<pre style={styles.code}>
+{`
+// backend/server.js
+
+const pool = new Pool({
+  host: process.env.DB_HOST,
+  password: process.env.DB_PASSWORD,
+});
+
+const redis = new Redis({
+  host: process.env.REDIS_HOST,
+});
+
+jwt.sign(
+  payload,
+  process.env.JWT_SECRET
+);
+`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 FLOW
+
+Secret
+      ↓
+Injected into pod
+      ↓
+Available inside process.env
+      ↓
+Backend app reads values
+
+Kubernetes automatically injects:
+
+✔ passwords
+✔ jwt secrets
+✔ hosts
+✔ ports
+✔ env configs
+`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 BENEFITS
+
+Without secrets/configmaps:
+
+❌ hardcoded passwords
+❌ hardcoded urls
+❌ unsafe configs
+
+Using Kubernetes:
+
+✔ secure
+✔ reusable
+✔ environment based
+✔ production ready
+`}
+</pre>
+
+</div>
+</section>
+
+{/* ===================================================== */}
+
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    🌍 Ingress + External Traffic Routing
+  </h2>
+
+<div style={styles.grid}>
+
+<pre style={styles.code}>
+{`
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: myapp.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-service
+                port:
+                  number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-service
+                port:
+                  number: 5000
+`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 REQUEST FLOW
+
+Browser
+   ↓
+myapp.com/api/products
+   ↓
+NGINX Ingress Controller
+   ↓
+Ingress Rules
+   ↓
+backend-service
+   ↓
+backend pod
+
+myapp.com
+   ↓
+frontend-service
+   ↓
+frontend pod
+`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 WHY INGRESS
+
+Without ingress:
+
+Need separate public IP
+for every service.
+
+Ingress allows:
+
+✔ one domain
+✔ path routing
+✔ SSL
+✔ reverse proxy
+✔ centralized routing
+
+NGINX Ingress Controller
+actually processes traffic.
+`}
+</pre>
+
+</div>
+</section>
+
+    <section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    📦 Deployment YAML + Flow
+  </h2>
+
+  <div style={styles.grid}>
+
+<pre style={styles.code}>
+{`apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: praveen/backend:v1
+          ports:
+            - containerPort: 5000
+          env:
+            - name: NODE_ENV
+              value: production
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 replicas: 3
+----------------
+Creates 3 backend pods.
+
+🔥 selector
+-------------
+Deployment controls
+pods having label:
+app: backend
+
+🔥 template
+-------------
+Blueprint for creating pods.
+
+🔥 resources
+--------------
+Restrict CPU & memory.
+
+🔥 image
+----------
+Docker image pulled
+from registry.
+`}
+</pre>
+
+  </div>
+</section>
+
+{/* ================================================= */}
+
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    🌍 Service YAML
+  </h2>
+
+  <div style={styles.grid}>
+
+<pre style={styles.code}>
+{`apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  type: ClusterIP
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000`}
+</pre>
+
+<pre style={styles.code}>
 {`
 🔥 targetPort
-
-Container port
+---------------
+Container running port.
 
 🔥 port
+---------
+Internal service port.
 
-Public service port
+🔥 selector
+-------------
+Connects service to pods.
 
-🔥 LoadBalancer
+🔥 ClusterIP
+--------------
+Internal communication only.
 
-Creates public IP
-`}
-          </pre>
-        </div>
-      </section>
-
-      {/* ========================================= */}
-      {/* KUBECTL */}
-      {/* ========================================= */}
-
-      <section style={styles.section}>
-        <h2 style={styles.subTitle}>
-          🖥️ Important kubectl Commands
-        </h2>
-
-        <div style={styles.grid}>
-          <pre style={styles.code}>
-{`
-# apply yaml
-kubectl apply -f app.yml
-
-# get pods
-kubectl get pods
-
-# get services
-kubectl get svc
-
-# get deployments
-kubectl get deployments
-`}
-          </pre>
-
-          <pre style={styles.code}>
-{`
-# pod logs
-kubectl logs pod_name
-
-# delete pod
-kubectl delete pod pod_name
-
-# describe pod
-kubectl describe pod pod_name
-`}
-          </pre>
-        </div>
-      </section>
-
-      {/* ========================================= */}
-      {/* SCALING */}
-      {/* ========================================= */}
-
-      <section style={styles.section}>
-        <h2 style={styles.subTitle}>
-          📈 Auto Scaling
-        </h2>
-
-        <div style={styles.grid}>
-          <pre style={styles.code}>
-{`
-Traffic increases
-       ↓
-Kubernetes detects load
-       ↓
-Creates more pods
-       ↓
-Traffic distributed
-`}
-          </pre>
-
-          <pre style={styles.code}>
-{`
-Scale manually:
-
-kubectl scale deployment
-backend-deployment
---replicas=5
-`}
-          </pre>
-        </div>
-      </section>
-
-      {/* ========================================= */}
-      {/* ROLLING UPDATE */}
-      {/* ========================================= */}
-
-      <section style={styles.section}>
-        <h2 style={styles.subTitle}>
-          🔄 Rolling Updates
-        </h2>
-
-        <div style={styles.grid}>
-          <pre style={styles.code}>
-{`
-Old version running
-       ↓
-New pods created gradually
-       ↓
-Old pods removed slowly
-       ↓
-Zero downtime deployment
-`}
-          </pre>
-
-          <pre style={styles.code}>
-{`
-kubectl set image
-deployment/backend-deployment
-backend=myapp:v2
-`}
-          </pre>
-        </div>
-      </section>
-
-      {/* ========================================= */}
-      {/* CLOUD */}
-      {/* ========================================= */}
-
-      <section style={styles.section}>
-        <h2 style={styles.subTitle}>
-          ☁️ Cloud Deployment Architecture
-        </h2>
-
-        <pre style={styles.code}>
-{`
-React Frontend
-       ↓
-Cloudflare CDN
-       ↓
-Load Balancer
-       ↓
-Kubernetes Cluster
-       ↓
+Frontend Pod
+      ↓
+backend-service
+      ↓
 Backend Pods
-       ↓
-Redis Cache
-       ↓
-PostgreSQL Database
 `}
-        </pre>
-      </section>
+</pre>
 
-      {/* ========================================= */}
-      {/* CLOUD SERVICES */}
-      {/* ========================================= */}
+  </div>
+</section>
 
-      <section style={styles.section}>
-        <h2 style={styles.subTitle}>
-          🌍 Popular Cloud Services
-        </h2>
+{/* ================================================= */}
 
-        <div style={styles.grid}>
-          <pre style={styles.code}>
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    🚦 Ingress YAML
+  </h2>
+
+  <div style={styles.grid}>
+
+<pre style={styles.code}>
+{`apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: api.app.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-service
+                port:
+                  number: 80`}
+</pre>
+
+<pre style={styles.code}>
 {`
-☁️ AWS
+🔥 ingressClassName
+--------------------
+Uses NGINX ingress controller.
 
-EC2
-EKS
-S3
-RDS
-CloudFront
+🔥 host
+---------
+Domain mapping.
+
+🔥 backend service
+-------------------
+Ingress routes traffic
+to backend-service.
+
+Internet
+    ↓
+NGINX Ingress
+    ↓
+backend-service
+    ↓
+Backend Pods
 `}
-          </pre>
+</pre>
 
-          <pre style={styles.code}>
+  </div>
+</section>
+
+{/* ================================================= */}
+
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    🔐 Secret YAML
+  </h2>
+
+  <div style={styles.grid}>
+
+<pre style={styles.code}>
+{`apiVersion: v1
+kind: Secret
+metadata:
+  name: backend-secret
+type: Opaque
+data:
+  JWT_SECRET: bXlzZWNyZXQ=
+  DB_PASSWORD: cGFzc3dvcmQ=
+`}
+</pre>
+
+<pre style={styles.code}>
 {`
-☁️ GCP
+🔥 data
+---------
+Base64 encoded values.
 
-Compute Engine
-GKE
-Cloud Storage
-Cloud SQL
+Example:
+-----------
+mysecret -> bXlzZWNyZXQ=
+
+🔥 Used for:
+--------------
+• JWT secrets
+• DB passwords
+• API keys
+
+Injected into pods
+securely.
 `}
-          </pre>
+</pre>
 
-          <pre style={styles.code}>
+  </div>
+</section>
+
+{/* ================================================= */}
+
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    🗂️ ConfigMap YAML
+  </h2>
+
+  <div style={styles.grid}>
+
+<pre style={styles.code}>
+{`apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+data:
+  NODE_ENV: production
+  API_URL: https://api.app.com
+  PORT: "5000"
+`}
+</pre>
+
+<pre style={styles.code}>
 {`
-☁️ Azure
+🔥 Stores non-sensitive
+configuration values.
 
-Virtual Machines
-AKS
-Blob Storage
-Azure SQL
+Examples:
+-----------
+• API URLs
+• Ports
+• Environment names
+
+Pods can access using:
+-----------------------
+process.env.PORT
 `}
-          </pre>
+</pre>
 
-          <pre style={styles.code}>
+  </div>
+</section>
+
+{/* ================================================= */}
+
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    💾 Persistent Volume YAML
+  </h2>
+
+  <div style={styles.grid}>
+
+<pre style={styles.code}>
+{`apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /data/postgres
+`}
+</pre>
+
+<pre style={styles.code}>
 {`
-☁️ Cloudflare
+🔥 Persistent storage
+outside pod lifecycle.
 
-CDN
-DNS
-DDoS protection
-Caching
-SSL
+Without PV:
+-------------
+Database data lost
+when pod restarts.
+
+Used For:
+-----------
+• PostgreSQL
+• Redis
+• Uploads
 `}
-          </pre>
-        </div>
-      </section>
+</pre>
+
+  </div>
+</section>
+
+{/* ================================================= */}
+
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    📦 Persistent Volume Claim
+  </h2>
+
+  <div style={styles.grid}>
+
+<pre style={styles.code}>
+{`apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 PVC requests storage
+from PersistentVolume.
+
+Flow:
+-------
+Pod
+ ↓
+PVC
+ ↓
+PV
+ ↓
+Actual Disk Storage
+`}
+</pre>
+
+  </div>
+</section>
+
+{/* ================================================= */}
+
+<section style={styles.section}>
+  <h2 style={styles.subTitle}>
+    📈 HPA YAML
+  </h2>
+
+  <div style={styles.grid}>
+
+<pre style={styles.code}>
+{`apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: backend-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: backend-deployment
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+`}
+</pre>
+
+<pre style={styles.code}>
+{`
+🔥 CPU > 70%
+---------------
+Creates more pods.
+
+🔥 minReplicas
+----------------
+Minimum running pods.
+
+🔥 maxReplicas
+----------------
+Maximum scaling limit.
+
+Traffic ↑
+   ↓
+Pods ↑
+`}
+</pre>
+
+  </div>
+</section>
 
       {/* ========================================= */}
       {/* INTERVIEW */}
@@ -1488,11 +3568,8 @@ Every worker node gets:
 
   <div style={styles.grid}>
     <pre style={styles.code}>
-{`
-🔥 StatefulSet
-
-Used for databases
-
+{`🔥 StatefulSet
+Used for databases like:
 PostgreSQL
 MongoDB
 Kafka
@@ -1503,9 +3580,7 @@ Redis
     <pre style={styles.code}>
 {`
 Why not Deployment?
-
 Databases need:
-
 Stable identity
 Persistent storage
 Ordered startup
@@ -3554,6 +5629,9 @@ THAT is real DevOps engineering.
   </div>
 </section>
     </div>
+    
+      <ImageBanner />
+    </>
   );
 };
 
