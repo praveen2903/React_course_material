@@ -48,7 +48,7 @@ const GridLights = () => {
 
   return (
     <>
-    <div> Grid Lights</div>
+    <div> Grid Lights -- all 3 types like static, moving with stop & moving with start and stop</div>
     <code style={{textAlign:'left', minWidth: '500px'}}>
       <pre>
 {`const [active, setActive]= useState([]);
@@ -68,8 +68,7 @@ return (
    }
   </div>
 </>
-)
-`}
+)`}
       </pre>
     </code>
     <div style={{display:'grid', gridTemplateColumns:'repeat(3,80px)'}}>
@@ -85,7 +84,40 @@ return (
       }
       
     </div>
-    <h1>Switching indexes</h1>
+    <h1>Switching indexes-- like using timeout to move to next indexes automatically</h1>
+        <code style={{textAlign:'left', minWidth: '500px'}}>
+      <pre>
+{`const [activeIndex, setActiveIndex] = useState(0);
+const timerRef = useRef(null);
+
+useEffect(()=>{
+  timerRef.current = setInterval(()=>{
+        setActiveIndex(index =>  index == 8 ? 0: index+1)
+  }, 3000) 
+  return ()=>clearTimeout(timerRef.current) //if interval stopped cleanup will be executed
+},[])
+
+const stop= ()=>{
+  clearTimeout(timerRef.current) //immediate stop like cleanup only
+  timerRef.current=null;
+}
+return (
+<>
+<div style={{display:'grid', gridTemplateColumns: 'repeat(3, 100px'}}>
+  {
+    [...Array(length)].map((_, index)=>(
+      <>
+      <div key={index} style={{width: '80px', height: '80px',border:'1px solid black', background: index===activeIndex? 'blue':'white'}}></div>
+      </>
+    ))
+  }
+</div>
+<div>
+    <button onClick={stop}>Stop</button>
+</>
+)`}
+      </pre>
+    </code>
     <div style={{display:'grid', gridTemplateColumns: 'repeat(3, 100px'}}>
       {
         [...Array(length)].map((_, index)=>(
@@ -100,6 +132,48 @@ return (
       </div>
 
       <h3> if needed start button too use a state running and instead of empty state for interval useEffect keep it too</h3>
+        <code style={{textAlign:'left', minWidth: '500px'}}>
+      <pre>
+{`const [startIndex, setStartIndex] = useState(0)
+const startRef = useRef(null);
+const [running,setRunning] = useState(false);
+
+useEffect(()=>{
+  startRef.current= setInterval(()=>{
+    setStartIndex(index=> index==8 ? 0 : index+1)
+  }, 3000)
+  return () =>clearInterval(startRef.current)
+},[running])
+
+const start = () =>{
+  setRunning(true)
+}
+
+const stopStart = () =>{
+  setRunning(false)
+  clearInterval(startRef.current)
+  startRef.current=null;
+}
+return (
+<>
+<div style={{display:'grid', gridTemplateColumns:'repeat(3,100px'}}>
+  {
+    [...Array(length)].map((_,index)=>(
+      <>
+      <div key={index} style = {{width:'80px', height:'80px', 
+        border: '1px solid black', background: index===startIndex? 'green':'white'}}></div>
+      </>
+    )
+    )
+  }
+  <div>
+    <button onClick={start}>start</button>
+    <button onClick={stopStart}>stop</button>
+  </div>
+</>
+)`}
+      </pre>
+    </code>
       <div style={{display:'grid', gridTemplateColumns:'repeat(3,100px'}}>
         {
         [...Array(length)].map((_,index)=>(

@@ -5,10 +5,6 @@ import dispatchSelectorImg from "../assets/dispatch_and_selector.png";
 import reduxWorkingImg from "../assets/redux_working.png";
 import { Provider, useDispatch,useSelector} from "react-redux";
 
-/* =========================================================
-   STYLES
-========================================================= */
-
 const styles = {
   page: {
     padding: "30px",
@@ -305,17 +301,14 @@ function ReduxDemoComponent() {
     >
 {`
 import { configureStore }  from "@reduxjs/toolkit";
-
 import counterReducer from "./counterSlice";
-
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
     toggler: toggleReducer,
   },
-});
-`}
+});`}
     </pre>
   </div>
 
@@ -339,16 +332,11 @@ export const store = configureStore({
 {`
 import React from "react";
 import ReactDOM from "react-dom/client";
-
 import App from "./App";
-
 import { Provider } from "react-redux";
-
 import { store } from "./store";
 
-ReactDOM.createRoot(
-  document.getElementById("root")
-).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <App />
   </Provider>
@@ -377,17 +365,17 @@ ReactDOM.createRoot(
     >
 {`
 import { createSlice } from "@reduxjs/toolkit";
-  const initState = {
-    count: 0,
-    text: "",
-    darkMode: false,
-    todos: ["Learn Redux"],
-  },
+
+const initState = {
+  count: 0,
+  text: "",
+  darkMode: false,
+  todos: ["Learn Redux"],
+},
 
 const counterSlice = createSlice({
   name: "counter",  -- name can be same in store generally same
   initialState: initState
-
   // initalState:{  --same
   //   count: 0,
   //   text: "",
@@ -396,19 +384,13 @@ const counterSlice = createSlice({
   // },
 
   reducers: {
-
     increment: (state) => {
       state.count += 1;
     },
-
     decrement: (state) => {
       state.count -= 1;
     },
-
-    incrementByAmount: (
-      state,
-      action
-    ) => {
+    incrementByAmount: (state,action) => {
       state.count += action.payload;
     },
 
@@ -424,14 +406,9 @@ const counterSlice = createSlice({
       state.todos.push(action.payload);
     },
 
-    removeTodo: (
-      state,
-      action
-    ) => {
-      state.todos.splice(
-        action.payload,
-        1
-      );
+    removeTodo: (state,action) => {
+      state.todos.splice(action.payload ,1); 
+      //deleteIndex, no.of items--> splice
     },
   },
 });
@@ -474,72 +451,48 @@ export default counterSlice.reducer;
 {`
 import React from "react";
 import {useSelector,useDispatch,} from "react-redux";
-
 import {increment, decrement,incrementByAmount,
-  setText, toggleTheme, addTodo, removeTodo,} from "./counterSlice";
+setText, toggleTheme, addTodo, removeTodo,} from "./counterSlice";
 
 const ReduxExample = () => {
-
   const dispatch = useDispatch();
 
-  /* =========================
+============================================================
 READ STATE -- useSelector(
   (state)=> state.reducerName.variableName
 )
 reducerName :- reducerName: slice.reducer (or) slice (if exported);
 Note variableName-- must be in initialState of that reducer
-  ========================= */
+================================================================
+  const count = useSelector((state) => state.counter.count);
 
-  const count = useSelector(
-    (state) => state.counter.count
-  );
+  const text = useSelector((state) => state.counter.text);
 
-  const text = useSelector(
-    (state) => state.counter.text
-  );
+  const darkMode = useSelector((state) => state.counter.darkMode);
 
-  const darkMode = useSelector(
-    (state) => state.counter.darkMode
-  );
-
-  const todos = useSelector(
-    (state) => state.counter.todos
-  );
+  const todos = useSelector((state) => state.counter.todos);
 
   return (
     <div>
-
       <h1>Count: {count}</h1>
-        /* =========================
+=======================================
 dispatch -- dispatch(
   imported reducer method
 )
 
 Note: reducer method is imported from slice
-  ========================= */
+=========================================
+    <button onClick={() => dispatch(increment())}>
+      Increment
+    </button>
 
-      <button
-        onClick={() =>
-          dispatch(increment())
-        }
-      >
-        Increment
-      </button>
-
-      <button
-        onClick={() =>
-          dispatch(addTodo("Task"))
-        }
-      >
-        Add Todo
-      </button>
-
-    </div>
+    <button onClick={() => dispatch(addTodo("Task"))}>
+      Add Todo
+    </button>
+  </div>
   );
 };
-
-export default ReduxExample;
-`}
+export default ReduxExample;`}
     </pre>
   </div>
 
@@ -576,6 +529,254 @@ Component Re-renders
 Updated UI
 `}
 </pre>
+<section
+  style={{
+    padding: "20px",
+    fontFamily: "sans-serif",
+    textAlign: "left",
+  }}
+>
+
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "20px",
+  }}
+>
+
+{/* ====================================== */}
+{/* LEFT */}
+{/* ====================================== */}
+
+<div
+  style={{
+    background: "#111",
+    color: "#00ff90",
+    padding: "18px",
+    borderRadius: "10px",
+    overflowX: "auto",
+  }}
+>
+
+<h2>Redux Slice + extraReducers</h2>
+
+<pre
+  style={{
+    fontSize: "13px",
+    lineHeight: "1.6",
+  }}
+>
+{`-----> createAsyncThunk allows to read the data and inject to slice
+import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
+import axios from "axios"
+
+export const getUsers = createAsyncThunk("users/getUsers", async () => {
+      const res = await axios.get("/users")
+      return res.data
+    }
+)
+
+export const addUser = createAsyncThunk("users/addUser", async (data) => {
+      const res = await axios.post("/users", data)
+      return res.data
+    }
+)
+
+export const updateUser = createAsyncThunk("users/updateUser", async ({ id, data }) => {
+      const res = await axios.put(\`/users/\${id}\`, data)
+      return res.data
+    }
+)
+export const deleteUser = createAsyncThunk("users/deleteUser",
+    async (id) => {
+      await axios.delete(\`/users/\${id}\`)
+      return id
+    }
+)
+====================================================
+SLICE
+====================================================
+const userSlice = createSlice({
+    name: "users",
+    initialState: {
+      users: [],
+      loading: false,
+      error: null,
+    },
+    reducers: {},
+
+--> reducers for normal data store but extra reducers if async data
+    extraReducers: (builder) => {
+      builder
+      .addCase(getUsers.pending, (state) => {
+          state.loading = true
+        }
+      )
+      .addCase(getUsers.fulfilled, (state, action) => {
+          state.loading = false
+          state.users =action.payload
+        }
+      )
+      .addCase(getUsers.rejected, (state, action) => {
+          state.loading = false
+          state.error = action.error.message
+        }
+      )
+====================================================
+POST
+====================================================
+      .addCase(addUser.fulfilled, (state, action) => {
+          state.users.push(action.payload)
+        }
+      )
+====================================================
+PUT
+====================================================
+      .addCase(updateUser.fulfilled,(state, action) => {
+          state.users = state.users.map((user) =>
+                user.id === action.payload.id ? action.payload : user
+            )
+        }
+      )
+      .addCase(deleteUser.fulfilled, (state, action) => {
+          state.users = state.users.filter(
+              (user) =>user.id !== action.payload
+            )
+        }
+      )
+    }
+})
+export default userSlice.reducer`}
+</pre>
+
+</div>
+
+{/* ====================================== */}
+{/* RIGHT */}
+{/* ====================================== */}
+
+<div
+  style={{
+    background: "#111",
+    color: "#00ff90",
+    padding: "18px",
+    borderRadius: "10px",
+    overflowX: "auto",
+  }}
+>
+
+<h2>Component + useSelector</h2>
+
+<pre
+  style={{
+    fontSize: "13px",
+    lineHeight: "1.6",
+  }}
+>
+{`
+import React, {useEffect} from "react"
+import {useDispatch, useSelector} from "react-redux"
+import {getUsers, addUser, updateUser, deleteUser} from "./userSlice"
+
+function Users() {
+  const dispatch = useDispatch()
+====================================================
+GET DATA FROM STORE
+====================================================
+  const {users,loading,error} = useSelector((state) => state.users)
+====================================================
+GET USERS
+====================================================
+  useEffect(() => {
+    dispatch(getUsers())
+  }, [])
+====================================================
+POST USER
+====================================================
+  const handleAdd = () => {
+    dispatch(addUser({
+        name: "praveen",
+        age: 22
+      })
+    )
+  }
+====================================================
+PUT USER
+====================================================
+  const handleUpdate = () => {
+    dispatch(updateUser({
+        id: 1,
+        data: { name: "sai" }
+      })
+    )
+  }
+====================================================
+DELETE USER
+====================================================
+  const handleDelete = () => {
+    dispatch(deleteUser(1))
+  }
+
+====================================================
+UI
+====================================================
+
+  if (loading)
+    return <h1>Loading...</h1>
+  if (error)
+    return <h1>{error}</h1>
+
+  return (
+    <div>
+      <button onClick={handleAdd}>Add</button>
+
+      <button onClick={handleUpdate}>Update</button>
+
+      <button onClick={handleDelete}>Delete</button>
+===================================================
+INJECTING STORE DATA
+====================================================
+      {users.map((user) => (
+          <div key={user.id}>
+            <h2>{user.name} </h2>
+          </div>
+        ))
+      }
+    </div>
+  )
+}
+
+export default Users
+
+====================================================
+FLOW
+====================================================
+
+dispatch(action)
+       ↓
+
+createAsyncThunk
+       ↓
+
+API Call
+       ↓
+
+extraReducers
+updates store
+       ↓
+
+useSelector gets
+updated store data
+       ↓
+
+UI re-renders
+
+====================================================`}
+</pre>
+</div>
+</div>
+</section>
       <ImageBanner/>
       <h1 style={styles.title}>
         🧠 Complete Redux Toolkit +
@@ -616,6 +817,7 @@ useSelector gets new state
 React re-renders`}
           </pre>
         </div>
+        
 
         <div style={styles.cardGrid}>
           <div style={styles.card}>
