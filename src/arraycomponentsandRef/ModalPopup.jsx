@@ -2,9 +2,48 @@ import { useState } from "react";
 
 export default function ModalPopup() {
   const [open, setOpen] = useState(false);
+  const modalRef = useRef(null);
+
+  useEffect (()=>{
+    const closeModal = () =>{
+      if(modalRef && modalRef.current && !modalRef.current.contains(e.target)){
+        setOpen(false)
+      }
+    }
+    window.addEventListener('click', closeModal);
+    return () => window.removeEventListener('click', closeModal)
+  }, []);
 
   return (
     <div style={{ padding: "40px", fontFamily: "Arial, sans-serif" }}>
+<code style ={{textAlign:'left'}}>
+  <pre>{`
+const [open, setOpen] = useState(false);
+const modalRef = useRef();
+
+//onclick close modal
+useEffect(()=>{
+    function handleClick(e){
+        if(open && modalRef.current && !modalRef.current.contains(e.target)){
+            setOpen(false)
+         }
+    }
+    document.addEventListener("mousedown", handleClick); 
+    return  () => document.removeEventListener("mousedown", handleClick)
+}, [open])
+
+//keyboard event esc key -- so adding listener than attaching it to the dom events
+useEffect(()=>{
+    const key= (event) => event.key === "Escape" && setOpen(false)
+    window.addEventListener("keydown", key);
+    return () => window.removeEventListener("keydown", key);
+})
+return (
+  <>
+    <div ref= {modalRef}></div>
+  </>
+)`}</pre>
+</code>
       <button
         onClick={() => setOpen(true)}
         style={{
@@ -20,7 +59,7 @@ export default function ModalPopup() {
       </button>
 
       {open && (
-        <div
+        <div ref ={modalRef}
           onClick={() => setOpen(false)}
           style={{
             position: "fixed",
