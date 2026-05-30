@@ -85,6 +85,7 @@ import Kubernetes from './mistakesInHooks/Kubernetes'
 import JwtTokens from './mistakesInHooks/JwtTokens'
 import ReactHookFormFullDemo from './mistakesInHooks/ReactHooksInterviewNotes.jsx'
 import RefTypes from './UseRefComponents/RefTypes'
+import SocketsDemo from './typescriptConcepts/SocketsDemo'
 
 function App() {
 
@@ -114,6 +115,7 @@ function App() {
       <button onClick={() => setTabs("oldInfiniteScroll")}>old Infinite scroll</button>
       <button onClick={() => setTabs('kubernetes')}>Kubernetes</button>
       <button onClick={() => setTabs('jwt')}>jwt</button>
+      <button onClick={() => setTabs('sockets')}>sockets</button>
     </div>
     {
       tabs==='kubernetes' && (
@@ -385,6 +387,14 @@ function App() {
             <DigitalClock/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <OTPEntry/>
+          </>
+        )
+      }
+      {
+        tabs==='sockets' && (
+          <>
+             <div>------------------------------------------------------------------------------------------------------------------</div>
+             <SocketsDemo/>
           </>
         )
       }
