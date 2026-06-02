@@ -21,7 +21,6 @@
     "react-hook-form": "^7.76.0",
     "react-redux": "^9.2.0",
     "react-select": "^5.10.2",
-    "react-window": "^1.8.10",
     "typescript": "^6.0.3",
     "zod": "^4.4.3"
   },
