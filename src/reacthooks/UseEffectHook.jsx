@@ -267,9 +267,9 @@ export default function UseEffectCompleteGuide() {
 
         <div style={cardStyle}>
 
-          <h1>
+          <h2>
             ❌ Component Removed
-          </h1>
+          </h2>
 
           <button
             style={buttonStyle}
@@ -294,9 +294,9 @@ export default function UseEffectCompleteGuide() {
   return (
     <div style={containerStyle}>
 
-      <h1>
+      <h2>
         🧠 useEffect Complete Interview Guide
-      </h1>
+      </h2>
 
 
 
@@ -566,9 +566,9 @@ Prevents old timeouts`}
           ⏱️ Timer Example
         </h2>
 
-        <h1>
+        <h2>
           {seconds}s
-        </h1>
+        </h2>
 
         <pre style={codeStyle}>
 {`useEffect(()=>{

@@ -474,7 +474,7 @@ Note variableName-- must be in initialState of that reducer
 
   return (
     <div>
-      <h1>Count: {count}</h1>
+      <h2>Count: {count}</h2>
 =======================================
 dispatch -- dispatch(
   imported reducer method
@@ -723,9 +723,9 @@ UI
 ====================================================
 
   if (loading)
-    return <h1>Loading...</h1>
+    return <h2>Loading...</h2>
   if (error)
-    return <h1>{error}</h1>
+    return <h2>{error}</h2>
 
   return (
     <div>
@@ -778,10 +778,10 @@ UI re-renders
 </div>
 </section>
       <ImageBanner/>
-      <h1 style={styles.title}>
+      <h2 style={styles.title}>
         🧠 Complete Redux Toolkit +
         React-Redux Demo
-      </h1>
+      </h2>
 
 
       <section style={styles.section}>

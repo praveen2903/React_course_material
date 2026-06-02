@@ -250,10 +250,10 @@ export default function UseReducerHookDetailed() {
 
   return (
     <div style={styles.page}>
-      <h1 style={styles.title}>
+      <h2 style={styles.title}>
         🧠 useReducer Complete Interview Notes +
         Visual Guide
-      </h1>
+      </h2>
 
       {/* =====================================================
           WHAT IS USEREDUCER

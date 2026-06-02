@@ -65,15 +65,43 @@
 
 body {
   margin: 0;
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 #root {
   text-align: center;
   border-inline: 1px solid var(--border);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+}
+
+img,
+svg,
+canvas,
+video {
+  max-width: 100%;
+}
+
+table {
+  max-width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 h1,
@@ -108,14 +136,75 @@ p {
 code,
 .counter {
   font-family: var(--mono);
-  display: inline-flex;
   border-radius: 4px;
   color: var(--text-h);
 }
 
 code {
+  display: inline-block;
   font-size: 15px;
   line-height: 135%;
   padding: 4px 8px;
   background: var(--code-bg);
+  width: min(100%, 900px);
+  max-width: 100%;
+  min-width: 0 !important;
+  overflow-wrap: break-word;
+  white-space: normal;
+  text-align: left;
+}
+
+.counter {
+  display: inline-flex;
+}
+
+pre {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0 !important;
+  margin: 0;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: normal;
+  tab-size: 2;
+}
+
+code pre,
+pre code {
+  white-space: pre-wrap;
+}
+
+@media (max-width: 640px) {
+  :root {
+    line-height: 155%;
+  }
+
+  #root {
+    border-inline: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  p,
+  li,
+  span,
+  div {
+    overflow-wrap: break-word;
+  }
+
+  code {
+    display: block;
+    width: 100%;
+    font-size: 13px;
+    line-height: 150%;
+    padding: 10px 12px;
+  }
+
+  pre {
+    font-size: 12.5px;
+    line-height: 150%;
+    overflow-wrap: break-word;
+  }
 }

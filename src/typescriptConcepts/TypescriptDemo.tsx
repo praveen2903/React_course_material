@@ -612,7 +612,7 @@ getValue(user, "name")`}
   </ul>
 
 </Section>
-      <h1>🚀 Type vs Interface Complete Guide</h1>
+      <h2>🚀 Type vs Interface Complete Guide</h2>
       <p> Both <b>type</b> and <b>interface</b>
       are used to define data structures in TypeScript.
       </p>

@@ -84,7 +84,7 @@ return (
       }
       
     </div>
-    <h1>Switching indexes-- like using timeout to move to next indexes automatically</h1>
+    <h2>Switching indexes-- like using timeout to move to next indexes automatically</h2>
         <code style={{textAlign:'left', minWidth: '500px'}}>
       <pre>
 {`const [activeIndex, setActiveIndex] = useState(0);

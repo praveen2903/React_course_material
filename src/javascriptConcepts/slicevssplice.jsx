@@ -83,9 +83,9 @@ function SliceVsSpliceGuide() {
       }}
     >
 
-      <h1 style={{ marginBottom: "30px" }}>
+      <h2 style={{ marginBottom: "30px" }}>
         🔥 slice() vs splice() — Complete Visual Guide
-      </h1>
+      </h2>
 
       {/* ===================================================== */}
       <section style={sectionStyle}>

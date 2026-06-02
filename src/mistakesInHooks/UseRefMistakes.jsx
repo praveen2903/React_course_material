@@ -164,7 +164,7 @@ function UseRefMistakes() {
         lineHeight: "1.8",
       }}
     >
-      <h1
+      <h2
         style={{
           textAlign: "center",
           fontSize: "48px",
@@ -172,7 +172,7 @@ function UseRefMistakes() {
         }}
       >
         🧠 Complete useRef Master Guide
-      </h1>
+      </h2>
 
       <p
         style={{

@@ -40,7 +40,7 @@ const stop=()=> {  //clear the interval as stop wantedly and restart the timeref
         </code>
         <div>StopWatch-- timer storage (setInterval)--approach 1st and 2nd is grid lights</div>
         
-        <h1>{time}</h1>
+        <h2>{time}</h2>
         <div style={{display:'flex', gap:'30px'}}>
             <button onClick={start}>Start</button>
             <button onClick={stop}>Stop</button>

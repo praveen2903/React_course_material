@@ -139,7 +139,7 @@ const ReactDomCheatSheet = () => {
 
   return (
     <div style={pageStyle}>
-      <h1
+      <h2
         style={{
           textAlign: "center",
           fontSize: "48px",
@@ -148,7 +148,7 @@ const ReactDomCheatSheet = () => {
         }}
       >
         React DOM Events + Browser APIs Cheat Sheet
-      </h1>
+      </h2>
 
       <p
         style={{

@@ -98,7 +98,7 @@ const ConnectFourGame = () => {
     <div
       style={{minHeight: "100vh", background: "#f4f7fb",display: "flex",flexDirection: "column",
         alignItems: "center",paddingTop: "30px",fontFamily: "Arial",}}>
-      <h1>Connect Four</h1>
+      <h2>Connect Four</h2>
 
       <div style={{display: "grid", gridTemplateColumns: `repeat(${COLS}, 70px)`, gap: "10px", 
         background: "#1d4ed8", padding: "16px", borderRadius: "18px", boxShadow: "0 8px 20px rgba(0,0,0,0.2)",}}>

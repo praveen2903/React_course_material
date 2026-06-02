@@ -124,13 +124,13 @@ const JwtTokens = () => {
   }}
 >
 
-  <h1
+  <h2
     style={{
       marginBottom: "20px",
     }}
   >
     localStorage vs sessionStorage vs Cookies vs HttpOnly Cookies
-  </h1>
+  </h2>
 
   <div
     style={{

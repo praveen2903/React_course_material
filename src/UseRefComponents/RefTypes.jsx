@@ -13,7 +13,7 @@ const RefTypes = () => {
         fontFamily: "sans-serif",
       }}
     >
-      <h1>Complete useRef Cheat Sheet</h1>
+      <h2>Complete useRef Cheat Sheet</h2>
 
       <pre
         style={{

@@ -18,12 +18,12 @@ Use () when you want to:
     B. Implicit return in arrow functions
     JSX
     const Add = () => (
-    <h1>Hello</h1>
+    <h2>Hello</h2>
     );
     Equivalent to:
     JSX
     const Add = () => {
-    return <h1>Hello</h1>;
+    return <h2>Hello</h2>;
     };
     ✅ () directly returns value.
 
@@ -40,7 +40,7 @@ Use () when you want to:
 Use {} when you want to:
         A. Write JavaScript inside JSX
         JSX
-        <h1>{name}</h1>
+        <h2>{name}</h2>
         <p>{2 + 2}</p>
         ✅ Inside JSX, {} means “run JavaScript here”.
 
@@ -49,7 +49,7 @@ Use {} when you want to:
         JSX
         const Add = () => {
         const name = "Praveen";
-        return <h1>{name}</h1>;
+        return <h2>{name}</h2>;
         };
         ✅ Multiple lines need {}.
 
@@ -77,18 +77,18 @@ Use {} when you want to:
 ❌ Wrong
 JSX
 const App = () => {
-   <h1>Hello</h1>
+   <h2>Hello</h2>
 }
 Nothing renders because {} body needs explicit return.
 ✅ Correct
 JSX
 const App = () => {
-   return <h1>Hello</h1>;
+   return <h2>Hello</h2>;
 }
 OR
 JSX
 const App = () => (
-   <h1>Hello</h1>
+   <h2>Hello</h2>
 )
 
 
@@ -136,7 +136,7 @@ const App = () => {
 
   return (
     <div>
-      <h1>{name}</h1>
+      <h2>{name}</h2>
     </div>
   );
 };

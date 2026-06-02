@@ -193,9 +193,9 @@ function ReactHookFormFullDemo() {
   return (
     <div style={pageStyle}>
 
-      <h1 style={headingStyle}>
+      <h2 style={headingStyle}>
         React Hook Form + Zod Full Guide
-      </h1>
+      </h2>
 
       <p style={subHeadingStyle}>
         register, Controller,

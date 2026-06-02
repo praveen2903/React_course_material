@@ -120,7 +120,7 @@ const GameMove = () => {
         paddingTop: "20px",
       }}
     >
-      <h1>Moving Tic Tac Toe</h1>
+      <h2>Moving Tic Tac Toe</h2>
 
       <h2>
         Turn : {xTurn ? "X" : "O"}
@@ -196,13 +196,13 @@ const GameMove = () => {
         })}
       </div>
 
-      <h1
+      <h2
         style={{
           marginTop: "30px",
         }}
       >
         Winner : {winner || "None"}
-      </h1>
+      </h2>
 
       <div
         style={{

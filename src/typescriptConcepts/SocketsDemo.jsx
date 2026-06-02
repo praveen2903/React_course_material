@@ -33,7 +33,7 @@ const SocketsDemo = () => {
   }}
 >
 
-<h1>Polling vs WebSocket vs Socket.IO</h1>
+<h2>Polling vs WebSocket vs Socket.IO</h2>
 
 <div
   style={{
@@ -364,7 +364,7 @@ Socket.IO Server
   }}
 >
 
-<h1>Polling vs WebSocket vs Socket.IO Traps</h1>
+<h2>Polling vs WebSocket vs Socket.IO Traps</h2>
 
 <div
   style={{

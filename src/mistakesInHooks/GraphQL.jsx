@@ -32,9 +32,9 @@ function ImageBanner() {
   return (
     <div style={styles.bannerContainer}>
 
-      <h1 style={styles.bannerTitle}>
+      <h2 style={styles.bannerTitle}>
         🚀 GraphQL + Apollo Client
-      </h1>
+      </h2>
 
       <div style={styles.imageGrid}>
         {images.map((img, index) => (
@@ -733,7 +733,7 @@ Updated UI Shown
 
 
 <div>
-  <h1
+  <h2
   style={{
     color: "#00ff90",
     marginBottom: "20px",
@@ -741,7 +741,7 @@ Updated UI Shown
   }}
 >
   📁 PROJECT STRUCTURE
-</h1>
+</h2>
 
 <pre
   style={{
@@ -2137,15 +2137,15 @@ function App() {
     };
 
   if (loading) {
-    return <h1>Loading...</h1>;
+    return <h2>Loading...</h2>;
   }
   if (error) {
-    return <h1>Error...</h1>;
+    return <h2>Error...</h2>;
   }
 
   return (
     <div>
-      <h1>GraphQL CRUD</h1>
+      <h2>GraphQL CRUD</h2>
       {data?.products?.products?.map((item) => (
           <div key={item.id}>
             <h3>{item.name}</h3>
@@ -2697,14 +2697,14 @@ const GraphQLExample = () => {
   const [updateUser] = useMutation(UPDATE_USER);
 
   if (loading) {
-    return <h1>Loading...</h1>;
+    return <h2>Loading...</h2>;
   }
   if (error) {
-    return <h1>Error...</h1>;
+    return <h2>Error...</h2>;
   }
   return (
     <div>
-      <h1>Users List</h1>
+      <h2>Users List</h2>
       {data.users.map((user) => (
         <div key={user.id}>
           <h2>{user.name}</h2>
@@ -2752,7 +2752,7 @@ export default GraphQLExample;
 
 <div style ={{display:'grid', gridTemplateColumns:'repeat(2, 1fr'}}>
   <div>
-    <h1
+    <h2
   style={{
     color: "#ffd166",
     marginTop: "70px",
@@ -2761,7 +2761,7 @@ export default GraphQLExample;
   }}
 >
   📚 IMPORTANT NOTES
-</h1>
+</h2>
 
     <pre
       style={{
@@ -2813,7 +2813,7 @@ export default GraphQLExample;
       ↓
     UI Updates
     {data.users.map((user)=>(
-      <h1>{user.name}</h1>
+      <h2>{user.name}</h2>
     ))}
 
     query GetUser($id: ID!)
@@ -2895,9 +2895,9 @@ function GraphQLNotes() {
   return (
     <div style={{...styles.card, textAlign:'left'}}>
 
-      <h1>
+      <h2>
         🚀 GraphQL + Apollo Complete Notes
-      </h1>
+      </h2>
 
       <code style={{textAlign:'left', minWidth: '500px'}}>
         <pre>

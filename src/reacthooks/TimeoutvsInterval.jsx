@@ -301,10 +301,10 @@ function TimeoutVsIntervalCompleteGuide() {
       }}
     >
 
-      <h1>
+      <h2>
         ⏱️ setTimeout vs setInterval
         Complete Interview Guide
-      </h1>
+      </h2>
 
 
       {/* =================================================== */}
@@ -430,9 +430,9 @@ Fixes stale closure issue`}
           ⏱️ Stopwatch Example
         </h2>
 
-        <h1>
+        <h2>
           {seconds}s
-        </h1>
+        </h2>
 
         <button
           style={buttonStyle}
