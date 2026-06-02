@@ -389,6 +389,32 @@ function App() {
          <div style={{textAlign:'left'}}>
            <div>
             <span>Usage to learn: like use of useRef instead of useState to stop the rerending of Dom </span>
+            <p>Example: here count state is not useful on change state the dom rerenders and rerender called everytime</p>
+            <code>
+              <pre>{`const [count,setCount] = useState(0);
+console.log('rerender)
+const handleClick = ()=>{
+  if(count<3){
+  fetchUsers();
+  }
+  setCount(count=>count+1)
+}
+return ( <button onClick = {handleClick}>fetch</button>)
+              `}</pre>
+            </code>
+<p>UseRef is used here so that the counterRef keep track of mutable data without causing rerenders</p>
+            <code>
+              <pre>{`const countRef = useRef(0);
+console.log('rerender)
+const handleClick = ()=>{
+  if(counterRef.current<3){
+  fetchUsers();
+  }
+  counterRef.current++;
+}
+return ( <button onClick = {handleClick}>fetch</button>)
+              `}</pre>
+              </code>
           </div>
           <div>
             <span>Attaching the useRef to the DOM element and storing it to make focus or getBoundingClientRect()-- to store the area of the rectangle</span>
