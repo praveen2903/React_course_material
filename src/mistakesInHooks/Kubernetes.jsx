@@ -5,9 +5,6 @@ import deploymentCloud from "../assets/gcp_cloud.png";
 import kubernetesImg from "../assets/kubernetes.png";
 import kubernetesSnippets from "../assets/kubernetes_snippets.jpeg";
 import kubernetesDocker from "../assets/kubernetes_docker.png";
-import cloudBackend from "../assets/cloud_in_backend.png";
-import cloudServices from "../assets/cloud_services.png";
-import cloudFlare from "../assets/clouldflare_usage.png";
 import kubernetesConcepts from '../assets/kubernetes_concepts.png';
 import kubernetesBlueprint from '../assets/kubernetes_bluepirnt.png'
 
@@ -18,9 +15,6 @@ function ImageBanner() {
     kubernetesDocker,
     kubernetesImg,
     kubernetesSnippets,
-    cloudBackend,
-    cloudFlare,
-    cloudServices,
   ];
 
   return (

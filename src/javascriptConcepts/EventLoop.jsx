@@ -24,7 +24,7 @@ const EventLoop = () => {
     }
   return (
     <>
-    <h2>Event Loop</h2>
+    <h2>Event Loop `(events, microtasks queue (promises), callback/macrotask queue (setTimeout, setInterval))`</h2>
 <div style={{textAlign:'left'}}>
         <code style={{textAlign:'left', minWidth: '500px'}}><pre>
             

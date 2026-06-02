@@ -48,7 +48,6 @@ import LightsRef from './UseRefComponents/LightsRef.jsx'
 import UseRefHook from './reacthooks/UseRefHook.jsx'
 import UseReducerHook from './reacthooks/UseReducerHook.jsx'
 import UseRefMistakes from './mistakesInHooks/UseRefMistakes.jsx'
-import ReactHooksInterviewNotes from './mistakesInHooks/ReactHooksInterviewNotes.jsx'
 import ToolTip from './advancedConcepts/ToolTip.jsx'
 import InfiniteScrollRef from './advancedConcepts/InfiniteScrollRef.jsx'
 import DebounceUndoRedo from './advancedConcepts/DebounceUndoRedo.jsx'
@@ -86,37 +85,53 @@ import JwtTokens from './mistakesInHooks/JwtTokens'
 import ReactHookFormFullDemo from './mistakesInHooks/ReactHooksInterviewNotes.jsx'
 import RefTypes from './UseRefComponents/RefTypes'
 import SocketsDemo from './typescriptConcepts/SocketsDemo'
+import RefUsageConcepts from './interview/RefUsageConcepts'
+import CloudConcepts from './interview/CloudConcepts'
 
 function App() {
 
   const [tabs, setTabs] = useState('pagination')
+  const tabList = [
+  "array",
+  "pagination",
+  "optimization",
+  "useRefcomponents",
+  "jsConcepts",
+  "promises",
+  "hooks",
+  "mistakes",
+  "redux",
+  "graphql",
+  "typescript",
+  "react-hooks",
+  "advanced",
+  "modernInfiniteScroll",
+  "oldInfiniteScroll",
+  "kubernetes",
+  "jwt",
+  "sockets",
+  "interview"
+];
 
 
   return (
     <div style={{display:'flex', alignItems:'center',justifyContent:'center',flexDirection:'column', gap:'20px'}}>
 
-    <div className="tabs-container">
-      <button onClick={() => setTabs("array")}>Array and useRef</button>
-      <button onClick={() => setTabs("pagination")}>Pagination</button>
-      <button onClick={() => setTabs("optimization")}>Optimization</button>
-      <button onClick={() => setTabs("useRefcomponents")}>UseRef</button>
-      <button onClick={() => setTabs("jsConcepts")}>JS Concepts</button>
-      <button onClick={()=> setTabs("promises")}>Promises</button>
-      <button onClick={() => setTabs("hooks")}>React Hooks</button>
-      <button onClick={() => setTabs("mistakes")}>
-        CheatSheet & Mistakes
-      </button>
-      <button onClick={() => setTabs("redux") }>Redux</button>
-      <button onClick={() => setTabs('graphql')}>Graph QL</button>
-      <button onClick={() => setTabs('typescript')}>TypeScript</button>
-      <button onClick={() => setTabs('react-hooks')}>React Hook Form</button>
-      <button onClick={() => setTabs("advanced")}>Advanced</button>
-      <button onClick={() => setTabs("modernInfiniteScroll")}>Modern Infinite scroll</button>
-      <button onClick={() => setTabs("oldInfiniteScroll")}>old Infinite scroll</button>
-      <button onClick={() => setTabs('kubernetes')}>Kubernetes</button>
-      <button onClick={() => setTabs('jwt')}>jwt</button>
-      <button onClick={() => setTabs('sockets')}>sockets</button>
-    </div>
+<div className="tabs-container">
+  {tabList.map(tab => (
+    <button
+      key={tab}
+      style={{
+          backgroundColor:tabs === tab ? "#2563eb" : "white",
+          color: tabs === tab ? "white" : "black",
+          border: tabs === tab ? "1px solid #2563eb": "1px solid #ccc"
+        }}
+      onClick={() => setTabs(tab)}
+    >
+      {tab}
+    </button>
+  ))}
+</div>
     {
       tabs==='kubernetes' && (
         <>
@@ -180,13 +195,13 @@ function App() {
         </>
       )
     }
-    {tabs==='infiniteScroll' && (
+    {tabs==='modernInfiniteScroll' && (
       <>
         <div>------------------------------------------------------------------------------------------------------------------</div>
         <ModernInfiniteScrollWindow/>
       </>
     )}
-        {tabs==='infiniteScroll' && (
+        {tabs==='oldInfiniteScroll' && (
       <>
         <div>------------------------------------------------------------------------------------------------------------------</div>
         <OldInfiniteScrollWindow/>
@@ -226,10 +241,18 @@ function App() {
           <>
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <UseRefMistakes/>
-            <div>------------------------------------------------------------------------------------------------------------------</div>
-            <ReactHooksInterviewNotes/>
+            {/* <div>------------------------------------------------------------------------------------------------------------------</div>
+            <ReactHooksInterviewNotes/> */}
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <ReactDomCheatSheet/>
+          </>
+        )
+      }
+      {
+        tabs =='interview' && (
+          <>
+          <RefUsageConcepts/>
+          <CloudConcepts/>
           </>
         )
       }
@@ -243,7 +266,7 @@ function App() {
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <UseEffectHook/>   
             <div>------------------------------------------------------------------------------------------------------------------</div>
-            <ReactQueryCompleteGuide/>         
+             <ReactQueryCompleteGuide/>         
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <UseContextHook/>
             <UseContextTraps/>
@@ -315,14 +338,14 @@ function App() {
           <> 
           <div>------------------------------------------------------------------------------------------------------------------</div>   
             <StarRatingFractions/>
-          <div>------------------------------------------------------------------------------------------------------------------</div>   
-          <DragBallWithHandlers/>
-                      <div>------------------------------------------------------------------------------------------------------------------</div>   
-<DragBallWithRef/>
-            <div>------------------------------------------------------------------------------------------------------------------</div>   
-            <GridLights/>
             <div>------------------------------------------------------------------------------------------------------------------</div>   
             <StarRating/>
+          <div>------------------------------------------------------------------------------------------------------------------</div>   
+          <DragBallWithHandlers/>
+        <div>------------------------------------------------------------------------------------------------------------------</div>   
+            <DragBallWithRef/>
+            <div>------------------------------------------------------------------------------------------------------------------</div>   
+            <GridLights/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
             <OtpEnter/>
             <div>------------------------------------------------------------------------------------------------------------------</div>
@@ -362,6 +385,8 @@ function App() {
       {
         tabs==='useRefcomponents' && (
           <>
+          <div>------------------------------------------------------------------------------------------------------------------</div>
+          
           <div>------------------------------------------------------------------------------------------------------------------</div>
           <RefTypes/>
           <div>------------------------------------------------------------------------------------------------------------------</div>

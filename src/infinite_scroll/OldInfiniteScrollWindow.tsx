@@ -1,195 +1,225 @@
-import { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
+import { useState,useEffect,useCallback } from "react";
+import axios from "axios";
 
-//giving type
 type PostType = {
-    userId: number
-    id: number
-    title: string
-    body: string
-}
+  userId:number;
+  id:number;
+  title:string;
+  body:string;
+};
+    const styles = {
 
+  subTitle: {
+    textAlign: "left",
+    marginBottom: "20px",
+    color: "#00ff90",
+    fontSize: "24px",
+    fontWeight: "bold"
+  },
 
-const OldInfiniteScrollWindow = () => {
-    const [users, setUsers] = useState<PostType[]>([]);
-    const [page, setPage] = useState<number>(1);
+  th: {
+    border: "1px solid #444",
+    padding: "12px",
+    background: "#1e1e1e",
+    color: "#00ff90",
+    fontWeight: "bold"
+  },
 
-    const [loading, setLoading] = useState<boolean>(false);
+  td: {
+    border: "1px solid #444",
+    padding: "12px",
+    verticalAlign: "top",
+    lineHeight: "1.6"
+  },
 
-    const [hasMore, setHasMore] = useState<boolean>(true);
+  pre: {
+    background: "#000",
+    color: "#00ff90",
+    padding: "15px",
+    borderRadius: "8px",
+    overflowX: "auto",
+    fontSize: "14px",
+    lineHeight: "1.6",
+    border: "1px solid #333"
+  },
 
-    const fetchUsers = useCallback(async (): Promise<void> => {
-        if (loading || !hasMore) return;
-        try {
-            setLoading(true);
-            const response = await axios.get<PostType[]>(
-                `https://jsonplaceholder.typicode.com/posts?_limit=10&_page=${page}`
-            );
-            console.log(response.data);   
+  code: {
+    color: "#00ff90"
+  },
 
-             // If no data stop infinite scroll
-            if (response.data.length === 0) {
-                setHasMore(false);
-                return;
-            }
+  card: {
+    border: "1px solid #333",
+    padding: "15px",
+    borderRadius: "8px",
+    marginBottom: "15px",
+    background: "#1a1a1a"
+  },
 
-            // Append new data
-            setUsers((prev) => [...prev,...response.data]);
+  grid2: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "20px",
+    marginTop: "20px"
+  },
 
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setLoading(false);
-        }
-    }, [page, loading, hasMore]);
+  grid3: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 1fr",
+    gap: "20px",
+    marginTop: "20px"
+  },
 
+  note: {
+    background: "#1e293b",
+    borderLeft: "5px solid #00ff90",
+    padding: "15px",
+    marginTop: "15px",
+    borderRadius: "5px"
+  },
 
-    useEffect(() => {
-        fetchUsers();
-    }, [fetchUsers]);
+  warning: {
+    background: "#2b1818",
+    borderLeft: "5px solid orange",
+    padding: "15px",
+    marginTop: "15px",
+    borderRadius: "5px"
+  },
 
+  success: {
+    background: "#102414",
+    borderLeft: "5px solid #00ff90",
+    padding: "15px",
+    marginTop: "15px",
+    borderRadius: "5px"
+  }
+};
+export default function OldInfiniteScroll(){
+  const [posts,setPosts] = useState<PostType[]>([]);
+  const [page,setPage] = useState(1);
 
-    const handleScroll = (): void => {
-        const scrollHeight = document.documentElement.scrollHeight;
-        const scrollTop = document.documentElement.scrollTop;
-        const clientHeight = document.documentElement.clientHeight;
+  const [loading,setLoading] = useState(false);
 
-        if ( scrollTop + clientHeight >= scrollHeight - 100 && !loading && hasMore) {
-            setPage((prev) => prev + 1);
-        }
+  const [hasMore,setHasMore] = useState(true);
+
+  const fetchPosts = useCallback(async()=>{
+    if(loading || !hasMore) return;
+
+    try{
+    setLoading(true);
+    const response = await axios.get<PostType[]>(`https://jsonplaceholder.typicode.com/posts?_limit=10&_page=${page}`);
+    if(response.data.length===0){
+        setHasMore(false);
+        return;
+    }
+
+    setPosts(prev=>[ ...prev, ...response.data]);
+    }finally{
+    setLoading(false);
+    }
+
+},[page,loading,hasMore]);
+
+  useEffect(()=>{
+    fetchPosts();
+  },[fetchPosts]);
+
+  const handleScroll = ()=>{
+    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollTop = document.documentElement.scrollTop;
+    const clientHeight = document.documentElement.clientHeight;
+    if(scrollTop + clientHeight>= scrollHeight - 100 && !loading && hasMore){
+      setPage(prev=>prev+1);
+    }
+  };
+
+  useEffect(()=>{
+    window.addEventListener("scroll",handleScroll);
+    return ()=>{window.removeEventListener("scroll",handleScroll);
     };
+  },[loading,hasMore]);
 
-    useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
-        return () => {
-            window.removeEventListener('scroll',handleScroll);
-        };
-    }, [loading, hasMore]);
+  return (
+    <>
+    <section>
+  <h2>
+    📜 Old Infinite Scroll (Window Scroll)
+  </h2>
 
+  <pre style={{textAlign:'left'}}>
+{`Scroll Event Fires Continuously
+↓
+Lots Of Calculations
+↓
+Can Become Slow
 
-    return (
-        <div
-            style={{
-                padding: '20px',
-                textAlign: 'left'
-            }}
-        >
+const [posts,setPosts] = useState<PostType[]>([]);
+const [page,setPage] = useState(1);
+const [loading,setLoading] = useState(false);
+const [hasMore,setHasMore] = useState(true);
 
-            <h2> Infinite Scroll using  old way without ref Window Scroll</h2>
-      <code style={{textAlign:'left'}}>
-        <pre>
-{`     const [users, setUsers] = useState<PostType[]>([]);
-    const [page, setPage] = useState<number>(1);
+const fetchPosts = useCallback(async()=>{
+  if(loading || !hasMore) return;
 
-    const [loading, setLoading] = useState<boolean>(false);
+  try{
+  setLoading(true);
+  const response = await axios.get<PostType[]>(\`https://jsonplaceholder.typicode.com/posts?_limit=10&_page=\${page}\`);
+  if(response.data.length===0){
+      setHasMore(false);
+      return;
+  }
+  setPosts(prev=>[ ...prev, ...response.data]);
+  }finally{
+  setLoading(false);
+  }
+},[page,loading,hasMore]);
 
-    const [hasMore, setHasMore] = useState<boolean>(true);
+useEffect(()=>{
+  fetchPosts();
+},[fetchPosts]);
 
-    const fetchUsers = useCallback(async (): Promise<void> => {
-        if (loading || !hasMore) return;
-        try {
-            setLoading(true);
-            const response = await axios.get<PostType[]>(
-                'https://jsonplaceholder.typicode.com/posts?_limit=10&_page={page}'
-            );
-            console.log(response.data);   
+const handleScroll = ()=>{
+  const scrollHeight = document.documentElement.scrollHeight;
+  const scrollTop = document.documentElement.scrollTop;
+  const clientHeight = document.documentElement.clientHeight;
+  if(scrollTop + clientHeight>= scrollHeight - 100 && !loading && hasMore){
+    setPage(prev=>prev+1);
+  }
+};
 
-             // If no data stop infinite scroll
-            if (response.data.length === 0) {
-                setHasMore(false);
-                return;
-            }
+useEffect(()=>{
+  window.addEventListener("scroll",handleScroll);
+  return ()=>{window.removeEventListener("scroll",handleScroll);
+  };
+},[loading,hasMore]);`}
+  </pre>
 
-            // Append new data
-            setUsers((prev) => [...prev,...response.data]);
+  <table>
+    <tbody>
+      <tr>
+        <td style={styles.td}>Performance</td>
+        <td style={styles.td}>⚠️ Medium</td>
+      </tr>
 
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setLoading(false);
-        }
-    }, [page, loading, hasMore]);
+      <tr>
+        <td style={styles.td}>Browser Work</td>
+        <td style={styles.td}>High</td>
+      </tr>
 
-
-    useEffect(() => {
-        fetchUsers();
-    }, [fetchUsers]);
-
-
-    const handleScroll = (): void => {
-        const scrollHeight = document.documentElement.scrollHeight;
-        const scrollTop = document.documentElement.scrollTop;
-        const clientHeight = document.documentElement.clientHeight;
-
-        if ( scrollTop + clientHeight >= scrollHeight - 100 && !loading && hasMore) {
-            setPage((prev) => prev + 1);
-        }
-    };
-
-    useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
-        return () => {
-            window.removeEventListener('scroll',handleScroll);
-        };
-    }, [loading, hasMore]);
-`}
-        </pre>
-      </code>
-            {
-                users.map((user: PostType) => (
-
-                    <div
-                        key={user.id}
-                        style={{
-                            border: '1px solid gray',
-                            marginBottom: '15px',
-                            padding: '15px',
-                            borderRadius: '10px'
-                        }}
-                    >
-
-                        <h2>
-                            {user.id}. {user.title}
-                        </h2>
-
-                        <p>
-                            {user.body}
-                        </p>
-
-                    </div>
-                ))
-            }
-
-
-            {/* ========================================= */}
-            {/* LOADING */}
-            {/* ========================================= */}
-
-            {
-                loading && (
-
-                    <h2>
-                        Loading More Data...
-                    </h2>
-                )
-            }
-
-
-            {/* ========================================= */}
-            {/* NO MORE DATA */}
-            {/* ========================================= */}
-
-            {
-                !hasMore && (
-
-                    <h2>
-                        No More Data Found
-                    </h2>
-                )
-            }
-
+      <tr>
+        <td style={styles.td}>Production Ready</td>
+        <td style={styles.td}>❌ No</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+      {posts.map(post=>(
+        <div key={post.id}>
+          <h3>{post.title}</h3>
+          <p>{post.body}</p>
         </div>
-    )
-}
+      ))}
 
-export default OldInfiniteScrollWindow
+      {loading && <h2>Loading...</h2>}
+    </>
+  );
+}

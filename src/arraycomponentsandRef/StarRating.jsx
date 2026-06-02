@@ -27,7 +27,19 @@ const StarRating = () => {
 
     return (
         <>
-        <div> Star Rating </div>
+        <div> Star Rating --simple iterate and fill </div>
+        <code style={{textAlign:'left'}}>
+            <pre>
+                {`{[1,2,3,4,5].map((num)=>(
+    <span key={num} onClick={()=>setStarSelected(num)}
+        style={{
+            fontSize: '80px',
+            cursor:'pointer',
+            borderRadius:'50%',
+            color: num<=starSelected ? 'gold': 'gray', //the num values less than selected stars get the color
+}}>.</span>`}
+            </pre>
+        </code>
         <div>
             {
             [1,2,3,4,5].map((num)=>(
