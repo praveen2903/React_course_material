@@ -568,7 +568,7 @@ HttpOnly; Expires=PastDate`}
     textAlign: "left",
   }}
 >
-
+<h2>How JWT directly managed by browser dealing with authentication of the user </h2>
 <div
   style={{
     display: "grid",
@@ -580,7 +580,6 @@ HttpOnly; Expires=PastDate`}
 {/* ====================================== */}
 {/* DEMO */}
 {/* ====================================== */}
-<h2>How JWT directly managed by browser dealing with authentication of the user </h2>
 <div
   style={{
     background: "#111",

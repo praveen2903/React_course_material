@@ -386,7 +386,17 @@ function App() {
         tabs==='useRefcomponents' && (
           <>
           <div>------------------------------------------------------------------------------------------------------------------</div>
-          
+         <div style={{textAlign:'left'}}>
+           <div>
+            <span>Usage to learn: like use of useRef instead of useState to stop the rerending of Dom </span>
+          </div>
+          <div>
+            <span>Attaching the useRef to the DOM element and storing it to make focus or getBoundingClientRect()-- to store the area of the rectangle</span>
+          </div>
+          <div>
+            <span>store the timers or functions which are constant things this helps to store timer so that Clear is useful to stop it.</span>
+          </div>
+         </div>
           <div>------------------------------------------------------------------------------------------------------------------</div>
           <RefTypes/>
           <div>------------------------------------------------------------------------------------------------------------------</div>
