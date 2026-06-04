@@ -266,13 +266,436 @@ function ReduxDemoComponent() {
 
   const renderRef = useRef(0);
   renderRef.current++;
+const middlewareNotes = `
+Definition
+-----------
+Middleware sits between dispatch() and reducer()
 
+It can:
+✓ Log Actions
+✓ Call APIs
+✓ Modify Actions
+✓ Authentication Checks
+✓ Error Handling
+✓ Analytics Tracking
+
+Normal Redux Flow
+-----------
+dispatch(action)
+       ↓
+    reducer
+       ↓
+store update
+
+With Middleware
+-----------
+dispatch(action)
+       ↓
+  middleware
+       ↓
+    reducer
+       ↓
+store update
+
+Real World Example-- User clicks Login
+-----------
+dispatch(loginUser())
+       ↓
+Middleware calls API
+       ↓
+Response received
+       ↓
+Dispatch Success Action
+       ↓
+Reducer Updates Store
+       ↓
+UI Updates
+
+Why Middleware?
+-----------
+Reducers must be PURE.
+Reducers cannot do:
+❌ API Calls
+❌ setTimeout
+❌ localStorage writes
+❌ Analytics
+
+Therefore middleware handles side effects.
+
+=================================================
+1. LOGGER MIDDLEWARE
+=================================================
+Purpose
+-----------
+Track every action.
+
+Code  --- logging middleware generation
+--------------------------------------------
+const logger = (store) => (next) => (action) => {
+    console.log("Previous State", store.getState())
+    console.log("Action", action)
+    const result = next(action)
+    console.log("Updated State", store.getState())
+    return result
+}
+
+Flow
+-----------
+dispatch(increment())
+      ↓
+Logger prints
+Previous State
+{count:0}
+Action
+{type:"counter/increment"}
+Updated State
+{count:1}
+      ↓
+Reducer Runs
+Usage
+-----------
+Debugging
+Redux DevTools internally does similar tracking.
+
+
+=================================================
+2. ASYNC API MIDDLEWARE
+=================================================
+
+Problem
+-----------
+Reducer cannot do:
+fetch("/users")
+because reducer must remain pure.
+
+Wrong
+-----------
+increment:(state)=>{
+ fetch("/users")
+}
+
+Correct
+-----------
+Thunk Middleware handles API & use ExtraReducers.
+
+Flow
+-----------
+dispatch(getUsers())
+        ↓
+  Middleware
+        ↓
+    API Call  
+        ↓
+  Success / Failure
+        ↓
+    Reducer
+        ↓
+Store Update
+
+=================================================
+3. THUNK MIDDLEWARE
+=================================================
+Redux Toolkit adds thunk middleware automatically.
+
+Without Thunk
+-----------
+dispatch({type:"users/get"})
+Only objects allowed.
+
+With Thunk
+-----------
+dispatch(getUsers()) --where getUsers is function.
+
+Example
+-----------
+const getUsers = () => async(dispatch)=>{
+ const response = await fetch("/users")
+ const data = await response.json()
+ dispatch({type:"users/setUsers", payload:data})
+}
+
+Usage
+-----------
+Async API Calls. Most common middleware.
+
+=================================================
+4. createAsyncThunk
+=================================================
+Modern Redux Toolkit way.
+
+Code
+-----------
+export const getUsers = createAsyncThunk("users/getUsers", async()=>{
+  const res = await axios.get("/users")
+  return res.data
+ }
+)
+
+Automatically Generates
+-----------
+users/getUsers/pending
+users/getUsers/fulfilled
+users/getUsers/rejected
+
+Flow
+-----------
+dispatch(getUsers())
+       ↓
+    pending
+       ↓
+  API Call
+       ↓
+  fulfilled
+      or
+  rejected
+       ↓
+extraReducers
+       ↓
+Store Updated
+
+=================================================
+5. EXTRA REDUCERS
+=================================================
+Purpose
+-----------
+Handle thunk Middleware actions.
+Code
+-----------
+extraReducers:(builder)=>{
+ builder.addCase(getUsers.pending, (state)=>{
+   state.loading=true
+  }
+ )
+ .addCase(getUsers.fulfilled, (state,action)=>{
+   state.loading=false
+   state.users=action.payload
+  }
+ )
+ .addCase(getUsers.rejected, (state,action)=>{
+   state.loading=false
+   state.error= action.error.message
+  }
+ )
+}
+
+Flow
+-----------
+pending
+   ↓
+loading=true
+__________________
+fulfilled
+   ↓
+users=data
+____________________
+rejected
+   ↓
+error=message
+
+
+=================================================
+6. AUTHENTICATION MIDDLEWARE
+=================================================
+Purpose
+-----------
+Check token before action.
+
+Example
+-----------
+const authMiddleware = (store)=>(next)=>(action)=>{
+  const token =localStorage.getItem("token")
+  if(!token){
+    console.log("Unauthorized")
+    return
+  }
+  return next(action)
+}
+Usage
+-----------
+Protected APIs
+
+=================================================
+7. ANALYTICS MIDDLEWARE
+=================================================
+Purpose
+-----------
+Track User Activity.
+
+Example
+-----------
+const analytics = (store)=> (next)=> (action)=>{
+ sendToGoogleAnalytics(action.type)
+ return next(action)
+}
+
+Usage
+-----------
+Google Analytics
+Mixpanel
+Segment
+
+=================================================
+8. ERROR MIDDLEWARE
+=================================================
+Purpose
+-----------
+Catch Redux Errors.
+Example
+-----------
+const errorMiddleware =(store)=>(next)=>(action)=>{
+ try{
+   return next(action)
+  }
+ catch(error){
+   console.error(error)
+ }
+}
+
+Usage
+-----------
+Production Monitoring
+
+=================================================
+MIDDLEWARE CHAIN
+=================================================
+  dispatch(action)
+        ↓
+  Logger Middleware
+        ↓
+  Auth Middleware
+        ↓
+  Analytics Middleware
+        ↓
+  Thunk Middleware
+        ↓
+    Reducer
+        ↓
+      Store
+
+=================================================
+INTERVIEW QUESTIONS
+=================================================
+Q) Why Middleware?
+A) Reducers must stay pure. Middleware handles side effects.
+
+---------------------------------
+Q) Most Common Middleware?
+A) Redux Thunk
+---------------------------------
+Q) createAsyncThunk uses?
+A) Async API Calls.
+---------------------------------
+Q) Middleware executes before?
+A) Before reducer.
+---------------------------------
+Q) Can reducer call API?
+A) No
+Reducers must be pure. So, use Thunks and use ExtraReducers for the fulfilled/pending/failed
+---------------------------------
+Q) Difference Between Thunk and Middleware?
+A) Middleware- Generic interception layer.
+   Thunk: Specific middleware for async actions.`;
   return (
     <div style={styles.page}>
       {/* =========================================================
     REDUX FLOW
 ========================================================= */}
+<table border="1" cellpadding="10" cellspacing="0" width="100%">
+  <thead>
+    <tr>
+      <th>Concept</th>
+      <th>Definition</th>
+      <th>Purpose / Usage</th>
+    </tr>
+  </thead>
 
+  <tbody>
+    <tr>
+      <td><b>Store</b></td>
+      <td>Central place where Redux state is stored.</td>
+      <td>Holds the entire application state.</td>
+    </tr>
+
+    <tr>
+      <td><b>Slice</b></td>
+      <td>Small section of Redux state with reducers and actions.</td>
+      <td>Organizes state by feature.</td>
+    </tr>
+
+    <tr>
+      <td><b>Reducer</b></td>
+      <td>
+        Pure function that receives current state and action,
+        then returns a new state.
+      </td>
+      <td>Updates state based on dispatched actions.</td>
+    </tr>
+
+    <tr>
+      <td><b>Action</b></td>
+      <td>JavaScript object describing what happened.</td>
+      <td>Triggers state updates.</td>
+    </tr>
+
+    <tr>
+      <td><b>Dispatch</b></td>
+      <td>Function used to send actions to Redux.</td>
+      <td>Starts the state update process.</td>
+    </tr>
+
+    <tr>
+      <td><b>useSelector</b></td>
+      <td>React hook to access Redux state.</td>
+      <td>Reads data from the store.</td>
+    </tr>
+
+    <tr>
+      <td><b>useDispatch</b></td>
+      <td>React hook that returns dispatch function.</td>
+      <td>Sends actions from components.</td>
+    </tr>
+
+    <tr>
+      <td><b>Middleware</b></td>
+      <td>
+        Function that runs between dispatch and reducer.
+      </td>
+      <td>
+        Used for logging, API calls, authentication,
+        error handling, etc.
+      </td>
+    </tr>
+
+    <tr>
+      <td><b>createAsyncThunk</b></td>
+      <td>
+        Redux Toolkit utility for async operations.
+      </td>
+      <td>
+        Handles API requests and dispatches
+        pending, fulfilled, and rejected actions.
+      </td>
+    </tr>
+
+    <tr>
+      <td><b>extraReducers</b></td>
+      <td>
+        Handles actions created outside the slice,
+        especially async thunk actions.
+      </td>
+      <td>
+        Updates state for pending, fulfilled,
+        and rejected cases.
+      </td>
+    </tr>
+
+    <tr>
+      <td><b>Payload</b></td>
+      <td>Data carried inside an action.</td>
+      <td>Passes information to reducers.</td>
+    </tr>
+  </tbody>
+</table>
 <div
   style={{
     display: "grid",
@@ -529,6 +952,23 @@ Component Re-renders
 Updated UI
 `}
 </pre>
+
+  <div>
+    <h2>🗂️ store.js</h2>
+
+    <pre
+      style={{
+        textAlign: "left",
+        padding: "16px",
+        borderRadius: "10px",
+        overflowX: "auto",
+        background: "#111",
+        color: "#00ff90",
+      }}
+    >
+      {middlewareNotes}
+    </pre>
+    </div>
 <section
   style={{
     padding: "20px",

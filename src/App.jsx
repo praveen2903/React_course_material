@@ -286,7 +286,7 @@ function App() {
 | ------------------- | -------------- | ----------------- |
 | \`[]\`                | ✅ Yes          | ❌ No              |
 | \`[val]\`             | ✅ Yes          | ✅ Yes             |
-| No dependency array | ✅ Yes          | ✅ Every render    |`}
+| No dependency array | ✅ Yes          | ✅ Every render on dom    |`}
 
 <hr/>
 
@@ -297,6 +297,76 @@ useEffect (()=>{
 `}
         </pre>
 </code>
+<code>{`
+┌─────────────────────────┬─────────────────────────┐
+│ CONTROLLED COMPONENT    │ UNCONTROLLED COMPONENT  │
+├─────────────────────────┼─────────────────────────┤
+│ React controls value    │ DOM controls value      │
+│ using state             │ using ref               │
+├─────────────────────────┼─────────────────────────┤
+│ Uses useState()         │ Uses useRef()           │
+├─────────────────────────┼─────────────────────────┤
+│ value={state}           │ ref={inputRef}          │
+├─────────────────────────┼─────────────────────────┤
+│ Updates state on        │ Reads value when        │
+│ every keystroke         │ needed                  │
+├─────────────────────────┼─────────────────────────┤
+│ Re-renders on change    │ No re-render required   │
+├─────────────────────────┼─────────────────────────┤
+│ Easy validation         │ Manual validation       │
+├─────────────────────────┼─────────────────────────┤
+│ Most React forms        │ File uploads            │
+│ Login Forms             │ Simple Forms            │
+│ Search Inputs           │ Third Party Libraries   │
+├─────────────────────────┼─────────────────────────┤
+│ Source of Truth         │ Source of Truth         │
+│ React State            │ DOM Element             │
+└─────────────────────────┴─────────────────────────┘
+
+
+CONTROLLED EXAMPLE
+──────────────────────────────────────────────
+const [name,setName] = useState("");
+<input value={name} onChange={(e)=> setName(e.target.value)} />
+
+Typing
+  ↓
+onChange
+  ↓
+setState
+  ↓
+React State Updated
+  ↓
+UI Updated
+
+
+UNCONTROLLED EXAMPLE
+──────────────────────────────────────────────
+const inputRef = useRef();
+<input ref={inputRef} />
+<button onClick={()=> console.log(inputRef.current.value)}> Submit</button>
+
+Typing
+  ↓
+DOM Stores Value
+  ↓
+Click Submit
+  ↓
+Read Using Ref
+
+INTERVIEW ANSWER
+──────────────────────────────────────────────
+Controlled Component → React manages input data using state.
+
+Uncontrolled Component → DOM manages input data and React accesses it using refs.
+
+MEMORY TRICK
+─────────────────────────────────────────────
+Controlled → React knows every character.
+Uncontrolled → React knows only when asked.`}
+</code>
+
+
             <div className="section-divider" />
             <TimeoutvsInterval/>
             <div className="section-divider" />
@@ -310,7 +380,7 @@ useEffect (()=>{
             <UseContextTraps/>
             <div className="section-divider" />
             <UseMemoHook/>
-            <div className="section-divider" />
+   <div className="section-divider" />
             <UseCallbackHook/>
             <UseCallbackAndMemo/>
             <div className="section-divider" />
