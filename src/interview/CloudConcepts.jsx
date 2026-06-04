@@ -12,8 +12,7 @@ function ImageBanner() {
     <div
       style={{
         display: "grid",
-        gridTemplateColumns:
-          "repeat(2,1fr)",
+        gridTemplateColumns: "repeat(2,1fr)",
         gap: "20px",
         marginTop: "20px",
       }}
@@ -69,6 +68,8 @@ const CloudConcepts = () => {
   },
 };
    return (
+    <>
+    <h1>Cloud backend and usage</h1>
     <div style={styles.notesGrid}>
       <pre style={styles.noteCard}>{`
 ========================================================
@@ -580,6 +581,7 @@ ECS
 Kubernetes`}</pre>
         <ImageBanner/>
     </div>
+    </>
   )
 }
 

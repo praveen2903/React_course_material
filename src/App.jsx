@@ -87,6 +87,7 @@ import RefTypes from './UseRefComponents/RefTypes'
 import SocketsDemo from './typescriptConcepts/SocketsDemo'
 import RefUsageConcepts from './interview/RefUsageConcepts'
 import CloudConcepts from './interview/CloudConcepts'
+import RoutingExample from './routingConcepts/RoutingExample'
 
 function App() {
 
@@ -110,7 +111,8 @@ function App() {
   "kubernetes",
   "jwt",
   "sockets",
-  "interview"
+  "interview",
+  "routing"
 ];
 
 
@@ -169,6 +171,14 @@ function App() {
         <>
           <div className="section-divider" />
           <GraphQLDemoApp/>
+        </>
+      )
+    }
+    {
+      tabs==="routing" && (
+        <>
+          <div className="section-divider" />
+          <RoutingExample/>
         </>
       )
     }
