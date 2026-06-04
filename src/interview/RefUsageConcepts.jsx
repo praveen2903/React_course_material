@@ -129,7 +129,6 @@ const RefUsageConcepts = () => {
 
   const handleClick = () => {
     counterRef.current++;
-
     console.log("Ref Updated =>",counterRef.current);
 
     if (count <= 3) {
@@ -188,10 +187,46 @@ const RefUsageConcepts = () => {
       </tr>
     </tbody>
   </table>
+      <code style={{textAlign:'left'}}>
+      <pre>
+{`const [data, setData] = useState([]);
+  const [page, setPage] = useState(3);
+  const [count, setCount] = useState(0);
+  // Ref Counter
+  const counterRef = useRef(0);
+  const fetchData = async () => {
+    try {
+      const response = await fetch(\`https://jsonplaceholder.typicode.com/users?_limit=\${page}\`);
+      if (response.ok) {
+        const users = await response.json();
+        setData(users);
+      } else {
+        console.log("Error");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  console.log("DOM Rendered");  -- rerender checker
 
+  const handleClick = () => {
+    counterRef.current++;
+    console.log("Ref Updated =>",counterRef.current);
+    if (count <= 3) {
+      fetchData();
+      setCount(prev => prev + 1);
+      setPage(prev => prev + 3);
+    } else {
+      console.log("Count is greater than 3");
+    }
+  };
+`}
+      </pre>
+    </code>
   <div style={styles.note}>
-    <strong>Current Component Example</strong>
-
+    <strong>Current Component Example-- like dom updates at every change in state (controlled component) 
+      so, we use the useRef (uncontrolled component) as counter must not effect DOM re-renders
+    </strong>
     <ul>
       <li>count → useState</li>
       <li>page → useState</li>
@@ -207,7 +242,6 @@ const RefUsageConcepts = () => {
         <th style={styles.th}>Why?</th>
       </tr>
     </thead>
-
     <tbody>
       <tr>
         <td style={styles.td}>count</td>
@@ -226,7 +260,8 @@ const RefUsageConcepts = () => {
       <tr>
         <td style={styles.td}>counterRef</td>
         <td style={styles.td}>
-          Internal tracking only
+          ref doesn't cause re-renders so it is used to uncontrolled variables where the variable should effect the DOM nodes 
+          like here count is just tracks so use Ref so that click update ref value and check it. so Ref is ideal here.
         </td>
       </tr>
     </tbody>
@@ -236,11 +271,8 @@ const RefUsageConcepts = () => {
     <strong>Interview Answer</strong>
 
     <p>
-      useState stores data and triggers
-      re-rendering.
-
-      useRef stores mutable data without
-      triggering re-rendering.
+      useState stores data and triggers re-rendering.
+      useRef stores mutable data witrout triggering re-rendering.
     </p>
   </div>
 </section>
@@ -283,20 +315,15 @@ const RefUsageConcepts = () => {
     </tbody>
   </table>
 <div style={{display:'flex'}}>
-    
   <div style={styles.card}>
     <h4>What Happens?</h4>
-
     <pre style={styles.pre}>
 {`
 setCount(1)
-
 ↓
 State Changes
-
 ↓
 React Re-renders
-
 ↓
 UI Updated
 `}
@@ -309,24 +336,32 @@ UI Updated
     <pre style={styles.pre}>
 {`
 counterRef.current++
-
 ↓
-
 Value Changes
-
 ↓
-
 No Re-render
-
 ↓
-
 UI Unchanged
 `}
     </pre>
   </div>
 </div>
 </section>
+      <h2>State Count : {count}</h2>
+      <h2>Ref Count : {counterRef.current}</h2>
+      <h2>page count : {page}</h2>
+      <button onClick={handleClick}>
+        Fetch Users
+      </button>
 
+      <hr />
+
+      {data.map(user => (
+        <div key={user.id}>
+          {user.name} - {user.email}
+        </div>
+      ))}
+<p>__________________________________________________________________________________________________________________________________________________________________</p>
 <section style={styles.section}>
   <h2 style={styles.subTitle}>
     🌐 Fetch vs Axios
@@ -373,19 +408,12 @@ UI Unchanged
       <h3>Fetch Flow</h3>
 
       <pre style={styles.pre}>
-{`
-fetch()
-
+{`fetch()
 ↓
-
 Response
-
 ↓
-
 response.json()
-
 ↓
-
 Data
 `}
       </pre>
@@ -397,57 +425,123 @@ Data
       <pre style={styles.pre}>
 {`
 axios.get()
-
-↓
-
+  ↓
 response.data
-
-↓
-
+  ↓
 Data
 `}
       </pre>
     </div>
   </div>
-</section>
-<section style={styles.section}>
   <h2 style={styles.subTitle}>
     🔐 JWT + Axios Interceptors
   </h2>
-<div style={{display:'flex'}}>
-      <div style={styles.card}>
-    <h3>Without Interceptors (Fetch)</h3>
+<div style={styles.grid2}>
+  <div style={styles.card}>
+    <h3>❌ Manual Header Approach</h3>
 
-    <pre style={styles.pre}>
+<pre style={styles.pre}>
 {`
-GET /users
-Authorization: Bearer token
+Developer Writes
 
-GET /products
-Authorization: Bearer token
+GET Users
+----------------
+axios.get("/users",{headers:{Authorization:Bearer token}})
 
-POST /orders
-Authorization: Bearer token
-`}
-    </pre>
+GET Products
+----------------
+axios.get("/products",{headers:{Authorization:Bearer token}})
+
+POST Orders
+----------------
+axios.post("/orders",data,{headers:{Authorization:Bearer token}})
+
+Problem?
+--------
+Not difficult. But repeated everywhere.
+Bearer Token
+-------------------
+A bearer token is a security credential that grants access to any system or individual that possesses it
+
+fetch -- 1.Json Data serialization (while post need to use Json.stringify(requestBody))
+         2. Json data deserialization (while get/put need to convert data to JSON)
+         3. same headers used for every request no global declaration
+         4.NO interceptors to allow to pause, inspect and modify the request.
+ 
+Example: fetch('https://example.com', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json', // Mandatory header step
+    'Accept': 'application/json'
+  },
+  body: JSON.stringify({ name: 'John Doe' }) // Mandatory transformation step
+});`}
+</pre>
   </div>
 
   <div style={styles.card}>
-    <h3>With Axios Interceptors</h3>
+    <h3>✅ Interceptor Approach</h3>
 
-    <pre style={styles.pre}>
-{`Interceptor
-↓
-Automatically Adds Token
-↓
-axios.get("/users")
+<pre style={styles.pre}>
+{`
+Configure Once
 
-↓
-Authorization Added
+Interceptor
+      ↓
+Adds Token
+      ↓
+Logs Request
+      ↓
+Handles Expired JWT
+      ↓
+Retries Request
+
+Usage
+
+api.get("/users")
+api.get("/products")
+api.post("/orders")
+
+Business Logic Only
+
+axios: 1.When you pass a plain JavaScript object to Axios, it automatically serializes the data to a JSON string 
+         and automatically injects the Content-Type: application/json header
+        2. reusable instances like headers and declare and reusable
+        3. Has interceptors built-in 
+
+handles the headers and data stringification for you
+axios.post('https://example.com', { 
+  name: 'John Doe' --no serialization of request body done built-in axios
+});
 `}
-    </pre>
+</pre>
   </div>
 </div>
+
+<pre style={styles.pre}>
+{`
+Question: Why Use Axios Interceptors?
+
+Wrong Answer
+----------------
+To Add Authorization Header
+
+Better Answer
+----------------
+To Centralize Cross-Cutting Request/Response Logic
+
+Examples
+✓ Auth
+✓ Refresh Tokens
+✓ Retry Logic
+✓ Logging
+✓ Monitoring
+✓ Error Handling
+✓ Analytics
+
+Adding Headers Is Only One Small Use Case.
+`}
+</pre>
 
   <table style={styles.table}>
     <thead>
@@ -485,27 +579,10 @@ Authorization Added
 
   <div style={styles.success}>
     <strong>Interview Answer:</strong>
-
     Axios does not use JWT differently.
-    It simply provides interceptors that
-    automatically attach JWT tokens to
-    outgoing requests.
+    It simply provides interceptors that automatically attach JWT tokens to outgoing requests.
   </div>
 </section>
-      <h2>State Count : {count}</h2>
-      <h2>Ref Count : {counterRef.current}</h2>
-      <h2>Current Limit : {page}</h2>
-      <button onClick={handleClick}>
-        Fetch Users
-      </button>
-
-      <hr />
-
-      {data.map(user => (
-        <div key={user.id}>
-          {user.name} - {user.email}
-        </div>
-      ))}
     </>
   );
 };
