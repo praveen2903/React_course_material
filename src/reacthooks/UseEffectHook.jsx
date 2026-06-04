@@ -309,6 +309,14 @@ export default function UseEffectCompleteGuide() {
         <h2>
           ✅ What is useEffect?
         </h2>
+        <p>
+| Dependency Array    | Initial Render | Dependency Change |
+| ------------------- | -------------- | ----------------- |
+| `[]`                | ✅ Yes          | ❌ No              |
+| `[val]`             | ✅ Yes          | ✅ Yes             |
+| No dependency array | ✅ Yes          | ✅ Every render    |
+
+        </p>
 
         <p>
           useEffect handles

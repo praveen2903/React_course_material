@@ -269,6 +269,34 @@ function App() {
       {
         tabs==='hooks' && (
           <>
+          <h3>Execution order & useEffect confusions</h3>
+<code>
+                    <pre style={{textAlign:'left '}}>
+{`[Phase 1: Render] Run Function Body -> Create/Read Refs -> Calculate Virtual DOM
+                                 ↓
+[Phase 2: Commit] Mutate DOM -> Clear Old Refs -> Assign New DOM Nodes to Refs
+                                 ↓
+[Phase 3: Paint ] Browser paints the changes onto the screen
+                                 ↓
+[Phase 4: Effect] Run useEffect Cleanup -> Run useEffect Setup`}
+
+<hr/>
+{`
+| Dependency Array    | Initial Render | Dependency Change |
+| ------------------- | -------------- | ----------------- |
+| \`[]\`                | ✅ Yes          | ❌ No              |
+| \`[val]\`             | ✅ Yes          | ✅ Yes             |
+| No dependency array | ✅ Yes          | ✅ Every render    |`}
+
+<hr/>
+
+{`
+useEffect (()=>{
+  console.log("hi")
+  }, []/ [props.val]/ __)   -- even without dependency array, or no dependency or array dependency intial render consoles hi, post re-render happens
+`}
+        </pre>
+</code>
             <div className="section-divider" />
             <TimeoutvsInterval/>
             <div className="section-divider" />
