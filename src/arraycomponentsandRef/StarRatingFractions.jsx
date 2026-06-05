@@ -5,18 +5,14 @@ const StarRatingFractions = () => {
     const totalStars= 5;
     const [hoverValue, setHoverValue] = useState(0);
 
-
     const calculateValue =(event, index) =>{
 
         // generally you can store that event in ref by attaching ref to the dom by ref={(element)=> indexRef.current= element}
         const rect = event.currentTarget.getBoundingClientRect(); //give position of element in dom like one circle of index
-
         const widthOccupied= event.clientX- rect.left;  
         //get event.clientX gives mouse pointer position and how much it is distant from left
-
         const percentOccupied= widthOccupied / rect.width;  //widthoccupied/total gives percentage
         //total like 2.5/2.6 fixing decimal point to 1
-        
         return Number((index+percentOccupied).toFixed(1))
     }
 
@@ -46,12 +42,12 @@ const StarRatingFractions = () => {
     return (
     <>
     <div>StarRatingFractions</div>
+    <h3>Hover event handlers like event.currentTarget passing as controlled components</h3>
 <code style={{textAlign:'left', minWidth: '500px'}}>
 <pre>
 {`OnMouseMove -- calculate the targeted circle area and how much width occupied, clientX-- are mouse events give position of mouse on that event x-axis
 
 const calculateValue =(event, index) =>{
-
 // generally you can store that event in ref by attaching ref to the dom by ref={(element)=> indexRef.current= element}
 
     const rect = event.currentTarget.getBoundingClientRect();
@@ -59,11 +55,12 @@ const calculateValue =(event, index) =>{
     const percentOccupied= widthOccupied / rect.width;
     return Number((index+percentOccupied).toFixed(1))
 }
+
 const handleClick=(index, event) =>{
     const value = calculateValue(event, index);
     setRating(value) //0.1-5 so no +1  set the hovered index to the rating
-
 }
+
 const handleMouseMove = (index, event)=>{
     const value= calculateValue(event,index);
     setHoverValue(value)
@@ -84,21 +81,79 @@ return(
     <div style={{display:'flex', gap:'20px'}} onMouseLeave={handleMouseLeave}>
     {
         [...Array(totalStars)].map((_,index)=>(
--=============================================================================================================
-you can have ref to store the div event or pass the event and getBoundingClientRect() to calculate the area
-==============================================================================================================
-            <div key={index} onClick={(event)=>handleClick(index, event)} onMouseMove={(event)=>handleMouseMove(index,event)}
+            <div key={index} onClick={(event)=>handleClick(index, event)}
+                onMouseMove={(event)=>handleMouseMove(index,event)}
                 style={{position:'relative', borderRadius: '50%', width: '50px', height:'50px', cursor: 'pointer'}}>
-                {/* base circle */}
-                <div style={{width: '100%', height:'100%', borderRadius:'50%', background:'lightgray'}}></div>
-                {/* circle to be filled */}
+s
+                <div style={{width: '100%', height:'100%', borderRadius:'50%', background:'lightgray'}}></div>  -base
+                
                 <div style={{position:'absolute', top:0, left:0, height: '100%',width: getFill(index), overflow:'hidden'}}>
-                    <div style={{width: '50px', height:'50px', borderRadius:'50%', background:'gold'}}></div>
+                    <div style={{width: '50px', height:'50px', borderRadius:'50%', background:'gold'}}></div>  -fill
                 </div>
             </div>
         ))
     }
     </div>    
+)`}
+</pre>
+</code>
+<h3>Passing the hover in the Refs passing as Uncontrolled components</h3>
+<code style={{textAlign:'left', minWidth: '500px'}}>
+<pre>
+{`const [rating, setRating] = useState(0);
+const [hoverValue, setHoverValue] = useState(0);
+
+const starRefs = useRef([]);
+
+const calculateValue = (event, index) => {  ------ store the event in the refs like as otp ones for focus now hover
+
+    const rect = starRefs.current[index].getBoundingClientRect();
+    const widthOccupied = event.clientX - rect.left;
+    const percentOccupied = widthOccupied / rect.width;
+
+    return Number((index + percentOccupied).toFixed(1));
+};
+
+const handleClick = (index, event) => {
+const value = calculateValue(event, index);
+setRating(value);
+};
+
+const handleMouseMove = (index, event) => {
+const value = calculateValue(event, index);
+setHoverValue(value);
+};
+
+const handleMouseLeave = () => {
+setHoverValue(0);
+};
+
+const getFill = (index) =>{
+    const difference = rating- index;
+    if(difference>=1) return '100%'
+    if(difference>0) return \`\${difference * 100}%\`
+    return '0%'
+}
+
+return(
+<div style={{ display: "flex", gap: "20px" }} onMouseLeave={handleMouseLeave} >
+        {[...Array(totalStars)].map((_, index) => (
+          <div key={index}
+            ref={(element) => (starRefs.current[index] = element)}
+            onClick={(event) => handleClick(index, event)}
+            onMouseMove={(event) => handleMouseMove(index, event)}
+            style={{ position: "relative", width: "50px", height: "50px", borderRadius: "50%", cursor: "pointer",}}>
+
+            {/* Base Circle */}
+            <div style={{width: "100%", height: "100%", borderRadius: "50%", background: "lightgray",}} />
+
+            {/* Filled Circle */}
+            <div style={{position: "absolute", top: 0, left: 0, height: "100%", width: getFill(index), overflow: "hidden" }}>
+              <div style={{width: "50px", height: "50px", borderRadius: "50%", background: "gold",}}/>
+            </div>
+          </div>
+        ))}
+      </div>   
 )`}
 </pre>
 </code>

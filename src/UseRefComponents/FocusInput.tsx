@@ -2,10 +2,10 @@ import { useEffect, useRef } from 'react'
 
 const FocusInput = () => {
 
-    const inputRef = useRef();
+    const inputRef = useRef<HTMLInputElement | null>(null);
 
     useEffect(()=>{
-        inputRef.current.focus()
+        inputRef.current?.focus()
     },[])
 
   return (
@@ -41,15 +41,13 @@ Examples of correct code for this rule:
 
 // ✅ Read ref in effects/handlers
 function Component() {
-  const ref = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
-  useEffect(() => {
-    if (ref.current) {
-      console.log(ref.current.offsetWidth); // OK in effect
-    }
-  });
+    useEffect(()=>{
+        inputRef.current?.focus()
+    },[])
 
-  return <div ref={ref} />;
+  return <input ref={ref} />;
 }
 
 // ✅ Use state for UI values
@@ -65,13 +63,12 @@ function Component() {
 
 // ✅ Lazy initialization of ref value
 function Component() {
-  const ref = useRef(null);
+  const ref = useRef<String>(null);
 
   // Initialize only once on first use
   if (ref.current === null) {
     ref.current = expensiveComputation(); // OK - lazy initialization
   }
-
   const handleClick = () => {
     console.log(ref.current); // Use the initialized value
   };

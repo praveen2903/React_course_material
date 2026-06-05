@@ -100,7 +100,7 @@ function App() {
   "jsConcepts",
   "promises",
   "hooks",
-  "mistakes",
+  "All Events",
   "redux",
   "graphql",
   "typescript",
@@ -247,7 +247,7 @@ function App() {
         )
       }
       {
-        tabs==='mistakes' && (
+        tabs==='All Events' && (
           <>
             <div className="section-divider" />
             <UseRefMistakes/>
@@ -297,7 +297,7 @@ useEffect (()=>{
 `}
         </pre>
 </code>
-<code>{`
+<code><pre>{`
 ┌─────────────────────────┬─────────────────────────┐
 │ CONTROLLED COMPONENT    │ UNCONTROLLED COMPONENT  │
 ├─────────────────────────┼─────────────────────────┤
@@ -363,7 +363,7 @@ Uncontrolled Component → DOM manages input data and React accesses it using re
 MEMORY TRICK
 ─────────────────────────────────────────────
 Controlled → React knows every character.
-Uncontrolled → React knows only when asked.`}
+Uncontrolled → React knows only when asked.`}</pre>
 </code>
 
 
@@ -499,28 +499,31 @@ Uncontrolled → React knows only when asked.`}
             <span>Usage to learn: like use of useRef instead of useState to stop the rerending of Dom </span>
             <p>Example: here count state is not useful on change state the dom rerenders and rerender called everytime</p>
             <code>
-              <pre>{`const [count,setCount] = useState(0);
+              <pre>{`const [count,setCount] = useState(0);  -- controlled component
 console.log('rerender)
 const handleClick = ()=>{
   if(count<3){
-  fetchUsers();
+      fetchUsers();
   }
-  setCount(count=>count+1)
+  setCount(count=>count+1)   -- where ever clicked the rerender logs cause cpu and memory occupied
 }
 return ( <button onClick = {handleClick}>fetch</button>)
               `}</pre>
             </code>
 <p>UseRef is used here so that the counterRef keep track of mutable data without causing rerenders</p>
             <code>
-              <pre>{`const countRef = useRef(0);
+              <pre>{`const countRef = useRef(0);  -- uncontrolled components
 console.log('rerender)
 const handleClick = ()=>{
   if(counterRef.current<3){
-  fetchUsers();
+      fetchUsers();
   }
-  counterRef.current++;
+  counterRef.current++;   //rerender doesn't get logged when button clicked use of refs
 }
 return ( <button onClick = {handleClick}>fetch</button>)
+
+
+1. previous values     2. stop re-rendering
               `}</pre>
               </code>
           </div>

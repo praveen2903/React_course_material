@@ -34,6 +34,77 @@ const OtpEnter= ()=>{
     }
     return (
         <div>
+
+        <code style={{textAlign:'left'}}>
+            <pre>
+{`const length =6;
+// const [otpCell, setOtpCell] = useState([...Array(length)]);  //undefined values in length of indexes
+const [otpCell, setOtpCell]= useState(Array(length).fill(''));
+
+const focusRef  = useRef([]); //assained to 0th index in input
+
+const handleChange= (value, index)=>{
+    const numberRegex =  /^\d?$/;
+    if(!numberRegex.test(value)) return;
+
+    const copy = [...otpCell];
+    copy[index] = value;
+    setOtpCell(copy)
+
+    if(value && index < length-1){
+        focusRef.current[index+1].focus();
+    }
+}
+
+const handleKeyDown = (event, index) =>{
+    if ((event.key==='Backspace' || event.key==="Delete") && !otpCell[index] && index>0){
+        focusRef.current[index-1].focus();
+    }
+}
+
+const handlePaste = (event) =>{
+    const pasteData = event.clipboardData.getData('text').slice(0,length);
+    const numberRegex = /^\d+$/;  // string of numbers or bignumber + atleast 1, ? means 0/1 must be any number or empty
+    if(!numberRegex.text(pasteData)) return;
+
+    const copy = pasteData.split("");
+
+    while(copy.length < length){
+        copy.push('')
+    }
+    setOtpCell(copy);
+}
+
+return (
+<>
+{
+    otpCell.map((digit, index)=>(
+    <>
+        <input key={index} value={digit} maxLength={1}
+
+            ref={(element)=> (focusRef.current[index]= element)}  
+            // attaching the htmlInputElement to ref or you could send e.currentTarget
+
+            onChange={(e)=> handleChange(e.target.value, index)}
+            onKeyDown={(e)=> handleKeyDown(e, index)}
+            onPaste={handlePaste}
+
+            onFocus={(e)=>{                                  //the focus blur controlled by the ref input has default handlers
+                e.target.style.border= "2px solid #3b4382";
+                e.target.style.boxShadow= "0 0 10px #3bc4f6";
+            }}
+            onBlur={(e)=>{                      //focus must have blur as aftereffect
+                e.target.style.border= "2px solid #ccc";
+                e.target.style.boxShadow ='none';
+            }}
+        />
+            </>
+        ))
+    }
+</>
+)`}
+            </pre>
+        </code>/
             <div>Otp Entering</div>
             {
                 [...Array(6)].map((_, index)=>(

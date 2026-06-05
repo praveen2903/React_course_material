@@ -10,6 +10,15 @@ const ReactDomCheatSheet = () => {
     offsetY: 0,
   });
 
+  const [rect, setRect] = useState({
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    width: 0,
+    height: 0,
+  });
+
   const [dragItems, setDragItems] = useState([
     "React",
     "JavaScript",
@@ -337,39 +346,118 @@ return (
             </pre>
           </div>
 
-          <div style={cardStyle}>
-            <h3>Mouse Coordinates Demo</h3>
+<div style={cardStyle}>
+  <h3>Mouse Coordinates + Bounding Client Rect</h3>
 
-            <div
-              style={{
-                ...demoStyle,
-                height: "220px",
-              }}
-              onMouseMove={(e) =>
-                setMouse({
-                  clientX: e.clientX,
-                  clientY: e.clientY,
-                  offsetX: e.nativeEvent.offsetX,
-                  offsetY: e.nativeEvent.offsetY,
-                })
-              }
-            >
-              <p>Move mouse inside this box</p>
+  <div
+    style={{
+      ...demoStyle,
+      height: "220px",
+    }}
+    onMouseMove={(e) => {
+      const boxRect = e.currentTarget.getBoundingClientRect();
 
-              <h4>clientX: {mouse.clientX}</h4>
-              <h4>clientY: {mouse.clientY}</h4>
-              <h4>offsetX: {mouse.offsetX}</h4>
-              <h4>offsetY: {mouse.offsetY}</h4>
-            </div>
+      setMouse({
+        clientX: e.clientX,
+        clientY: e.clientY,
+        offsetX: e.nativeEvent.offsetX,
+        offsetY: e.nativeEvent.offsetY,
+      });
 
-            <pre style={codeStyle}>
+      setRect({
+        left: Math.round(boxRect.left),
+        top: Math.round(boxRect.top),
+        right: Math.round(boxRect.right),
+        bottom: Math.round(boxRect.bottom),
+        width: Math.round(boxRect.width),
+        height: Math.round(boxRect.height),
+      });
+    }}
+  >
+    <p>Move mouse inside this box</p>
+
+    <h4>clientX: {mouse.clientX}</h4>
+    <h4>clientY: {mouse.clientY}</h4>
+
+    <h4>offsetX: {mouse.offsetX}</h4>
+    <h4>offsetY: {mouse.offsetY}</h4>
+
+    <hr />
+
+    <h4>left: {rect.left}</h4>
+    <h4>top: {rect.top}</h4>
+
+    <h4>right: {rect.right}</h4>
+    <h4>bottom: {rect.bottom}</h4>
+
+    <h4>width: {rect.width}</h4>
+    <h4>height: {rect.height}</h4>
+  </div>
+
+  <pre style={codeStyle}>
 {`onMouseMove={(e)=>{
- console.log(e.clientX)
- console.log(e.offsetX)
+ const rect = e.currentTarget.getBoundingClientRect();
+
+ console.log(rect.left);
+ console.log(rect.top);
+ console.log(rect.width);
+ console.log(rect.height);
 }}`}
-            </pre>
-          </div>
-        </div>
+  </pre>
+</div>
+
+<code>
+  <pre>
+    {`Difference
+Property	Meaning
+
+clientX	Mouse X position relative to viewport
+clientY	Mouse Y position relative to viewport
+offsetX	Mouse X position inside the element
+offsetY	Mouse Y position inside the element
+
+-------------------------------------
+rect.left	Distance from viewport left edge to box
+rect.top	Distance from viewport top edge to box
+rect.right	Right edge position of box
+rect.bottom	Bottom edge position of box
+rect.width	Width of box
+rect.height	Height of box
+
+
+Suppose:
+
+Browser Window
+─────────────────────────────
+          Box
+     ┌───────────────┐
+     │       ●       │
+     └───────────────┘
+
+left = 100
+top = 200
+width = 300
+height = 220
+
+Mouse on box center:
+clientX = 250
+clientY = 300
+
+offsetX = 150
+offsetY = 100
+
+Relationship:
+
+offsetX = clientX - rect.left;
+offsetY = clientY - rect.top;
+150 = 250 - 100
+100 = 300 - 200
+
+This is one of the most common React interview demos when explaining mouse events, drag-and-drop, drawing canvases, resizable panels, and custom tooltips.
+       `}
+  </pre>
+</code>
+ </div>
       </section>
 
       {/* ===================================================== */}
@@ -593,10 +681,7 @@ return (
             </h4>
 
             <pre style={codeStyle}>
-{`if(
- scrollTop + clientHeight
- >= scrollHeight
-){
+{`if( scrollTop + clientHeight >= scrollHeight ){
  loadMore()
 }`}
             </pre>

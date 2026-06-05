@@ -9,9 +9,7 @@ function UseRefMistakes() {
   const renderCountRef = useRef(0);
 
   const inputRef = useRef(null);
-
   const previousValueRef = useRef("");
-
   const timerRef = useRef(null);
 
   const dragItemRef = useRef(null);
@@ -164,6 +162,86 @@ function UseRefMistakes() {
         lineHeight: "1.8",
       }}
     >
+
+      <code><pre>{`
+┌─────────────────────────┬─────────────────────────┐
+│ CONTROLLED COMPONENT    │ UNCONTROLLED COMPONENT  │
+├─────────────────────────┼─────────────────────────┤
+│ React controls value    │ DOM controls value      │
+│ using state             │ using ref               │
+├─────────────────────────┼─────────────────────────┤
+│ Uses useState()         │ Uses useRef()           │
+├─────────────────────────┼─────────────────────────┤
+│ value={state}           │ ref={inputRef}          │
+├─────────────────────────┼─────────────────────────┤
+│ Updates state on        │ Reads value when        │
+│ every keystroke         │ needed                  │
+├─────────────────────────┼─────────────────────────┤
+│ Re-renders on change    │ No re-render required   │
+├─────────────────────────┼─────────────────────────┤
+│ Easy validation         │ Manual validation       │
+├─────────────────────────┼─────────────────────────┤
+│ Most React forms        │ File uploads            │
+│ Login Forms             │ Simple Forms            │
+│ Search Inputs           │ Third Party Libraries   │
+├─────────────────────────┼─────────────────────────┤
+│ Source of Truth         │ Source of Truth         │
+│ React State            │ DOM Element             │
+└─────────────────────────┴─────────────────────────┘
+`}</pre>
+</code>
+
+<div style={{display:'grid', gridTemplateColumns:'repeat(2,1fr)'}}>
+  <code>
+  <pre>
+    {`CONTROLLED EXAMPLE
+──────────────────────────────────────────────
+const [name,setName] = useState("");
+<input value={name} onChange={(e)=> setName(e.target.value)} />
+
+Typing
+  ↓
+onChange
+  ↓
+setState
+  ↓
+React State Updated
+  ↓
+UI Updated
+
+INTERVIEW ANSWER
+──────────────────────────────────────────────
+Controlled Component → React Component manages input data using state.
+Uncontrolled Component → DOM manages input data and React accesses it using refs.
+`}
+  </pre>
+</code>
+<code>
+  <pre>
+    {`UNCONTROLLED EXAMPLE
+──────────────────────────────────────────────
+const inputRef = useRef();
+<input ref={inputRef} />
+<button onClick={()=> console.log(inputRef.current.value)}> Submit</button>
+
+Typing
+  ↓
+DOM Stores Value
+  ↓
+Click Submit
+  ↓
+Read Using Ref
+
+MEMORY TRICK
+─────────────────────────────────────────────
+Controlled → React knows every character.
+Uncontrolled → React knows only when asked.`}
+  </pre>
+</code>
+
+<hr/>
+<hr/>
+</div>
       <h2
         style={{
           textAlign: "center",
@@ -225,9 +303,8 @@ function UseRefMistakes() {
 
         <div style={cardStyle}>
           <pre style={codeStyle}>
-{`const ref = useRef(initialValue)
-
-ref.current`}
+{`const ref = useRef(initialValue);
+ref.current;  //gives the value`}
           </pre>
         </div>
       </section>
@@ -316,10 +393,7 @@ ref.current`}
 
             <pre style={codeStyle}>
 {`const inputRef = useRef(null)
-
-inputRef.current.focus()
-
-// ERROR
+inputRef.current.focus()   // ERROR
 // because no DOM attached`}
             </pre>
           </div>
@@ -329,10 +403,8 @@ inputRef.current.focus()
 
             <pre style={codeStyle}>
 {`const inputRef = useRef(null)
-
 <input ref={inputRef} />
-
-inputRef.current.focus()`}
+inputRef.current.focus(); `}
             </pre>
           </div>
         </div>
@@ -379,9 +451,7 @@ inputRef.current.focus()`}
 
           <pre style={codeStyle}>
 {`const inputRef = useRef(null)
-
 <input ref={inputRef} />
-
 inputRef.current.focus()`}
           </pre>
         </div>
@@ -432,8 +502,14 @@ inputRef.current.focus()`}
           </div>
 
           <pre style={codeStyle}>
-{`ref={(el)=>{
- gridRefs.current[index] = el
+{`const gridRefs = useRef([]);
+
+[...Array(length)].map((_, index)=>(
+  <input key={index}  ref = {element => gridRefs.current[index]= element} value = {value} onChange={()=> setValue(e.target.value)}/>
+  ))
+
+ref={(el)=>{
+ gridRefs.current[index] = el; //like this is used to give for map, store the DOM in the array
 }}`}
           </pre>
         </div>
@@ -449,8 +525,7 @@ inputRef.current.focus()`}
         </h2>
 
         <div style={descStyle}>
-          Changing ref.current updates value BUT UI
-          won't refresh automatically.
+          Changing ref.current updates value BUT UI won't refresh automatically.
         </div>
 
         <div style={gridStyle}>
@@ -533,11 +608,19 @@ inputRef.current.focus()`}
           </div>
 
           <pre style={codeStyle}>
-{`const previousRef = useRef("")
+{`const previousRef = useRef("");
+const [value, setValue] = useState('');
 
 useEffect(()=>{
  previousRef.current = value
-},[value])`}
+},[value])
+
+return (
+  <>
+    <p>{previousRef.current}</p>
+    <input value={value} onChange={(e)=> setValue(e.target.value)} />
+  </>
+)`}
           </pre>
         </div>
       </section>
@@ -570,11 +653,9 @@ useEffect(()=>{
 
           <pre style={codeStyle}>
 {`const intervalRef = useRef(null)
+intervalRef.current = setInterval(...)
 
-intervalRef.current =
-setInterval(...)
-
-clearInterval(intervalRef.current)`}
+clearInterval(intervalRef.current)  //clearing the whole interval mean stops running interval`}
           </pre>
         </div>
       </section>
@@ -620,8 +701,7 @@ clearInterval(intervalRef.current)`}
           </div>
 
           <pre style={codeStyle}>
-{`const rect =
-boxRef.current.getBoundingClientRect()`}
+{`const rect = boxRef.current.getBoundingClientRect()`}
           </pre>
         </div>
       </section>
@@ -767,8 +847,10 @@ onDragStart={()=>{
 
         <div style={cardStyle}>
           <pre style={codeStyle}>
-{`const inputRef = useRef(null)
-
+{`const inputRef = useRef(null);
+  useEffect(()=>{
+      inputRef.current.focus(); //useEffect since only show at render
+  },[..])
 <input ref={inputRef} />
 
 FLOW
@@ -801,11 +883,9 @@ Now accessible`}
 
         <div style={cardStyle}>
           <pre style={codeStyle}>
-{`const debouncedSave = useRef(
- debounce((value)=>{
-   console.log(value)
- },1000)
-).current`}
+{`-- function in Ref
+
+const debouncedSave = useRef( debounce((value) =>{ console.log(value) },1000).current`}
           </pre>
 
           <div style={successStyle}>
