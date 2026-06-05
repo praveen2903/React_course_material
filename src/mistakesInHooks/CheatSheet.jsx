@@ -161,7 +161,109 @@ const ReactDomCheatSheet = () => {
         Interactive visual handbook for React DOM events, browser APIs,
         measurements, drag-drop, bubbling, refs and scrolling concepts.
       </p>
+            {/* ===================================================== */}
+      {/* SLICE VS SPLICE */}
+      {/* ===================================================== */}
 
+      <section style={sectionStyle}>
+        <h2 style={headingStyle}>✅ slice vs splice ** importa</h2>
+
+        <div style={descBox}>
+          <ul>
+            <li>slice() → non mutating</li>
+            <li>splice() → mutates original array</li>
+          </ul>
+
+          <div style={warningBox}>
+            ❌ Avoid mutating React state directly.
+          </div>
+        </div>
+
+        <div style={gridStyle}>
+          <div style={cardStyle}>
+            <h3>slice()  - pagination to data</h3>
+
+            <pre style={codeStyle}>
+{`const arr=[1,2,3,4]
+arr.slice(1,3)        // [2,3]
+console.log(arr) //[1,2,3,4]-- doesn't mutate original array
+
+Pagination Example:
+
+const totalPages = Math.ceil(data.length / pagesize ) //how many splits of data
+const pagesStartIndex = (currentPage - 1)* pagesize;  // like initial page number is 1, next 2,..., so indexes are 0,5,10... if page size is 5
+const splitData = data.slice(pageStartIndex, pageStartIndex+pageSize)`}
+            </pre>
+          </div>
+
+          <div style={cardStyle}>
+            <h3>splice()</h3>
+
+            <pre style={codeStyle}>
+{`const arr=[1,2,3,4]
+arr.splice(1,2)    //[1,4]  // mutates original
+console.log(arr)  //[1,4]
+
+copy.splice(dragIndex (deleteBeginIndex),1 (no.of items to delete from begin index));  
+// a   b   d   e   f     ---- Removed it from it's position
+
+copy.splice(dropIndex (deleteBeginIndex),0 (no.of items to delete from begin index),
+                                                    draggedItem (adding indexes at deleteBeginIndex));       
+// a   b   d   c   f   e ---- appended it where it is required
+
+Drag and drop example of splice:-
+
+const handleDrop = (dropIndex)=>{
+  -- if focus reqired useRef else dragIndex is in state accessable in handleDrop
+    if(dragRef.current===null) return;
+    const {dragIndex, element} = dragRef.current; 
+
+    const copy=[...taskList]; 
+
+    const draggedItem = copy[dragIndex]; 
+
+    copy.splice(dragIndex,1);
+    copy.splice(dropIndex,0,draggedItem);
+
+    setTaskList(copy);
+    setDragIndex(null);
+
+    //giving focus to the dom elements focus is added so onFocus and onBlur can be managed
+    setTimeout(() => {
+            element.focus();
+        }, 0);
+    
+}
+ -- no focus on dragging item required use this, it is if focus need use ref
+return (
+  <div key={index} draggable 
+      onDragStart={()=>setDragIndex(index)}
+      onDragOver={(e)=>e.preventDefault()}
+      onDrop={()=>handleDrop(index)}
+      style={{display:"flex", gap:'30px', cursor:'grab', background: '#f1f1f1'}}
+  >
+
+
+  -- if focus required it is best to use ref as the drag managed by DOM giving state variable to it gives error
+
+  <div key={index} draggable tabIndex={0}
+          onDragStart={(event) => {dragRef.current = {dragIndex: index, element: event.currentTarget}; }}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={() => handleDrop(index)}
+          onFocus={() => setFocusedIndex(index)}
+          onBlur={() => setFocusedIndex(null)}
+          style={{
+              height: '90px',
+              fontSize: '28px',
+              cursor: 'grab',
+              background: focusedIndex === index? 'lightblue': '#ddd'
+          }}
+      >
+`}
+            </pre>
+          </div>
+        </div>
+      </section>
       {/* ===================================================== */}
       {/* MOUSE EVENTS */}
       {/* ===================================================== */}
@@ -412,9 +514,17 @@ onKeyUp`}
             </div>
 
             <pre style={codeStyle}>
-{`onChange={(e)=>
- setText(e.target.value)
-}`}
+{`Read values: inputRef.current.value (uncontrolled Input (accessed by DOM))/ text (controlled Input (accessed by React component))
+return (
+  <>
+      <input ref={inputRef} value={text} onChange={(e) => setText(e.target.value)}
+        onFocus={(e) => { e.target.style.border = "3px solid green";}}
+        onBlur={(e) => {e.target.style.border = "1px solid #ccc";}}
+        placeholder="Type here"
+      />
+      <button onClick={() => inputRef.current.focus()}>
+  </>
+)`}
             </pre>
           </div>
         </div>
@@ -682,7 +792,7 @@ console.log(rect.top)`}
         <h2 style={headingStyle}>✅ Event Bubbling & Capturing</h2>
 
         <div style={descBox}>
-          <h3>Event Bubbling</h3>
+          <h3>Event Bubbling (if child event should not render parent use e.stopPropogation())</h3>
 
           <p>
             Events travel from child → parent.
@@ -976,53 +1086,6 @@ new ResizeObserver((entries)=>{
  )
 })`}
           </pre>
-        </div>
-      </section>
-
-      {/* ===================================================== */}
-      {/* SLICE VS SPLICE */}
-      {/* ===================================================== */}
-
-      <section style={sectionStyle}>
-        <h2 style={headingStyle}>✅ slice vs splice</h2>
-
-        <div style={descBox}>
-          <ul>
-            <li>slice() → non mutating</li>
-            <li>splice() → mutates original array</li>
-          </ul>
-
-          <div style={warningBox}>
-            ❌ Avoid mutating React state directly.
-          </div>
-        </div>
-
-        <div style={gridStyle}>
-          <div style={cardStyle}>
-            <h3>slice()</h3>
-
-            <pre style={codeStyle}>
-{`const arr=[1,2,3,4]
-
-arr.slice(1,3)
-
-// [2,3]
-
-Original unchanged`}
-            </pre>
-          </div>
-
-          <div style={cardStyle}>
-            <h3>splice()</h3>
-
-            <pre style={codeStyle}>
-{`const arr=[1,2,3,4]
-
-arr.splice(1,2)
-
-// mutates original`}
-            </pre>
-          </div>
         </div>
       </section>
     </div>

@@ -618,7 +618,7 @@ A) Middleware- Generic interception layer.
 
     <tr>
       <td><b>Slice</b></td>
-      <td>Small section of Redux state with reducers and actions.</td>
+      <td>Small section of Redux state with reducers and actions to perform actions on items of State in useselectors and dispatched functions using reducers.</td>
       <td>Organizes state by feature.</td>
     </tr>
 
@@ -626,7 +626,7 @@ A) Middleware- Generic interception layer.
       <td><b>Reducer</b></td>
       <td>
         Pure function that receives current state and action,
-        then returns a new state.
+        then returns a new state. Cannot handle the asyncronous so we use Middleware thunk. So, no api calls in reducers.
       </td>
       <td>Updates state based on dispatched actions.</td>
     </tr>
@@ -639,19 +639,19 @@ A) Middleware- Generic interception layer.
 
     <tr>
       <td><b>Dispatch</b></td>
-      <td>Function used to send actions to Redux.</td>
-      <td>Starts the state update process.</td>
+      <td>Function used to send actions to Redux reducers in appropriate slice.</td>
+      <td>Starts the state update process where inital values of state are saved in initial state updates it.</td>
     </tr>
 
     <tr>
       <td><b>useSelector</b></td>
-      <td>React hook to access Redux state.</td>
-      <td>Reads data from the store.</td>
+      <td>React hook to access Redux state. {`useSelector((state)=>state.reducerName.stateVariable)`}</td>
+      <td>Reads data from the store in app components.</td>
     </tr>
 
     <tr>
       <td><b>useDispatch</b></td>
-      <td>React hook that returns dispatch function.</td>
+      <td>React hook that returns dispatch function call reducers hook from app component.</td>
       <td>Sends actions from components.</td>
     </tr>
 
@@ -661,8 +661,8 @@ A) Middleware- Generic interception layer.
         Function that runs between dispatch and reducer.
       </td>
       <td>
-        Used for logging, API calls, authentication,
-        error handling, etc.
+        Used for logging, API calls (this is asyncronous thing handled using createAsyncThunk & extraReducers), authentication,
+        error handling, Thunks etc.
       </td>
     </tr>
 
@@ -672,20 +672,17 @@ A) Middleware- Generic interception layer.
         Redux Toolkit utility for async operations.
       </td>
       <td>
-        Handles API requests and dispatches
-        pending, fulfilled, and rejected actions.
+        Handles API requests and dispatches pending, fulfilled, and rejected actions.
       </td>
     </tr>
 
     <tr>
       <td><b>extraReducers</b></td>
       <td>
-        Handles actions created outside the slice,
-        especially async thunk actions.
+        Handles actions created outside the slice, especially async thunk actions.
       </td>
       <td>
-        Updates state for pending, fulfilled,
-        and rejected cases.
+        Updates state for pending, fulfilled, and rejected cases.
       </td>
     </tr>
 
@@ -954,7 +951,7 @@ Updated UI
 </pre>
 
   <div>
-    <h2>🗂️ store.js</h2>
+    <h2>🗂️ MiddleWare Demo usecases of logging, asyncronous calls, error handling</h2>
 
     <pre
       style={{

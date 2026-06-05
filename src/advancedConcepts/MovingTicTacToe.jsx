@@ -22,19 +22,12 @@ const MovingTicTacToe = () => {
     const dragRef = useRef(null);
 
     const handleDrop = (dropIndex) => {
-
         const { dragIndex, element } = dragRef.current;
-
         const item = board[dragIndex];
-
         const newData = [...board];
-
         newData.splice(dragIndex, 1);
-
         newData.splice(dropIndex, 0, item);
-
         setBoard(newData);
-
         setTimeout(() => {
             element.focus();
         }, 0);

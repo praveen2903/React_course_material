@@ -74,6 +74,9 @@ const handleDrop = (dropIndex)=>{
 
     const draggedItem = copy[dragIndex];        // c                     --- copied the item to drag
 
+    copy.splice(dragIndex,1);
+    copy.splice(dropIndex,0,draggedItem);
+
 copy.splice(dragIndex (deleteBeginIndex),1 (no.of items to delete from begin index));  
 // a   b   d   e   f     ---- Removed it from it's position
 
