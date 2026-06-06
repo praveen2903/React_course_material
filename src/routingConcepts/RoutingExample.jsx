@@ -737,19 +737,19 @@ Navigate
   [
     "browserRouter",
     "BrowserRouter",
-    "Root router provider. Connects React Router with browser URL and enables routing features."
+    "Root router provider. Connects React Router with browser URL and enables routing features. Would make work useLocation(), useParams().."
   ],
 
   [
     "routes",
     "Routes",
-    "Container that holds all Route components and finds the best matching route."
+    "Container that holds all Route components and finds the best matching route. container of all route paths and elements."
   ],
 
   [
     "route",
     "Route",
-    "Maps a URL path to a React component. URL → Component relationship."
+    "Maps a URL path to a React component. URL → Component relationship. <Route path='' element={<.../>}/>"
   ],
 
   [
@@ -796,14 +796,14 @@ Navigate
 
   [
     "index",
-    "Index Route",
-    "Default child route rendered automatically when parent route is opened."
+    "Index Route keep index instead of path to route",
+    "Default child route rendered automatically when parent route is opened. <Route index element={<.../>} />"
   ],
 
   [
     "location",
     "useLocation",
-    "Provides current URL information like pathname, state and search parameters."
+    "Provides current URL information like pathname, state and search parameters. whole url like httpL//localhost:4200/home, url.split('/')[-1]"
   ],
 
   [
