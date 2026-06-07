@@ -1974,6 +1974,75 @@ Device Tracking, Refresh Token Linked To
 Unknown Device
  ↓
 Force Login Again
+====================================================
+🚫 TOKEN BLACKLISTING
+====================================================
+WHY USED?
+----------
+Invalidate JWT Before Expiry.
+Example:
+User Logout OR Account Compromised OR Password Changed
+====================================================
+PROBLEM
+----------
+JWT Is Stateless. Even After Logout
+Token Still Valid Until Expiration Time.
+====================================================
+SOLUTION
+----------
+Store Token In Blacklist
+
+Logout
+   ↓
+Add JWT To Redis
+   ↓
+Blacklist
+
+====================================================
+FLOW
+----------
+Request
+   ↓
+Get JWT
+   ↓
+Check Redis Blacklist
+
+Found?
+  ↓
+YES → Reject Request (401)
+--------------
+  NO
+  ↓
+jwt.verify()
+  ↓
+Allow Access
+
+====================================================
+REDIS EXAMPLE
+----------
+Logout
+await redis.set(token,"blacklisted","EX", 900);
+(900 seconds = remaining token life)
+
+====================================================
+MIDDLEWARE
+----------
+const exists = await redis.get(token);
+if(exists){
+ return res.status(401).json({message:"Token revoked"});
+}
+jwt.verify(token,SECRET);
+
+====================================================
+INTERVIEW TRAP
+----------
+JWT Cannot Normally Be Revoked.
+Blacklisting Adds Server-Side Control.
+====================================================
+BETTER APPROACH
+----------
+Short Access Token + Refresh Token Rotation
+Most Modern Systems. Use This Instead Of Blacklisting Every JWT.
 `}
 </pre>
 </div>
