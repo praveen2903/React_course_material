@@ -1795,6 +1795,7 @@ app.put("/products/:id" ,async (req, res) => {
 
 </div>
 
+
       {/* ================================================= */}
       {/* REDIS FLOW */}
       {/* ================================================= */}
@@ -1847,6 +1848,270 @@ app.post("/logout", async (req, res) => {
 `}
         </pre>
       </section>
+</div>
+<div style={{display:'grid', gridTemplateColumns:'repeat(2, 1fr)'}}>
+<div
+  style={{
+    background: "#111",
+    color: "#00ff90",
+    padding: "16px",
+    borderRadius: "10px",
+  }}
+>
+
+<h2>JWT Security & Interview Traps</h2>
+
+<pre
+  style={{
+    whiteSpace: "pre-wrap",
+    lineHeight: "1.6",
+    fontSize: "13px",
+  }}
+>
+{`
+====================================================
+JWT SECURITY FLOW
+====================================================
+when user logouts and still attacker has token he could login as you?
+solution: when user logout the access token has short span, but cancel it and token blacklist the refresh token
+
+Login
+  ↓
+Verify Credentials
+  ↓
+Generate Access Token
+  ↓
+Generate Refresh Token
+  ↓
+Store In HttpOnly Cookies
+  ↓
+Return Success
+
+====================================================
+ACCESS TOKEN
+----------------------------------------------------
+Purpose:
+Used For API Requests
+
+Expiry:
+5 min - 15 min
+
+Example:
+
+jwt.sign( {userId:1, role:"admin"}, SECRET, {expiresIn:"15m"})
+
+====================================================
+REFRESH TOKEN
+----------------------------------------------------
+Purpose: Generate New Access Token store it in DB and send post access token expiry rotate this token
+Expiry:
+7 Days / 30 Days
+
+Example:
+jwt.sign({userId:1}, REFRESH_SECRET, {expiresIn:"7d"})
+
+====================================================
+BEST PRACTICE
+----------------------------------------------------
+Access Token
+ ↓
+Short Lifetime
+
+Refresh Token
+ ↓
+Long Lifetime
+
+If Access Token Expires
+ ↓
+Use Refresh Token
+ ↓
+Issue New Access Token
+====================================================
+WHAT IF JWT IS STOLEN?
+====================================================
+Problem: Attacker Gets Token
+Solution 1
+------------
+Short Expiration 15 Minutes, Attacker Has Limited Time
+====================================================
+Solution 2
+------------
+Refresh Token Rotation
+
+Old Refresh Token
+        ↓
+    Used Once
+        ↓
+Generate New Refresh Token
+        ↓
+  Invalidate Old One (blacklist)
+====================================================
+Solution 3
+------------
+Store Refresh Token In Database
+user_id, token_hash, expires_at
+  Logout
+   ↓
+Delete Refresh Token (blacklist)
+Token Becomes Invalid
+====================================================
+Solution 4
+------------
+Store Token Hash  Instead Of: jwt123abc
+Store: hash(jwt123abc)
+If Database Leaks
+ ↓
+Real Token Hidden
+
+====================================================
+Solution 5
+------------
+Device Tracking, Refresh Token Linked To
+✓ Browser
+✓ Device
+✓ IP (optional)
+
+Unknown Device
+ ↓
+Force Login Again
+`}
+</pre>
+</div>
+<div
+  style={{
+    background: "#111",
+    color: "#00ff90",
+    padding: "16px",
+    borderRadius: "10px",
+  }}
+>
+  <pre style={styles.code}>
+  {`===================================================
+WHY HTTPONLY COOKIE?
+====================================================
+Without HttpOnly
+document.cookie
+ ↓
+Can Read Token
+
+XSS/ CSRF Attack
+ ↓
+Token Stolen
+====================================================
+With HttpOnly
+document.cookie
+ ↓
+Blocked
+JS Cannot Read Token
+Browser Still Sends Cookie
+====================================================
+CSRF PROTECTION
+====================================================
+Problem: User Logged In
+      ↓
+Visits Malicious Site
+      ↓
+Browser Sends Cookie
+====================================================
+Solution : sameSite:"strict"
+OR
+CSRF Token
+
+====================================================
+JWT INTERVIEW TRAPS
+====================================================
+Trap 1
+--------
+JWT Is NOT Encryption
+Anyone Can Decode Payload
+Never Store:
+✗ Passwords
+✗ Secrets
+✗ Credit Cards
+====================================================
+Trap 2
+--------
+JWT Is Signed
+Not Encrypted
+Header.Payload.Signature
+====================================================
+Trap 3
+--------
+JWT Alone Does Not Mean Secure
+Need:
+✓ HTTPS
+✓ HttpOnly
+✓ Secure Cookie
+✓ Expiration
+====================================================
+Trap 4
+--------
+JWT Cannot Be Destroyed Until Expiry
+Solution: Use Refresh Token Store
+
+====================================================
+Trap 5
+--------
+localStorage vs HttpOnly Cookie
+
+localStorage: Readable By JS
+HttpOnly Cookie: Not Readable By JS
+
+Preferred: HttpOnly Cookie
+====================================================
+ROLE BASED AUTHORIZATION
+====================================================
+Token
+{
+ userId:1,
+ role:"admin"
+}
+
+Middleware
+if(req.user.role !== "admin"){
+ return res.status(403)
+}
+Authentication
+ ↓
+Who Are You?
+
+Authorization
+ ↓
+What Can You Access?
+====================================================
+RATE LIMITING
+====================================================
+Prevent Brute Force
+Login API
+ ↓
+5 Requests Per Minute
+
+Too Many Requests
+ ↓
+429 Error
+====================================================
+PASSWORD STORAGE
+====================================================
+Wrong: password:"admin123"
+Correct: bcrypt.hash(password,10)
+Database: $2b$10$....
+Never Store Plain Passwords
+====================================================
+MOST ASKED INTERVIEW ANSWER
+====================================================
+Secure JWT Using:
+✓ HTTPS
+✓ HttpOnly Cookies
+✓ Secure Cookies
+✓ SameSite Protection
+✓ Short Access Token Expiry
+✓ Refresh Token Rotation
+✓ Token Revocation
+✓ bcrypt Password Hashing
+✓ Rate Limiting
+✓ Role Based Authorization`}
+</pre>
+</div>
 </div>
     </div>
     <ImageBanner />
