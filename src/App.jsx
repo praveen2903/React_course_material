@@ -286,7 +286,7 @@ function App() {
 | ------------------- | -------------- | ----------------- |
 | \`[]\`                | ✅ Yes          | ❌ No              |
 | \`[val]\`             | ✅ Yes          | ✅ Yes             |
-| No dependency array | ✅ Yes          | ✅ Every render on dom    |`}
+| No dependency array   | ✅ Yes          | ✅ Every render on dom|`}
 
 <hr/>
 
@@ -320,7 +320,7 @@ useEffect (()=>{
 │ Search Inputs           │ Third Party Libraries   │
 ├─────────────────────────┼─────────────────────────┤
 │ Source of Truth         │ Source of Truth         │
-│ React State            │ DOM Element             │
+│ React State             │ DOM Element             │
 └─────────────────────────┴─────────────────────────┘
 
 
@@ -342,9 +342,9 @@ UI Updated
 
 UNCONTROLLED EXAMPLE
 ──────────────────────────────────────────────
-const inputRef = useRef();
+const inputRef = useRef();  -- get the DOM event into ref
 <input ref={inputRef} />
-<button onClick={()=> console.log(inputRef.current.value)}> Submit</button>
+<button onClick={()=> {console.log(inputRef.current.value); inputRef.current?.focus();}}> Submit</button>
 
 Typing
   ↓
