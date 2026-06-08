@@ -583,6 +583,349 @@ Adding Headers Is Only One Small Use Case.
     It simply provides interceptors that automatically attach JWT tokens to outgoing requests.
   </div>
 </section>
+<pre style={styles.noteCard}>{`
+========================================================
+🟨 ARRAY METHODS CHEAT SHEET
+========================================================
+
+MAP
+========================================================
+
+Purpose
+---------
+Transform Every Item
+And Return New Array.
+
+Input
+---------
+[1,2,3]
+
+Code
+---------
+const result =
+arr.map(x => x * 2);
+
+Output
+---------
+[2,4,6]
+
+Use Cases
+---------
+✓ UI Rendering
+✓ Data Transformation
+✓ API Response Mapping
+
+Interview Trap
+---------
+map() always returns
+a new array.
+
+========================================================
+
+FILTER
+========================================================
+
+Purpose
+---------
+Keep Matching Items
+And Return New Array.
+
+Input
+---------
+[1,2,3,4,5]
+
+Code
+---------
+const result =
+arr.filter(x => x > 3);
+
+Output
+---------
+[4,5]
+
+Use Cases
+---------
+✓ Search
+✓ Active Users
+✓ Product Filtering
+
+Interview Trap
+---------
+filter() may return
+empty array.
+
+========================================================
+
+FIND
+========================================================
+
+Purpose
+---------
+Return First Match.
+
+Input
+---------
+[1,2,3,4]
+
+Code
+---------
+const result =
+arr.find(x => x > 2);
+
+Output
+---------
+3
+
+Use Cases
+---------
+✓ Find User
+✓ Find Product
+✓ Find Record
+
+Interview Trap
+---------
+Returns single value
+or undefined.
+
+========================================================
+
+SOME
+========================================================
+
+Purpose
+---------
+Check If At Least One
+Item Matches.
+
+Input
+---------
+[1,2,3]
+
+Code
+---------
+const result =
+arr.some(x => x > 2);
+
+Output
+---------
+true
+
+Use Cases
+---------
+✓ Permission Checks
+✓ Validation
+✓ Role Checking
+
+Example
+---------
+users.some(
+ user => user.role==="admin"
+)
+
+Interview Trap
+---------
+Stops After First Match.
+
+========================================================
+
+EVERY
+========================================================
+
+Purpose
+---------
+Check If All Items Match.
+
+Input
+---------
+[2,4,6]
+
+Code
+---------
+const result =
+arr.every(x => x % 2 === 0);
+
+Output
+---------
+true
+
+Use Cases
+---------
+✓ Form Validation
+✓ Data Verification
+
+Interview Trap
+---------
+One Failure = false.
+
+========================================================
+
+FOREACH
+========================================================
+
+Purpose
+---------
+Loop Through Array.
+
+Input
+---------
+[1,2,3]
+
+Code
+---------
+arr.forEach(x => {
+ console.log(x);
+});
+
+Output
+---------
+1
+2
+3
+
+Use Cases
+---------
+✓ Logging
+✓ Side Effects
+✓ Updating Variables
+
+Interview Trap
+---------
+Returns undefined.
+
+Cannot Chain Like Map.
+
+========================================================
+
+REDUCE
+========================================================
+
+Purpose
+---------
+Convert Array To
+Single Value.
+
+Input
+---------
+[1,2,3,4]
+
+Code
+---------
+const total =
+arr.reduce(
+ (sum,x) => sum + x,
+ 0
+);
+
+Output
+---------
+10
+
+Use Cases
+---------
+✓ Sum
+✓ Grouping
+✓ Aggregation
+
+Interview Trap
+---------
+Can Return Any Type.
+
+========================================================
+
+MAP vs FOREACH
+========================================================
+
+map()
+---------
+Returns New Array
+
+const nums =
+arr.map(x => x * 2);
+
+Output:
+[2,4,6]
+
+-------------------------
+
+forEach()
+---------
+Returns Undefined
+
+arr.forEach(x=>{
+ console.log(x);
+});
+
+Output:
+undefined
+
+========================================================
+
+FIND vs FILTER
+========================================================
+
+find()
+---------
+Returns First Match
+
+Output:
+User Object
+
+-------------------------
+
+filter()
+---------
+Returns All Matches
+
+Output:
+Array Of Users
+
+========================================================
+
+SOME vs EVERY
+========================================================
+
+some()
+---------
+At Least One Match
+
+every()
+---------
+All Must Match
+
+========================================================
+
+MEMORY TRICK
+========================================================
+
+map()
+---------
+Transform
+
+filter()
+---------
+Remove
+
+find()
+---------
+First Match
+
+some()
+---------
+Any?
+
+every()
+---------
+All?
+
+forEach()
+---------
+Loop
+
+reduce()
+---------
+One Value
+`}
+</pre>
     </>
   );
 };
