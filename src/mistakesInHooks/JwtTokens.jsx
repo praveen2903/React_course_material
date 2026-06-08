@@ -1952,7 +1952,97 @@ Most Node.js + PostgreSQL + Redis Applications Use CACHE ASIDE
     </h2>
 
     <pre style={styles.code}>
-{`Client Request
+{`========================================================
+⏰ TTL (Time To Live)
+========================================================
+
+WHAT IS IT?
+------------
+Expiry Time For Cached Data.
+
+After TTL Ends
+     ↓
+Redis Automatically Deletes It.
+
+========================================================
+
+WHY USED?
+------------
+✓ Prevent Stale Data
+✓ Save Memory
+✓ Auto Cleanup
+
+========================================================
+
+EXAMPLE
+----------------------------------------------------
+
+Store User Profile
+
+await redis.set(
+ "user:101",
+ JSON.stringify(user),
+ "EX",
+ 300
+);
+
+300 Seconds = 5 Minutes
+
+========================================================
+
+FLOW
+----------------------------------------------------
+
+Store Data
+    ↓
+TTL = 5 Min
+    ↓
+Data Available
+    ↓
+5 Min Completed
+    ↓
+Redis Deletes Key
+
+========================================================
+
+CHECK TTL
+----------------------------------------------------
+
+TTL user:101
+
+Result
+
+120
+
+(120 Seconds Remaining)
+
+========================================================
+
+INTERVIEW TRAP
+----------------------------------------------------
+
+TTL Does NOT Refresh
+Automatically On Read.
+
+Read
+ ↓
+TTL Same
+
+Need Explicit Update
+If Required.
+
+========================================================
+
+MEMORY TRICK
+----------------------------------------------------
+
+TTL
+ ↓
+Automatic Expiry Timer
+For Redis Keys
+
+
+Client Request
       ↓
 GET /products
       ↓
