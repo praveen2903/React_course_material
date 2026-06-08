@@ -542,49 +542,264 @@ Admin
  Users`;
 
   const completeExample = `
-═══════════════════════════════════════════════
-14. COMPLETE PROJECT STRUCTURE
-═══════════════════════════════════════════════
+========================================================
+🌳 REACT ROUTE TREE
+========================================================
+URL                     COMPONENT
+------------------------------------------------
+/                       Home
+/about                  About
+/contact                Contact
 
-/
-│
-├── Home
-├── About
-├── Contact
-│
-├── Login
-├── Register
-│
-├── Dashboard
-│     │
-│     ├── index
-│     ├── Profile
-│     ├── Settings
-│     └── Reports
-│
-├── Admin
-│     │
-│     ├── Users
-│     ├── Roles
-│     └── Permissions
-│
-└── NotFound
+/login                  Login
+/register               Register
 
-Route Tree if 404 page number (path= "*" element={<NotFound/>})
---------
+/dashboard              DashboardLayout
+/dashboard/profile      Profile
+/dashboard/settings     Settings
+/dashboard/reports      Reports
+
+/admin                  AdminLayout
+/admin/users            Users
+/admin/roles            Roles
+/admin/permissions      Permissions
+
+*                       NotFound
+
+========================================================
+VISUAL ROUTE TREE
+========================================================
+
+│
+├── Home                (/)
+├── About               (/about)
+├── Contact             (/contact)
+│
+├── Login               (/login)
+├── Register            (/register)
+│
+├── Dashboard           (/dashboard)
+│     │
+│     ├── index         (/dashboard)
+│     ├── Profile       (/dashboard/profile)
+│     ├── Settings      (/dashboard/settings)
+│     └── Reports       (/dashboard/reports)
+│
+├── Admin               (/admin)
+│     │
+│     ├── Users         (/admin/users)
+│     ├── Roles         (/admin/roles)
+│     └── Permissions   (/admin/permissions)
+│
+└── NotFound            (*)
+
+========================================================
+NORMAL ROUTES
+========================================================
+
 BrowserRouter
-      |
+      │
     Routes
-      |
---------------------------------
-|             |               |
-Home       About         Dashboard
-                             |
-                     ----------------
-                     |      |       |
-                  Profile Settings Reports
+      │
+------------------------------------------------
+│              │               │
+Home         About         Contact
+(/)        (/about)      (/contact)
+========================================================
+NESTED ROUTES
+========================================================
+
+Dashboard
+(/dashboard)
+      │
+      ▼
+    Outlet
+      │
+------------------------------------------------
+│              │                │
+Profile      Settings        Reports
+/profile    /settings       /reports
+
+Final URLs
+/dashboard/profile
+/dashboard/settings
+/dashboard/reports
+========================================================
+ADMIN NESTED ROUTES
+========================================================
+Admin
+(/admin)
+      │
+      ▼
+    Outlet
+      │
+------------------------------------------------
+│              │                │
+Users         Roles       Permissions
+
+/admin/users
+/admin/roles
+/admin/permissions
+========================================================
+404 ROUTE
+========================================================
+<Route  path="*" element={<NotFound/>} />
+
+Flow
+Unknown URL
+      ↓
+No Match Found
+      ↓
+NotFound Component
+
+========================================================
+INTERVIEW TRAP
+========================================================
+Normal Route: No Outlet Needed
+
+Nested Route: Outlet Required
+
+Without Outlet: Child Routes Will Not Render
+
+========================================================
+MEMORY TRICK
+========================================================
+Normal Route
+-------------
+Home
+About
+Contact
+
+Nested Route
+-------------
+Dashboard
+   ├── Profile
+   ├── Settings
+   └── Reports
+
+Admin
+   ├── Users
+   ├── Roles
+   └── Permissions
 `;
 
+const completeJsx = `<Routes>
+  {/* Normal Routes */}
+  <Route path="/" element={<Home />} />
+  <Route path="/about" element={<About />} />
+  <Route path="/contact" element={<Contact />} />
+  <Route path="/login" element={<Login />} />
+  <Route path="/register" element={<Register />} />
+========================================================
+Nested Routing  - most nested routes are child routes
+========================================================
+Purpose
+--------
+Share Common UI Layout.
+DashboardLayout
+-----------------------
+Sidebar
+Navbar
+<Outlet />
+-----------------------
+URL: /dashboard/profile
+Rendered:
+Sidebar
+Navbar
+Profile Page
+-----------------------
+URL: /dashboard/settings
+Rendered:
+Sidebar
+Navbar
+Settings Page
+-----------------------
+Meaning:
+---------
+Same Layout Different Content
+Uses:
+------
+Dashboard
+Admin Panel
+Settings Pages
+
+========================================================
+Child Routing -- most nested routes are child routes
+========================================================
+Purpose
+--------
+Route Hierarchy.
+Dashboard
+   │
+   ├── Profile
+   ├── Settings
+   └── Reports
+Code:
+<Route path="/dashboard">
+  <Route path="profile" />
+  <Route path="settings" />
+  <Route path="reports" />
+</Route>
+
+Meaning:
+---------
+Profile, Settings and Reports belong to Dashboard.
+========================================================
+Easy Interview Difference
+========================================================
+Child Route
+------------
+Defines Relationship.
+"profile" is child of "dashboard".
+Nested Route
+------------
+Defines Rendering Location.
+"profile" renders inside Dashboard's <Outlet />.
+
+========================================================
+Memory Trick
+========================================================
+Child Route
+------------
+WHO IS THE PARENT?
+Dashboard
+   └── Profile
+Nested Route
+------------
+WHERE IS IT RENDERED?
+DashboardLayout
+      ↓
+   Outlet
+      ↓
+ Profile Page
+========================================================
+Interview One-Liner
+========================================================
+Child Routing → Route Structure.
+Nested Routing → Shared Layout + Outlet Rendering.
+Most Nested Routes are also Child Routes.
+
+  {/* 404 */}
+  <Route path="*" element={<NotFound />} />
+
+</Routes>
+
+React Router Reality
+--------------------
+Child Route + Outlet = Nested Route
+Most examples use both together.
+
+Why 2 things child & nested routes needed?
+--------------------------------------------
+Developers differentiate based on functionality
+
+Child Route  - if no outlet replaces the parent if there
+-----------
+Routing Concept
+
+Nested Route  - inclues the parent in it like common layouts
+------------
+UI/Layout Concept`;
   const interviewTraps = `
 ═══════════════════════════════════════════════
 15. INTERVIEW TRAPS
@@ -689,6 +904,125 @@ Flow
 Navigate
   ↓
 /`
+
+const roleBasedRouting = `====================================================
+👥 ROLE BASED AUTHORIZATION
+====================================================
+WHY USED?
+----------
+Different Users Need Different Levels Of Access.
+====================================================/
+AUTHENTICATION
+----------------------------------------------------
+Question: Who Are You?
+Example:
+Login
+  ↓
+JWT Created
+  ↓
+User Verified
+====================================================
+AUTHORIZATION
+----------------------------------------------------
+Question:
+What Can You Access?
+Example:
+User
+ ↓
+Can View Profile
+
+Admin
+ ↓
+Can Manage Users
+====================================================
+JWT PAYLOAD
+----------------------------------------------------
+{
+ userId:1,
+ role:"admin"
+}
+====================================================
+ROLE TYPES
+----------------------------------------------------
+Guest
+-----
+✓ Home
+✓ Login
+✓ Register
+
+User
+-----
+✓ Profile
+✓ Orders
+✓ Dashboard
+
+Admin
+------
+✓ Users
+✓ Reports
+✓ Settings
+====================================================
+BACKEND FLOW
+----------------------------------------------------
+Request
+   ↓
+jwt.verify()
+   ↓
+Read Role
+   ↓
+Check Permission
+   ↓
+Allow / Reject
+====================================================
+EXAMPLE
+----------------------------------------------------
+Route: GET /admin
+
+Allowed Roles: admin
+
+If User Role:
+{
+ role:"user"
+}
+Result: 403 Forbidden
+
+====================================================
+REACT ROUTE EXAMPLE
+----------------------------------------------------
+/dashboard
+------------
+admin or user
+
+/admin
+------------
+admin only
+
+/profile
+------------
+admin or user
+====================================================
+INTERVIEW TRAP
+----------------------------------------------------
+Never Trust Frontend Role.
+
+Wrong:
+-------------
+if(role==="admin") Frontend Can Change It.
+
+Correct:
+-------------
+Verify JWT Check Role On Backend
+Backend Is Final Authority.
+====================================================
+INTERVIEW ANSWER
+----------------------------------------------------
+Authentication
+---------------
+Who Are You?
+
+Authorization
+---------------
+What Can You Access?`
   return (
     <>
     <div
@@ -841,6 +1175,10 @@ Navigate
     "Child Routes",
     "Routes rendered inside a parent route through the Outlet component."
   ],
+  ["rolebasedrouting",
+    'Role based routing',
+    "Pass the role in jwt token in payload while frontend can use the role post login."
+  ],
 
   [
     "project",
@@ -959,9 +1297,18 @@ Navigate
   </div>
 
   <div id="project">
-    <pre style={styles.noteCard}>{completeExample}</pre>
+    <div style={{display:'grid', gridTemplateColumns:'repeat(2,1fr)'}}>
+      <div>
+            <pre style={styles.noteCard}>{completeExample}</pre>
+      </div>
+      <div>
+        <pre style={styles.noteCard}>{completeJsx}</pre>
+      </div>
+    </div>
   </div>
-
+  <div id='rolebasedrouting'>
+    <pre style={styles.noteCard}>{roleBasedRouting}</pre>
+  </div>
   <div id="traps">
     <pre style={styles.noteCard}>{interviewTraps}</pre>
   </div>

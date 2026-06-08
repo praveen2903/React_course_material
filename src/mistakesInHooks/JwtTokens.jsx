@@ -808,42 +808,450 @@ Refresh Token
 </div>
 
 </section>
+
+<section
+  style={{
+    padding: "20px",
+    fontFamily: "sans-serif",
+    textAlign: "left",
+  }}
+>
+<h2>How JWT directly managed by browser dealing with authentication of the user </h2>
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 1fr",
+    gap: "16px",
+  }}
+>
+
+{/* ====================================== */}
+{/* DEMO */}
+{/* ====================================== */}
+<div
+  style={{
+    background: "#111",
+    color: "#00ff90",
+    padding: "16px",
+    borderRadius: "10px",
+  }}
+>
+
+<h2>Demo</h2>
+
+<pre
+  style={{
+    whiteSpace: "pre-wrap",
+    lineHeight: "1.6",
+    fontSize: "13px",
+  }}
+>
+{`Note:- After login user assign jwt token so when user does any get,post, put, delete the backend need to verify the token before implementing it to DB.
+
+LOGIN RESPONSE
+---------------
+Set-Cookie:
+token=jwt123
+HttpOnly
+
+================================
+
+FRONTEND REQUEST
+----------------
+
+fetch("/posts", {
+  method: "POST",
+  credentials: "include"
+})
+
+================================
+ACTUAL REQUEST
+---------------
+POST /posts
+Cookie: token=jwt123
+
+================================
+
+BACKEND
+--------
+const token = req.cookies.token
+
+jwt.verify(token, SECRET)
+
+================================
+
+IMPORTANT
+----------
+✔ JS cannot READ token
+
+✘ document.cookie blocked
+
+✔ Browser CAN STILL attach cookie
+
+
+// HTTPOnly Cookies
+res.cookie("accessToken",accessToken,
+  {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+  }
+);
+res.cookie("refreshToken",refreshToken,
+  {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+  }
+);
+res.json({success: true, message:"Login success",});`}
+</pre>
+
+</div>
+
+{/* ====================================== */}
+{/* EXPLANATION */}
+{/* ====================================== */}
+
+<div
+  style={{
+    background: "#111",
+    color: "#00ff90",
+    padding: "16px",
+    borderRadius: "10px",
+  }}
+>
+
+<h2>Explanation</h2>
+
+<pre
+  style={{
+    whiteSpace: "pre-wrap",
+    lineHeight: "1.6",
+    fontSize: "13px",
+  }}
+>
+{`
+CONFUSION
+----------
+"If JS blocked, how request gets token?"
+
+================================
+
+ANSWER
+-------
+Browser itself manages cookies
+
+Frontend JS and Browser are different things
+
+================================
+
+JS
+---
+✘ Cannot read cookie
+
+Browser
+---------
+✔ Can store cookie
+✔ Can attach cookie
+✔ Can send cookie
+
+================================
+
+FLOW : js can't read but browser can read httponly cookies and attaches if same-site=true condition set at declaring cookie in backend
+-----
+
+1. Backend sets cookie
+2. Browser stores it
+3. User sends request
+4. Browser auto-adds:
+Cookie: token=xyz
+5. Backend verifies JWT
+
+================================
+
+IMPORTANT
+----------
+Frontend never manually attaches token
+
+Browser automatically handles cookie internally
+
+--> HTTP only cookies can't be read by frontend prevent csrf attack, can't be read by frontend using document.cookie but can be managed by browser neatly`}
+</pre>
+
+</div>
+
+{/* ====================================== */}
+{/* TRAPS */}
+{/* ====================================== */}
+
+<div
+  style={{
+    background: "#111",
+    color: "#00ff90",
+    padding: "16px",
+    borderRadius: "10px",
+  }}
+>
+
+</div>
+
+</div>
+
+</section>
       {/* ================================================= */}
       {/* FLOW */}
       {/* ================================================= */}
 
 <div style={{display:'grid', gridTemplateColumns:'repeat(2,1fr)'}}>
+  <div style={{
+    background: "#111",
+    color: "#00ff90",
+    padding: "16px",
+    borderRadius: "10px",
+  }}>
+<pre style={styles.noteCard}>{`
+====================================================
+🔐 ACCESS TOKEN + REFRESH TOKEN
+====================================================
+Note: When you log website it doesn't ask the relogin everytime due to refresh token. (like netflix refresh token (30days)).
+Access token keeps on generating newly for every session neatly. but refresh token logs out website when expired/ new refresh token generation strategy used.
+WHY USED?
+----------
+Secure Authentication Without Asking User To Login Frequently.
+====================================================
+ACCESS TOKEN
+----------------------------------------------------
+Purpose: Used To Access APIs
+Lifetime: 5 Minutes - 15 Minutes
+Contains:
+✓ userId
+✓ role
+✓ permissions
+
+Example:
+GET /profile
+Cookie: accessToken=abc123
+
+Backend
+jwt.verify(accessToken, ACCESS_SECRET)
+====================================================
+REFRESH TOKEN
+----------------------------------------------------
+Purpose: Generate New Access Token
+Lifetime: 7 Days - 30 Days
+Stored: HttpOnly Cookie
+Example: Cookie: refreshToken=xyz123
+====================================================
+COMPLETE FLOW
+----------------------------------------------------
+Login
+  ↓
+Generate Access Token
+  ↓
+Generate Refresh Token
+  ↓
+Store In Cookies
+===================================================
+NORMAL REQUEST
+----------------------------------------------------
+Browser
+   ↓
+GET /profile
+   ↓
+accessToken Sent
+   ↓
+Backend Verify
+   ↓
+Return Data
+====================================================
+ACCESS TOKEN EXPIRED
+----------------------------------------------------
+Browser
+   ↓
+GET /profile
+   ↓
+Token Expired
+   ↓
+401 Error
+
+Backend
+{
+ code: "ACCESS_TOKEN_EXPIRED"
+}
+====================================================
+REFRESH FLOW
+----------------------------------------------------
+Frontend Detects Expired Token
+           ↓
+POST /refresh-token
+           ↓
+Refresh Token Verified
+           ↓
+Generate New Access Token
+           ↓
+Return New Cookie
+           ↓
+Retry Original Request
+====================================================
+USER EXPERIENCE
+----------------------------------------------------
+Access Token Expired
+          ↓
+Refresh Token Used
+          ↓
+New Access Token Created
+          ↓
+User Notices Nothing
+====================================================
+WHEN LOGIN AGAIN?
+---------------------------------------------------
+Refresh Token Expired
+         OR
+Refresh Token Revoked
+         OR
+User Logged Out
+
+Then Redirect To Login
+====================================================
+INTERVIEW TRAP
+----------------------------------------------------
+Access Token: Short Life
+
+Refresh Token
+-------------
+Creates New Access Tokens
+User Does NOT Login Again Until Refresh Token Expires.`}
+</pre>
+</div>
         <section style={styles.section}>
-        <h2 style={styles.subTitle}>
-          🚀 Authentication Flow
-        </h2>
+<div style={{
+    background: "#111",
+    color: "#00ff90",
+    padding: "16px",
+    borderRadius: "10px",
+  }}>
+<pre style={styles.noteCard}>{`
+====================================================
+👥 ROLE BASED AUTHORIZATION
+====================================================
+WHY USED?
+----------
+Different Users Need Different Levels Of Access.
+====================================================/
+AUTHENTICATION
+----------------------------------------------------
+Question: Who Are You?
+Example:
+Login
+  ↓
+JWT Created
+  ↓
+User Verified
+====================================================
+AUTHORIZATION
+----------------------------------------------------
+Question:
+What Can You Access?
+Example:
+User
+ ↓
+Can View Profile
 
-        <pre style={styles.code}>
-{`JWT- JSON Web Tokens used to authenticate user transmits the information with signing keys
+Admin
+ ↓
+Can Manage Users
+====================================================
+JWT PAYLOAD
+----------------------------------------------------
+{
+ userId:1,
+ role:"admin"
+}
+====================================================
+ROLE TYPES
+----------------------------------------------------
+Guest
+-----
+✓ Home
+✓ Login
+✓ Register
 
-User Login
+User
+-----
+✓ Profile
+✓ Orders
+✓ Dashboard
+
+Admin
+------
+✓ Users
+✓ Reports
+✓ Settings
+====================================================
+BACKEND FLOW
+----------------------------------------------------
+Request
    ↓
-Frontend sends email/password
+jwt.verify()
    ↓
-Backend verifies user
+Read Role
    ↓
-bcrypt.compare(password)
+Check Permission
    ↓
-JWT Access Token Created
-   ↓
-Refresh Token Created
-   ↓
-Refresh Token stored in DB
-   ↓
-Tokens sent as HTTPOnly Cookies
-   ↓
-Frontend sends cookies automatically
-   ↓
-Backend verifies JWT
-   ↓
-Protected Route Access
-`}
-        </pre>
+Allow / Reject
+====================================================
+EXAMPLE
+----------------------------------------------------
+Route: GET /admin
+
+Allowed Roles: admin
+
+If User Role:
+{
+ role:"user"
+}
+Result: 403 Forbidden
+
+====================================================
+REACT ROUTE EXAMPLE
+----------------------------------------------------
+/dashboard
+------------
+admin or user
+
+/admin
+------------
+admin only
+
+/profile
+------------
+admin or user
+====================================================
+INTERVIEW TRAP
+----------------------------------------------------
+Never Trust Frontend Role.
+
+Wrong:
+-------------
+if(role==="admin") Frontend Can Change It.
+
+Correct:
+-------------
+Verify JWT Check Role On Backend
+Backend Is Final Authority.
+====================================================
+INTERVIEW ANSWER
+----------------------------------------------------
+Authentication
+---------------
+Who Are You?
+
+Authorization
+---------------
+What Can You Access?`}
+</pre>
+</div>
       </section>
 <section style ={styles.section}>
   <pre style={styles.code}>
@@ -1407,12 +1815,132 @@ app.use(cors({
 <div
   style={{
     display: "grid",
-    gridTemplateColumns: "repeat(2,1fr)",
+    gridTemplateColumns: "repeat(3,1fr)",
     gap: "20px",
     marginTop: "30px",
   }}
 >
+  <section style={styles.section}>
 
+    <h2 style={styles.subTitle}>
+      ⚡ Redis caching strategies
+    </h2>
+
+    <pre style={styles.code}>
+{`1. CACHE ASIDE (Lazy Loading)
+========================================================
+Most Common Strategy.
+FLOW
+----------
+Request
+   ↓
+Redis
+
+Found?
+ ├─ YES → Return Data
+ │
+ └─ NO
+      ↓
+   Database
+      ↓
+   Store In Redis
+      ↓
+   Return Data
+
+Example:
+----------
+User Profile, Product Details
+
+Pros:
+✓ Easy
+✓ Saves DB Calls
+
+Cons:
+✗ First Request Slower
+========================================================
+2. WRITE THROUGH
+========================================================
+Update Database And Cache At Same Time.
+
+FLOW
+----------
+Update Request
+      ↓
+Redis
+      ↓
+Database
+      ↓
+Success
+
+Pros:
+✓ Cache Always Fresh
+✓ Fast Reads
+
+Cons:
+✗ Slower Writes
+
+Example:
+----------
+User Settings
+Configurations
+========================================================
+3. WRITE BEHIND (Write Back)
+========================================================
+Write To Cache First. Database Updated Later.
+
+FLOW
+----------
+Update Request
+      ↓
+Redis
+      ↓
+Immediate Success
+
+      ↓
+Background Process
+
+      ↓
+Database
+
+Pros:
+✓ Very Fast Writes
+✓ High Performance
+
+Cons:
+✗ Risk Of Data Loss
+
+Example:
+----------
+Analytics
+Counters
+View Counts
+
+========================================================
+INTERVIEW TRAP
+========================================================
+Cache Aside
+-------------
+Read First Strategy
+
+Write Through
+-------------
+Write Cache + DB Together
+
+Write Behind
+-------------
+Write Cache First, DB Later
+========================================================
+MOST USED IN INDUSTRY
+========================================================
+1. Cache Aside   ⭐⭐⭐⭐⭐
+2. Write Through ⭐⭐⭐
+3. Write Behind  ⭐⭐
+
+Most Node.js + PostgreSQL + Redis Applications Use CACHE ASIDE
+`}
+    </pre>
+
+  </section>
   {/* =====================================================
       LEFT SIDE
   ===================================================== */}
@@ -1424,64 +1952,49 @@ app.use(cors({
     </h2>
 
     <pre style={styles.code}>
-{`
-Client Request
+{`Client Request
       ↓
 GET /products
       ↓
 Check Redis Cache
-
+--------------------------
 redis.get("products")
-
       ↓
-
 Cache HIT ?
-   YES
+    YES
       ↓
 Return Cached Data
 
-   NO
+      NO
       ↓
 Fetch From PostgreSQL
       ↓
 Store Data In Redis
       ↓
 Return Response
-
-
-
+------------------------
 WHY CACHE?
-
 PostgreSQL
    ↓
 Disk Read
    ↓
 Slower
-
+-------------
 Redis
    ↓
 RAM Memory
    ↓
 Super Fast
-
-
-
+-------------------
 CACHE INVALIDATION
-
 CREATE PRODUCT
 UPDATE PRODUCT
 DELETE PRODUCT
-
       ↓
-
 Delete Old Cache
-
 redis.del("products")
-
       ↓
-
-Next API Call
-Gets Fresh Data
+Next API Call Gets Fresh Data
 `}
     </pre>
 
