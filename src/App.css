@@ -256,6 +256,88 @@
   background: var(--border);
 }
 
+.readable-page {
+  align-items: stretch;
+  width: 100%;
+}
+
+.readable-page > :not(.tabs-container):not(.section-divider) {
+  width: min(100%, 1280px);
+  margin-inline: auto;
+}
+
+.readable-page section,
+.readable-page article,
+.readable-page div,
+.readable-page form,
+.readable-page table,
+.readable-page pre,
+.readable-page code {
+  max-width: 100%;
+  min-width: 0 !important;
+  box-sizing: border-box;
+}
+
+.readable-page [style*="grid-template-columns"] {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)) !important;
+}
+
+.readable-page [style*="repeat(3"],
+.readable-page [style*="1fr 1fr 1fr"] {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)) !important;
+}
+
+.readable-page [style*="repeat(2"],
+.readable-page [style*="1fr 1fr"] {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)) !important;
+}
+
+.readable-page pre {
+  /* white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important; */
+  overflow-x: scroll !important;
+  padding: 16px;
+  overflow-y: visible;
+  font-size: clamp(12.5px, 1.1vw, 14px);
+}
+.pre{
+  padding: 20px;
+}
+
+.readable-page code {
+  white-space: normal;
+}
+
+.readable-page table {
+  width: 100% !important;
+  min-width: 720px !important;
+}
+
+.readable-page section > div[style*="overflow-x"],
+.readable-page div[style*="overflow-x"] {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto !important;
+}
+
+.readable-page img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain !important;
+}
+
+.readable-page h1,
+.readable-page h2,
+.readable-page h3,
+.readable-page p,
+.readable-page li,
+.readable-page td,
+.readable-page th {
+  overflow-wrap: anywhere;
+}
+
 /* =========================
    TABLET
 ========================= */
@@ -298,5 +380,23 @@
     min-height: 42px;
     border-radius: 8px;
     overflow-wrap: anywhere;
+  }
+
+  .readable-page {
+    padding-inline: 10px;
+  }
+
+  .readable-page > :not(.tabs-container):not(.section-divider) {
+    width: 100%;
+  }
+
+  .readable-page section,
+  .readable-page article,
+  .readable-page div[style*="padding"] {
+    padding-inline: 12px !important;
+  }
+
+  .readable-page table {
+    min-width: 620px !important;
   }
 }

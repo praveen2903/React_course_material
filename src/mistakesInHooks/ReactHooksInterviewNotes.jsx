@@ -103,7 +103,6 @@ function ReactHookFormFullDemo() {
   ========================================================= */
 
   const pageStyle = {
-    padding: "40px",
     background: "#f4f7fb",
     minHeight: "100vh",
     fontFamily: "Arial",
@@ -132,7 +131,7 @@ function ReactHookFormFullDemo() {
 
   const cardStyle = {
     background: "white",
-    padding: "28px",
+    // padding: "28px",
     borderRadius: "18px",
     boxShadow:
       "0 4px 12px rgba(0,0,0,0.08)",
@@ -162,7 +161,7 @@ function ReactHookFormFullDemo() {
   const codeStyle = {
     background: "#111827",
     color: "#00ff95",
-    padding: "16px",
+    // padding: "16px",
     borderRadius: "12px",
     overflowX: "auto",
     whiteSpace: "pre-wrap",
@@ -223,7 +222,7 @@ function ReactHookFormFullDemo() {
   <div
     style={{
       background: "#f8fafc",
-      padding: "24px",
+      // padding: "24px",
       borderRadius: "16px",
       borderLeft:
         "6px solid #2563eb",
@@ -425,7 +424,7 @@ return (
   <pre
     style={{
       background: "#161b22",
-      padding: "24px",
+      // padding: "24px",
       borderRadius: "16px",
       color: "#fff1c1",
       lineHeight: "1.8",

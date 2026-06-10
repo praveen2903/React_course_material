@@ -92,6 +92,15 @@ import RoutingExample from './routingConcepts/RoutingExample'
 function App() {
 
   const [tabs, setTabs] = useState('pagination')
+  const readableTabs = new Set([
+    'jwt',
+    'kubernetes',
+    'graphql',
+    'redux',
+    'react-hooks',
+    'sockets',
+    'interview',
+  ])
   const tabList = [
   "array",
   "pagination",
@@ -117,7 +126,7 @@ function App() {
 
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${readableTabs.has(tabs) ? 'readable-page' : ''}`}>
 
 <div className="tabs-container">
   {tabList.map(tab => (

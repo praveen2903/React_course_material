@@ -54,7 +54,7 @@ function ImageBanner() {
 
 const styles = {
   page: {
-    padding: "30px",
+    // padding: "30px",
     background: "#f3f4f6",
     fontFamily: "Arial",
     lineHeight: "1.7",
@@ -63,7 +63,7 @@ const styles = {
 
   section: {
     background: "white",
-    padding: "25px",
+    // padding: "25px",
     borderRadius: "14px",
     marginBottom: "30px",
     boxShadow:
@@ -83,7 +83,7 @@ const styles = {
   code: {
     background: "#111827",
     color: "#d1fae5",
-    padding: "18px",
+    // padding: "18px",
     borderRadius: "10px",
     overflowX: "auto",
     fontSize: "13px",

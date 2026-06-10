@@ -4,21 +4,25 @@ const RefUsageConcepts = () => {
 
     const styles = {
   section: {
-    marginBottom: "40px",
-    padding: "20px",
-    border: "1px solid #333",
-    borderRadius: "10px",
-    background: "#111",
-    color: "#fff",
-    overflowX: "auto",
-    textAlign:'left'
+    width: "100%",
+    maxWidth: "1120px",
+    minWidth: 0,
+    marginBottom: "32px",
+    // padding: "clamp(16px, 3vw, 24px)",
+    border: "1px solid #2a3446",
+    borderRadius: "8px",
+    background: "#111827",
+    color: "#e5e7eb",
+    overflowX: "hidden",
+    textAlign:'left',
+    boxShadow: "0 18px 45px rgba(15, 23, 42, 0.14)"
   },
 
   subTitle: {
     textAlign: "left",
-    marginBottom: "20px",
-    color: "#00ff90",
-    fontSize: "24px",
+    marginBottom: "16px",
+    color: "#34d399",
+    fontSize: "clamp(20px, 2.6vw, 24px)",
     fontWeight: "bold"
   },
 
@@ -30,60 +34,71 @@ const RefUsageConcepts = () => {
   },
 
   th: {
-    border: "1px solid #444",
+    border: "1px solid #374151",
     padding: "12px",
-    background: "#1e1e1e",
-    color: "#00ff90",
+    background: "#172033",
+    color: "#34d399",
     fontWeight: "bold"
   },
 
   td: {
-    border: "1px solid #444",
+    border: "1px solid #374151",
     padding: "12px",
     verticalAlign: "top",
-    lineHeight: "1.6"
+    lineHeight: "1.6",
+    color: "#d1d5db"
   },
 
   pre: {
-    background: "#000",
-    color: "#00ff90",
-    padding: "15px",
+    width: "100%",
+    maxWidth: "100%",
+    background: "#020617",
+    color: "#d1fae5",
+    padding: "16px",
     borderRadius: "8px",
     overflowX: "auto",
+    overflowY: "hidden",
+    whiteSpace: "pre",
+    wordBreak: "normal",
+    overflowWrap: "normal",
     fontSize: "14px",
     lineHeight: "1.6",
-    border: "1px solid #333"
+    border: "1px solid #334155",
+    margin: "12px 0"
   },
 
   code: {
-    color: "#00ff90"
+    color: "#34d399"
   },
 
   card: {
-    border: "1px solid #333",
-    padding: "15px",
+    minWidth: 0,
+    border: "1px solid #334155",
+    // padding: "16px",
     borderRadius: "8px",
     marginBottom: "15px",
-    background: "#1a1a1a"
+    background: "#172033"
   },
 
   grid2: {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
+    gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,320px),1fr))",
     gap: "20px",
-    marginTop: "20px"
+    marginTop: "20px",
+    minWidth: 0
   },
 
   grid3: {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr 1fr",
+    gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,260px),1fr))",
     gap: "20px",
-    marginTop: "20px"
+    marginTop: "20px",
+    minWidth: 0
   },
 
   note: {
     background: "#1e293b",
-    borderLeft: "5px solid #00ff90",
+    borderLeft: "5px solid #34d399",
     padding: "15px",
     marginTop: "15px",
     borderRadius: "5px"
@@ -99,7 +114,7 @@ const RefUsageConcepts = () => {
 
   success: {
     background: "#102414",
-    borderLeft: "5px solid #00ff90",
+    borderLeft: "5px solid #34d399",
     padding: "15px",
     marginTop: "15px",
     borderRadius: "5px"

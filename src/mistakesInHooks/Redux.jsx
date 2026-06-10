@@ -595,6 +595,230 @@ Reducers must be pure. So, use Thunks and use ExtraReducers for the fulfilled/pe
 Q) Difference Between Thunk and Middleware?
 A) Middleware- Generic interception layer.
    Thunk: Specific middleware for async actions.`;
+
+const middlewareDemo =`MiddleWare usage
+________________________
+--dispatch
+store.dispatch({
+  type:"increment"
+});
+
+--Logger
+
+const logger = (store)=> (next)=> (action)=>{
+ console.log("Before",store.getState());
+ const result = next(action);
+ console.log("After", store.getState());
+ return result;
+};
+
+-- reducer
+const reducer = (state={count:0},action)=>{
+ switch(action.type){
+  case "increment": return {count: state.count + 1};
+  case "decrement" : return {count: state.count-1}
+  default: return state;
+ }
+};
+
+
+============================================
+Role-based authentication middleware
+=============================================
+dispatch 
+
+dispatch({type:"users/deleteUser"})
+
+      ↓
+authMiddleware
+
+const authMiddleware = (store)=>(next)=>(action)=>{
+ const token = localStorage.getItem("token");
+ if(!token){
+  console.log("Login Required");
+  return;
+ }
+ return next(action);
+}
+      ↓
+reducer
+
+deleteUser:(state)=>{
+ state.users = [];
+}
+      ↓
+store updated
+
+
+dispatch({type:"users/deleteUser"})
+
+      ↓
+
+roleMiddleware
+
+const roleMiddleware = (store)=> (next)=> (action)=>{
+ const role = localStorage.getItem("role");
+ if(action.type === "users/deleteUser" && role !== "admin"){
+  console.log("Access Denied");
+  return;
+ }
+  return next(action);
+}
+      ↓
+reducer
+
+deleteUser:(state)=>{state.users = [];}
+      ↓
+store updated
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++
+Full Demo
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+App.jsx
+--------------------------
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import {deleteUser,addUser} from "./usersSlice";
+
+export default function App(){
+ const dispatch = useDispatch();
+ const users = useSelector(state => state.users.users);
+
+ return (
+  <div>
+   <h2>Users</h2>
+   <pre>
+    {JSON.stringify(users, null, 2)}
+   </pre>
+
+   <button onClick={()=> dispatch(addUser("Sai"))}> Add User</button>
+    <button onClick={()=> dispatch(deleteUser())}> Delete Users</button>
+  </div>
+ );
+}
+
+usersSlice.js
+------------------------------------
+import { createSlice } from "@reduxjs/toolkit";
+
+const usersSlice = createSlice({
+  name: "users",
+  initialState: {
+    users: ["John", "David"]
+  },
+  reducers: {
+    deleteUser: (state) => {
+      state.users = [];
+    },
+    addUser: (state, action) => {
+      state.users.push(action.payload);
+    }
+
+  }
+});
+
+export const {deleteUser, addUser} = usersSlice.actions;
+export default usersSlice.reducer;
+
+
+authMiddleware.js
+------------------------------------
+export const authMiddleware = (store)=> (next)=> (action)=>{
+  const token = localStorage.getItem("token");
+  console.log("Auth Middleware");
+  if(!token){
+    console.log("Login Required");
+    return;
+  }
+  return next(action);
+};
+
+roleMiddleware.js
+------------------------------
+export const roleMiddleware =(store)=> (next)=> (action)=>{
+  const role =localStorage.getItem("role");
+  console.log("Role Middleware");
+
+  if(action.type === "users/deleteUser" && role !== "admin"){
+    console.log("Admin Only");
+    return;
+  }
+  return next(action);
+};
+
+loggerMiddleware.js
+------------------------------
+export const loggerMiddleware = (store)=> (next)=> (action)=>{
+  console.log("Before", store.getState());
+
+  const result = next(action);
+
+  console.log("After", store.getState());
+  return result;
+};
+
+
+Store.js
+________________________________________________
+import {configureStore} from "@reduxjs/toolkit";
+import usersReducer from "./usersSlice";
+import {authMiddleware} from "./authMiddleware";
+import {roleMiddleware} from "./roleMiddleware";
+import {loggerMiddleware} from "./loggerMiddleware";
+
+export const store =
+ configureStore({
+
+  reducer:{users: usersReducer},
+  middleware: (getDefaultMiddleware)=> getDefaultMiddleware().concat(loggerMiddleware, authMiddleware, roleMiddleware)
+});
+
+
+
+
+
+
+Most Important line in middleware
+++++++++++++++++++++++++++++++++++++
+return next(action);
+
+Pass action to the next middleware.
+If no middleware remains, pass action to the reducer.
+
+If any logger or checks should be in it only
+
+
+
+
+Autopsy of createAsyncThunk
+---------------------------------
+export const getUsers = createAsyncThunk("users/getUsers", async () => {
+    const res = await axios.get("/users");
+    return res.data;
+  }
+);
+
+
+const api = axios.create({
+  baseURL: "http://localhost:5000"
+});
+
+api.get("/users");
+/users is backend request as it could 
+
+
+
+name: sliceName/actionName
+
+createAsyncThunk("users/getUsers", async()=>{})
+
+users/getUsers/pending
+users/getUsers/fulfilled
+users/getUsers/rejected
+
+Redux toolkit helps to view the pending/fulfiled/rejected the request in extra reducers `
   return (
     <div style={styles.page}>
       {/* =========================================================
@@ -953,7 +1177,8 @@ Updated UI
   <div>
     <h2>🗂️ MiddleWare Demo usecases of logging, asyncronous calls, error handling</h2>
 
-    <pre
+<div style={{display:'grid', gridTemplateColumns:'repeat(2,1fr'}}>
+      <pre
       style={{
         textAlign: "left",
         padding: "16px",
@@ -965,6 +1190,19 @@ Updated UI
     >
       {middlewareNotes}
     </pre>
+    <pre
+      style={{
+        textAlign: "left",
+        padding: "16px",
+        borderRadius: "10px",
+        overflowX: "auto",
+        background: "#111",
+        color: "#507af8",
+      }}
+    >
+      {middlewareDemo}
+    </pre>
+</div>
     </div>
 <section
   style={{
