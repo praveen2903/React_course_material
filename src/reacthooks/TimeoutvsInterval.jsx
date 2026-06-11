@@ -87,25 +87,13 @@ function TimeoutVsIntervalCompleteGuide() {
   */
 
   useEffect(() => {
-
     const badInterval = setInterval(async () => {
-
       console.log("❌ Fetch started");
-
-      await new Promise((res) =>
-        setTimeout(res, 5000)
-      );
-
+      await new Promise((res) => setTimeout(res, 5000));
       console.log("❌ Fetch completed");
-
     }, 2000);
-
     return () => clearInterval(badInterval);
-
   }, []);
-
-
-
   /*
   ==========================================================
   ✅ FIX USING RECURSIVE setTimeout
@@ -113,38 +101,18 @@ function TimeoutVsIntervalCompleteGuide() {
   */
 
   useEffect(() => {
-
     let active = true;
-
     const safePolling = async () => {
-
       console.log("✅ Safe fetch started");
-
-      await new Promise((res) =>
-        setTimeout(res, 3000)
-      );
-
+      await new Promise((res) => setTimeout(res, 3000));
       console.log("✅ Safe fetch completed");
-
       if (active) {
-
-        setTimeout(
-          safePolling,
-          2000
-        );
-
+        setTimeout(safePolling, 2000);
       }
     };
-
     safePolling();
-
-    return () => {
-      active = false;
-    };
-
+    return () => {active = false;};
   }, []);
-
-
 
   /* =========================================================
      🔥 DEBOUNCE EXAMPLE
@@ -310,7 +278,44 @@ function TimeoutVsIntervalCompleteGuide() {
       {/* =================================================== */}
       {/* 🔥 MAIN DIFFERENCE */}
       {/* =================================================== */}
+<code><pre>
+  {`  /* =========================================================
+     TRAP : OVERLAPPING INTERVALS
+     ========================================================= */
 
+  /*
+  ❌ PROBLEM
+  -----------
+  setInterval does NOT wait for async task
+  Example: interval every 2 sec, API takes 5 sec  → multiple overlapping requests happen
+
+  useEffect(() => {
+    const badInterval = setInterval(async () => {
+      console.log("❌ Fetch started");
+      await new Promise((res) => setTimeout(res, 5000));
+      console.log("❌ Fetch completed");
+    }, 2000);
+    return () => clearInterval(badInterval);
+  }, []);
+
+  ==========================================================
+  ✅ FIX USING RECURSIVE setTimeout
+  ==========================================================
+
+  useEffect(() => {
+    let active = true;
+    const safePolling = async () => {
+      console.log("✅ Safe fetch started");
+      await new Promise((res) => setTimeout(res, 3000));
+      console.log("✅ Safe fetch completed");
+      if (active) {
+        setTimeout(safePolling, 2000);
+      }
+    };
+    safePolling();
+    return () => {active = false;};
+  }, []);`}
+  </pre></code>
       <div style={{...cardStyle, textAlign:'left'}}>
 
         <h2>
@@ -407,13 +412,32 @@ function TimeoutVsIntervalCompleteGuide() {
         </p>
 
         <pre style={codeStyle}>
-{`setCount((prev) => prev + 1)
+        
+{`  setInterval captures OLD state value
+  Even if count updates, interval callback still remembers old count
+
+  useEffect(() => {
+    const staleId = setInterval(() => {
+      console.log("❌ stale closure value:",count);
+      setCount(count+1)
+    }, 1000);
+    return () => clearInterval(staleId);
+  }, []);
+
+  ========================================================
+  ✅ FIX USING FUNCTIONAL UPDATE
+  ==========================================================
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setCount((prev) => prev + 1);  //no stale clousre fix
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
 
 WHY?
 ------
-Always gets latest value
-
-Fixes stale closure issue`}
+Always gets latest value. Fixes stale closure issue`}
         </pre>
 
       </div>
@@ -425,35 +449,46 @@ Fixes stale closure issue`}
       {/* =================================================== */}
 
       <div style={cardStyle}>
-
         <h2>
           ⏱️ Stopwatch Example
         </h2>
+<code>
+  <pre>
+    {`
+useEffect(()=>{
+  if(!isRunning) return;
+  intervalRef.current = setInterval(()=> setSeconds((prev)=> prev+1),1000)
+  
+  return ()=>clearInterval(intervalRef.current)  //see unmount can be written so best to use this
+},[isRunning])    
+const startTimer=() =>{setIsRunning(true)}
+    
+    
+const startTimer = () => {   //here no useEffect used this is a way too but using useEffect is flexible as it handles auto unmounting
+    if (intervalRef.current) return;
 
-        <h2>
-          {seconds}s
-        </h2>
+    intervalRef.current = setInterval(() => {   // if this is in useEffect you could add clearInterval when unmount which isn't done here
+      setSeconds((prev) => prev + 1);
+    }, 1000);
+  };
 
-        <button
-          style={buttonStyle}
-          onClick={startTimer}
-        >
-          Start
-        </button>
+  const stopTimer = () => {
+    clearInterval(intervalRef.current);
+    intervalRef.current = null;
+  };
 
-        <button
-          style={buttonStyle}
-          onClick={stopTimer}
-        >
-          Stop
-        </button>
+  const resetTimer = () => {
+    stopTimer();
+    setSeconds(0);
+  };`}
+  </pre>
+</code>
+        <h2>{seconds}s</h2>
 
-        <button
-          style={buttonStyle}
-          onClick={resetTimer}
-        >
-          Reset
-        </button>
+        <button style={buttonStyle} onClick={startTimer}>Start</button>
+
+        <button style={buttonStyle} onClick={stopTimer}>Stop</button>
+        <button style={buttonStyle} onClick={resetTimer}>Button</button>
 
         <pre style={codeStyle}>
 {`Used In:
@@ -477,7 +512,33 @@ Fixes stale closure issue`}
         <h2>
           🔥 Debounce Example
         </h2>
+<code>
+  <pre>
+    {`useEffect(() => {
+    timeoutRef.current = setTimeout(() => {
+      setDebounced(search);
+    }, 700);
+    return () => {clearTimeout(timeoutRef.current);};
+  }, [search]);
 
+  /* =========================================================
+     🔥 TYPING INDICATOR
+     ========================================================= */
+  useEffect(() => {
+    if (!search) {
+      setTypingStatus("");
+      return;
+    }
+    setTypingStatus("Typing...");
+
+    const id = setTimeout(() => {
+      setTypingStatus("Stopped typing");
+    }, 1000);
+    return () => clearTimeout(id);
+  }, [search]);
+`}
+  </pre>
+</code>
         <input
           value={search}
           onChange={(e) =>
@@ -487,6 +548,7 @@ Fixes stale closure issue`}
           style={{
             padding: "12px",
             width: "100%",
+            marginTop: '20px',
             borderRadius: "8px",
             border:
               "1px solid #ccc",
@@ -555,17 +617,12 @@ Exactly after 1000ms
 
 Means:
 -------
-Run AFTER minimum 1000ms
-when call stack becomes empty
-
+Run AFTER minimum 1000ms when call stack becomes empty
 
 Example:
 ---------
 Heavy loop blocking UI
-
 for(let i=0;i<999999999;i++){}
-
-
 Result:
 --------
 Timeout delayed`}
@@ -630,24 +687,17 @@ Timeout delayed`}
 {`❌ BAD
 --------
 setInterval(async()=>{
-
- await fetch()
-
+ await fetch()          //directly giving setTimeout for fetch gives duplicates
 },2000)
-
 
 PROBLEM
 ---------
-New request starts
-before previous finishes
-
+New request starts before previous finishes
 
 ✅ GOOD
 ---------
 const poll = async()=>{
-
  await fetch()
-
  setTimeout(poll,2000)
 }
 

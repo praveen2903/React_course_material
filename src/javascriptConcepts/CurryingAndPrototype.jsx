@@ -7,10 +7,6 @@ const CurryingAndPrototype= () => {
 
   const [message, setMessage] = useState("Click a button");
 
-  const handleMessage = (text) => () => {
-    setMessage(text);
-  };
-
   function add(a) {
     return function (b) {
       return function (c) {
@@ -72,7 +68,7 @@ const CurryingAndPrototype= () => {
         </h2>
 
         <p style={styles.text}>
-          Converting:
+           Currying is a functional programming technique where a function that takes multiple arguments is transformed into a sequence of nested functions, each taking only a single argument. It allows developers to break down complex tasks into smaller, reusable parts and handle function arguments incrementally.
         </p>
 
         <pre style={styles.code}>
@@ -87,32 +83,6 @@ add(a)(b)(c)`}
           add(1)(2)(3) = {add(1)(2)(3)}
         </h3>
 
-        <div style={styles.buttonContainer}>
-          <button
-            style={styles.button}
-            onClick={handleMessage("Hello")}
-          >
-            Hello
-          </button>
-
-          <button
-            style={styles.button}
-            onClick={handleMessage("Welcome")}
-          >
-            Welcome
-          </button>
-
-          <button
-            style={styles.button}
-            onClick={handleMessage("React")}
-          >
-            React
-          </button>
-        </div>
-
-        <h3 style={styles.message}>
-          {message}
-        </h3>
 
         <div style={styles.codeWrapper}>
           <code style={{textAlign:'left', minWidth: '500px'}}>
@@ -125,9 +95,38 @@ add(a)(b)(c)`}
   };
 }
 
-const handleMessage = (text) => () => {
-  setMessage(text);
-};`}
+can be writtern as const add= (a)=>(b)=>(c)=>a+b+c;
+
+both called as add(a)(b)(c)
+
+
+Real Examples:-
+______________________
+const checkRole = role => user => user.roles.includes(role);
+
+const isAdmin = checkRole("ADMIN");
+const isManager = checkRole("MANAGER");
+
+isAdmin(user1);
+isAdmin(user2);
+isManager(user1);
+
+
+Redux middleware
+____________________________
+const logger = store => next => action => {
+    console.log(action);
+    return next(action);
+};
+
+
+Event Handlers
+_________________________
+const handleDelete = id => () => {
+  console.log("Deleting", id);  //Deleting 101
+};
+
+<button onClick={handleDelete(101)}>Delete</button>`}
             </pre>
           </code>
         </div>
@@ -137,7 +136,7 @@ const handleMessage = (text) => () => {
 
           <p>
             Currying works because closures remember
-            previous values.
+            previous values like inner function remembers outer variable scope value.
           </p>
         </div>
       </div>
@@ -162,16 +161,84 @@ const handleMessage = (text) => () => {
         <div style={styles.codeWrapper}>
           <code style={{textAlign:'left', minWidth: '500px'}}>
             <pre>
-{`function User(name, age) {
+{`function User(name) {
   this.name = name;
-  this.age = age;
+
+  this.greet = function () {
+    console.log(\`Hello \${this.name}\`);
+  };
 }
 
-User.prototype.introduce = function () {
-  return \`Hi I am \${this.name}\`;
+const u1 = new User("Sai");
+const u2 = new User("John");
+
+
+u1
+ ├─ name
+ └─ greet()  ← Copy 1
+
+u2
+ ├─ name
+ └─ greet()  ← Copy 2
+ 
+ 
+ If using Prototype:-
+------------------------------ 
+function User(name) {
+  this.name = name;
+}
+
+User.prototype.greet = function () {
+  console.log(\`Hello \${this.name}\`);
 };
 
-const user1 = new User("Sai", 22);`}
+const u1 = new User("Sai");
+const u2 = new User("John");
+
+u1
+ └─ name
+
+u2
+ └─ name
+
+User.prototype
+ └─ greet()   ← Shared
+ 
+ 
+ 
+ 
+ Like wise Protype functions: Array Prototype:- map(), filter(), reduce(), forEach()      stringPrototypes:- toUpperCase(), toLowerCase()..
+
+ const user = {
+  login() {
+    console.log("Login");
+  }
+};
+const admin = Object.create(user);
+
+admin.deleteUser = function () {
+  console.log("Delete User");
+};
+ 
+admin
+ │
+ ├─ deleteUser()
+ │
+ ▼
+user
+ │
+ └─ login()
+ │
+ ▼
+Object.prototype
+ │
+ ├─ toString()
+ ├─ hasOwnProperty()
+ └─ valueOf()
+ │
+ ▼
+null
+ `}
             </pre>
           </code>
         </div>
@@ -186,7 +253,8 @@ const user1 = new User("Sai", 22);`}
           <p>
             Memory efficient because only ONE copy
             exists.
-          </p>
+          </p>  
+          <p>Prototype exists so that multiple objects can share the same methods and properties instead of creating duplicate copies, enabling memory-efficient inheritance through the prototype chain</p>
         </div>
 
         <pre style={styles.diagram}>

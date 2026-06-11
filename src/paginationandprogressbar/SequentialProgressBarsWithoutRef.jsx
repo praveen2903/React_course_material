@@ -36,6 +36,28 @@ export default function SequentialProgressBars() {
 
     return (
         <>
+        <code><pre>
+{`const [progressBars, setProgressBars] = useState([0, 0, 0]);
+
+useEffect(() => {
+const timer = setInterval(() => {
+    setProgressBars(prev => {
+        const copy = [...prev];
+        const index = copy.findIndex(p => p < 100);
+        if (index === -1) return prev;
+        copy[index] = Math.min(copy[index] + 20, 100);
+        return copy;
+    });
+}, 500);
+
+return (
+<>
+    {progressBars.map((progress, index) => (
+        <ProgressDemo key={index} progress={progress} />
+    ))}
+</>
+)`}
+            </pre></code>
             <div>Sequential Progress Bars Indexing</div>
             {progressBars.map((progress, index) => (
                 <ProgressDemo key={index} progress={progress} />

@@ -5,14 +5,20 @@ export default function ModalPopup() {
   const modalRef = useRef(null);
 
   useEffect (()=>{
-    const closeModal = () =>{
-      if(modalRef && modalRef.current && !modalRef.current.contains(e.target)){
+    const closeModal = (event) =>{
+      if(modalRef && modalRef.current && !modalRef.current.contains(event.target)){
         setOpen(false)
       }
     }
-    window.addEventListener('click', closeModal);
+    window.addEventListener('click', closeModal);  //event listener provide event to the listener of click
     return () => window.removeEventListener('click', closeModal)
   }, []);
+
+  useEffect(()=>{
+    const key= (event) => event.key === "Escape" && setOpen(false)
+    window.addEventListener("keydown", key);
+    return () => window.removeEventListener("keydown", key);
+})
 
   return (
     <div style={{ padding: "40px", fontFamily: "Arial, sans-serif" }}>
@@ -28,7 +34,7 @@ useEffect(()=>{
             setOpen(false)
          }
     }
-    document.addEventListener("mousedown", handleClick); 
+    document.addEventListener("mousedown", handleClick);      //event listener provide event to the listener of click the modalRef stores model area
     return  () => document.removeEventListener("mousedown", handleClick)
 }, [open])
 
@@ -36,8 +42,8 @@ useEffect(()=>{
 useEffect(()=>{
     const key= (event) => event.key === "Escape" && setOpen(false)
     window.addEventListener("keydown", key);
-    return () => window.removeEventListener("keydown", key);
-})
+    return () => window.removeEventListener("keydown", key);  //event listener provide event to function of the keydown
+}, [open])
 return (
   <>
     <div ref= {modalRef}></div>

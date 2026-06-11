@@ -133,6 +133,153 @@ const EventDelegation = () => {
   return (
     <>
     <div> Event Delegation -- and optimal delegate post api calls like when navigate send api call</div>
+    <p>Event delegation is a JavaScript technique where you attach a single event listener to a parent element to manage events for all of its current and future child elements</p>
+    <code>
+      <pre>
+{`  const menus = [
+    { key: "home", title: "Home", subs: ["Dashboard", "Activity", "Reports"] },
+    { key: "profile", title: "Profile", subs: ["Info", "Edit Profile", "Privacy"] },
+    { key: "settings", title: "Settings", subs: ["Theme", "Notifications"] },
+    { key: "help", title: "Help", subs: ["FAQ", "Support", "Contact"] }
+  ];
+  
+  const [sideOpen, setSideOpen] = useState(false);
+  const [openMenus, setOpenMenus] = useState({});
+  const menuRef = useRef(null);  // close  menu when clicked outside
+  const navRef = useRef(null) // not close when clicked on menu the toggle must not allow neatly please
+  const toggleBar = () => setSideOpen(prev => !prev);
+
+  const toggleMenu = (key) => {
+    setOpenMenus(prev => ({...prev, [key]: !prev[key] }));
+  };
+
+  const postAPICall = async (payload) =>{
+    try{
+        await fetch("https://your-api.com/menu-click", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(payload)
+        });    
+        } catch (err) {
+                console.error("api error: ", err)
+        }
+  }
+
+  const handleClick = (e) => {
+    const {type, key, value, parent} = e.target.dataset
+    if (type === "menu") {
+      toggleMenu(key);
+    }
+
+    if (type === "submenu") {
+        const payload= {
+            menu: parent,
+            submenu: value,
+            timestamp: new Date().toISOString()
+        }
+      console.log("Submenu clicked:", value);
+      postAPICall(payload)
+    }
+  };
+
+  useEffect(() => {
+    const closeOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target) && !navRef.current.contains(e.target)) {
+        setSideOpen(false);
+        setOpenMenus({});
+      }
+    };
+
+    document.addEventListener("click", closeOutside);
+    return () => document.removeEventListener("click", closeOutside);
+  }, []);
+  
+  return(
+  <>
+      <div ref={menuRef} onClick={handleClick}>
+        <h3 style={{ marginBottom: "20px" }}>Navigation</h3>
+
+        {menus.map((item) => (
+          <div key={item.key}>
+            <button data-type="menu" data-key={item.key}> {item.title} {openMenus[item.key] ? "▲" : "▼"} </button>
+
+            {openMenus[item.key] && (
+              <div style={styles.subMenu}>
+                {item.subs.map((sub, i) => (
+                    <button key={i}
+                      data-parent={item.key}   //stores the parent key like suppose home, profile or any store it
+                      data-type="submenu"
+                      data-value={sub}
+                    >
+                      {sub}
+                    </button>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+
+        <button>Logout</button>
+      </div>
+  </>
+  )`}
+      </pre>
+    </code>
+
+<code>
+  <pre>
+    {`Without Event Delegation     
+
+<button onClick={handleDashboard}>Dashboard</button>
+<button onClick={handleActivity}>Activity</button>
+<button onClick={handleReports}>Reports</button>
+
+Dashboard → Listener
+Activity  → Listener
+Reports   → Listener
+Info      → Listener
+Privacy   → Listener
+Theme     → Listener
+Many listeners`}
+  </pre>
+</code>
+
+<code><pre>
+  {`<button data-type="submenu" data-parent="home" data-value="Dashboard">Dashboard</button>
+
+   const target = e.target.closest("[data-type]");`}
+  </pre></code>
+
+
+
+  <h2>Small Event Delegation Example</h2>
+
+  <code>
+    <pre>
+      {`<div id="products">
+  <button data-id="1">Buy</button>
+  <button data-id="2">Buy</button>
+  <button data-id="3">Buy</button>
+</div>
+
+products.addEventListener("click", (e) => {
+  const id = e.target.dataset.id;
+  console.log("Buying", id);
+});
+
+
+______________________________________________
+<div id="app">
+  <button data-action="buy">Buy</button>
+  <button data-action="share">Share</button>
+  <button data-action="wishlist">Wishlist</button>
+</div>
+
+app.addEventListener("click", (e) => {
+  console.log("User Action:", e.target.dataset.action);
+});`}
+    </pre>
+  </code>
       <nav style={styles.nav} ref={navRef}>
         <h2 style={{color:'white'}}>Event Delegation</h2>
         <button style={styles.menuBtn} onClick={toggleBar}>

@@ -32,12 +32,9 @@ export default function DebouncedSearch() {
     }
     return (
         <>
-        <code style={{textAlign:'left', minWidth: '500px'}}><pre>{`
-
--- without ref
+        <code style={{textAlign:'left', minWidth: '500px'}}><pre>{`-- without ref
 const debounce=(fn, delay)=>{
     let timer;
-
     return function(...args){
         clearTimeout(timer);    //if any remove the timeout --- edge case
         timer = setTimeout(()=>{
@@ -53,7 +50,7 @@ const handleChange= (value)=>{
 const debouncedSearch= debounce(handleChange, 10000)
 
 --with ref
-const timerRef = useRef(null);
+const timerRef = useRef(null);  - better to use ref since the timer variable hard to destroy and stop is not availed
 
 useEffect(() => {
     const debounce = (func, delay) => {
@@ -78,7 +75,14 @@ const handleChange = (e) => {
     setText(e.target.value);
 };
 
-`}</pre></code>
+return (
+<>
+    <input type="text" value={inputText} onChange={handleChange}/>
+    <p> text: {inputText}</p>
+    <p> Result: {result}</p
+</>
+)`}
+</pre></code>
         <div>Debounce Search-- wait a timeout till user stops like api is searched after time user stops giving input</div>
         <div>current-(10) check console the request comes post stoppage 1 second (uses: Auto save, search, resize)</div>
         <input type="text" value={inputText} onChange={handleChange}/>

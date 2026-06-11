@@ -49,22 +49,19 @@ export default function PaginationAndSorting(){
         <>
 <code style={{textAlign:'left', minWidth: '500px'}}>
     <pre>
-{`
-const totalPages = Math.ceil(data.length/pageSize);
-
+{`const totalPages = Math.ceil(data.length/pageSize);
 const pageStartIndexes = (pageNumber-1)*pageSize;
 const filteredData = data.slice(pageStartIndexes, pageStartIndexes + pageSize);
 
 {<table>
-<thead><th></th></thead>
-filteredData.map((item, index)=>(
-    <>
-
-    <tbody><td></td></tbody>
-    </>
+    <thead><th></th></thead>
+    filteredData.map((item, index)=>(
+        <>
+            <tbody><td></td></tbody>
+        </>
     ))
-</table>
-}
+</table>}
+
 <p>{pageNumber} in {totalPages} </p>
 <button onClick={()=>setPageNumber(num=> num-1)} disabled={pageNumber===1}>Prev</button>
 <p>Page size</p>

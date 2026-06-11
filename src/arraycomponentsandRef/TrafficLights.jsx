@@ -20,6 +20,33 @@ export default function TrafficLights(){
     return (
         <>
          <div>Traffic Lights with normally without ref</div>
+         <code>
+            <pre>{`const [lights,setLights] = useState("red");
+
+useEffect(()=>{
+    let timer;
+    if(lights ==='red'){
+        timer= setTimeout(()=>{setLights("green")},5000)
+    } else if(lights==='green'){
+        timer= setTimeout(()=>setLights('orange'),5000)
+    } else{
+        timer = setTimeout(()=> setLights('red'), 2000)
+    }
+
+    return ()=>clearTimeout(timer)
+},[lights])
+
+const getColor=(color)=>lights===color? color: '#ccc'
+return (
+    <>
+        <div>Traffic Lights with normally without ref</div>
+    <div style={{...styles.container}}>
+        <div style={{...styles.container, background: getColor("red")}}>.</div>
+        <div style={{...styles.container, background: getColor("orange")}}>.</div>
+        <div style={{...styles.container, background: getColor("green")}}>.</div>
+    </div>`}</pre>
+         </code>
+
         <div style={{...styles.container}}>
             <div style={{...styles.container, background: getColor("red")}}>.</div>
             <div style={{...styles.container, background: getColor("orange")}}>.</div>

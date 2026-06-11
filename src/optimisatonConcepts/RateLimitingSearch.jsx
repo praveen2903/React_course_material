@@ -34,16 +34,17 @@ export default function RateLimitingSearch(){
     return (
         <>
             <div> Rate Limit-- allows to control no.of api calls in time frame</div>
-<code style={{textAlign:'left', minWidth: '500px'}}><pre>{`
-const callsRef= useRef([]);
+<code style={{textAlign:'left', minWidth: '500px'}}><pre>{`const callsRef= useRef([]);
 
 const rateLimit= (fn, limit, interval)=>{
     return function(...args){
         const now= Date.now();
+
         callsRef.current=callsRef.current.filter((time)=>{
             return now- time < interval
         });
-        if(callsRef.current.length < limit) {
+
+        if(callsRef.current.length < limit) {   --per 10 seconds only 3 requests like that
             callsRef.current.push(now);
             fn(...args);
         } else{
@@ -60,7 +61,16 @@ const rateLimitRef = useRef(null);
 
 if(!rateLimitRef.current){
     rateLimitRef.current = rateLimit(searchApi,3,10000); //Max 3 calls in 10 seconds
-}`}</pre></code>
+}
+
+
+return (
+    <>
+        <input type="text" value={inputText} onChange={(e)=>{ setInputText(e.target.value); rateLimitRef.current(e.target.value);}}/>
+        <p>Text:{inputText}</p>
+        <p>Result: {result}</p>
+    </>
+)`}</pre></code>
             <input type="text" value={inputText} onChange={(e)=>{
                 setInputText(e.target.value);
                 rateLimitRef.current(e.target.value);

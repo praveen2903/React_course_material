@@ -121,6 +121,189 @@ const EventBatchingDemo = () => {
         store all clicks but Send 5 clicks at a time post an api call like wise in cycle reduce burden on cpu & some times post call may take
         more time we could use here promises too to parallely execute
       </p>
+
+      <code>
+        <pre>
+{`Home → Dashboard
+Home → Reports
+Profile → Info
+Admin → Users
+Products → Shoes
+
+without batching:-
+POST /track
+POST /track
+POST /track
+POST /track
+POST /track
+
+5 Network Requests
+
+
+Batching allows  Queue
+track-batch: [Dashboard, Reports,Info,Users,Shoes]   POST /track-batch`}
+        </pre>
+      </code>
+
+
+<h3>Event Batching</h3>
+<code>
+  <pre>
+    {`import axios from "axios";
+
+const queue = [];
+
+function trackClick(item) {
+  queue.push(item);
+
+  if (queue.length >= 3) {
+    sendBatch();
+  }
+}
+
+async function sendBatch() {
+  try {
+    const batch = [...queue];
+
+    await axios.post("/api/events", {
+      events: batch
+    });
+
+    console.log("API Sent:", batch);
+
+    queue.length = 0;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+trackClick("Home");
+trackClick("Profile");
+trackClick("Settings");
+
+Output: -POST /api/events
+{
+  events: ["Home", "Profile", "Settings"]
+}`}
+  </pre>
+</code>
+<h2>Time Batching Demo</h2>
+<code>
+  <pre>
+    {`import axios from "axios";
+const queue = [];
+let timer = null;
+
+function trackClick(item) {
+  queue.push(item);
+  if (!timer) {
+    timer = setTimeout(() => {
+      sendBatch();
+    }, 3000);
+  }
+}
+
+async function sendBatch() {
+  try {
+    const batch = [...queue];
+    await axios.post("/api/events", {events: batch});
+    console.log("API Sent:", batch);
+    queue.length = 0;
+    timer = null;
+  } catch (err) {
+    console.error(err);
+  }
+}
+trackClick("Home");
+trackClick("Dashboard");
+
+Output: POST /api/events
+{
+  events: ["Home","Dashboard"]
+}`}
+  </pre>
+</code>
+
+<h2>Event+ time batching</h2>
+<code>
+  <pre>
+    {`import axios from "axios";
+
+const queue = [];
+let timer = null;
+
+function trackClick(menu, submenu) {
+  queue.push({
+    menu,
+    submenu,
+    timestamp: Date.now()
+  });
+
+  // Send immediately if 5 events collected
+  if (queue.length >= 5) {
+    sendBatch();
+    return;
+  }
+
+  // Otherwise wait 3 seconds
+  if (!timer) {
+    timer = setTimeout(sendBatch, 3000);
+  }
+}
+
+async function sendBatch() {
+  if (!queue.length) return;
+
+  const batch = [...queue];
+
+  try {
+    await axios.post("/api/menu-tracking", {
+      events: batch
+    });
+
+    console.log("Batch Sent:", batch);
+
+    queue.length = 0;
+
+    clearTimeout(timer);
+    timer = null;
+  } catch (err) {
+    console.error(err);
+  }
+}
+trackClick("Home", "Dashboard");
+trackClick("Home", "Reports");
+trackClick("Profile", "Info");
+trackClick("Admin", "Users");
+trackClick("Products", "Shoes");
+
+output: POST /api/menu-tracking
+{
+  "events": [
+    {
+      "menu": "Home",
+      "submenu": "Dashboard"
+    },
+    {
+      "menu": "Home",
+      "submenu": "Reports"
+    },
+    {
+      "menu": "Profile",
+      "submenu": "Info"
+    },
+    {
+      "menu": "Admin",
+      "submenu": "Users"
+    },
+    {
+      "menu": "Products",
+      "submenu": "Shoes"
+    }
+  ]
+}`}
+  </pre>
+</code>
       <div
         style={{
           display: "flex",
@@ -185,6 +368,8 @@ const EventBatchingDemo = () => {
                       }
                       style={{
                         padding: "10px 14px",
+                        color: "black",
+                        backgroundColor:'green',
                         borderRadius: "10px",
                         border: "1px solid #ccc",
                         background: "white",

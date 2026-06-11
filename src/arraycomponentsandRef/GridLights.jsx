@@ -139,6 +139,10 @@ const startRef = useRef(null);
 const [running,setRunning] = useState(false);
 
 useEffect(()=>{
+
+  --edge case missing in code below ****
+  if(!running) return; -- this was missing in the code since it starts without clicking start like when running == false it runs as useEffect always renders when page opens
+
   startRef.current= setInterval(()=>{
     setStartIndex(index=> index==8 ? 0 : index+1)
   }, 3000)

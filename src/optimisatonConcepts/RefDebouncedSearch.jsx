@@ -7,10 +7,10 @@ const RefDebouncedSearch = () => {
     };
 
     const codeStyle = {
-        background: "#f4f4f4",
+        // background: "#f4f4f4",
         padding: "12px",
         borderRadius: "8px",
-        maxHeight: "300px",
+        maxHeight: "500px",
         overflowY: "auto",
         overflowX: "auto",
 

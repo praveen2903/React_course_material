@@ -33,7 +33,9 @@ const StarRating = () => {
                 {`{[1,2,3,4,5].map((num)=>(
     <span key={num} onClick={()=>setStarSelected(num)}
         style={{
-            fontSize: '80px',
+            fontSize: '180px',
+            height: '50px',
+            width: '50px,
             cursor:'pointer',
             borderRadius:'50%',
             color: num<=starSelected ? 'gold': 'gray', //the num values less than selected stars get the color
@@ -45,8 +47,10 @@ const StarRating = () => {
             [1,2,3,4,5].map((num)=>(
                 <span key={num} onClick={()=>setStarSelected(num)}
                     style={{
-                        fontSize: '80px',
+                        height: '50px',
+                        width: '50px',
                         cursor:'pointer',
+                        fontSize:'180px',
                         borderRadius:'50%',
                         color: num<=starSelected ? 'gold': 'gray', //the num values less than selected stars get the color
                 }}

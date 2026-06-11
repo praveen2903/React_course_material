@@ -88,6 +88,7 @@ import SocketsDemo from './typescriptConcepts/SocketsDemo'
 import RefUsageConcepts from './interview/RefUsageConcepts'
 import CloudConcepts from './interview/CloudConcepts'
 import RoutingExample from './routingConcepts/RoutingExample'
+import TemporalDeadZone from './javascriptConcepts/TemporalDeadZone'
 
 function App() {
 
@@ -424,6 +425,8 @@ Uncontrolled → React knows only when asked.`}</pre>
            <EventBubbling/>
            <div className="section-divider" />
            <EventCapturing/>
+           <div className="section-divider" />
+           <TemporalDeadZone/>
           </>
         )
       }
@@ -502,6 +505,10 @@ Uncontrolled → React knows only when asked.`}</pre>
       {
         tabs==='useRefcomponents' && (
           <>
+
+          <h1>How to give useRef initial values?</h1>
+  <h4>Dom elements/ Timeouts:  useRef(null)</h4>
+  <h4>If mutable things like attached to DOM like grid/ counters:- useRef(----): mutable value related like [],{},0</h4>
           <div className="section-divider" />
          <div style={{textAlign:'left'}}>
            <div>
@@ -585,4 +592,3 @@ return ( <button onClick = {handleClick}>fetch</button>)
 }
 
 export default App
-

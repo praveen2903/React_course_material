@@ -44,9 +44,15 @@ const throttle= (fn, limit)=>{
     }
 }
 const searchApi= (value)=> setResult("Throttle Search: "+ value)
-
 const throttleSearch = throttle(searchApi, 3000);  
-`}</pre>
+
+return (
+<>
+    <input type="text" value={inputText} onChange={(e)=>{ setInputText(e.target.value); throttleSearch(e.target.value); }} />
+    <p>Text: {inputText}</p>
+    <p> Result: {result}</p>
+</>
+)`}</pre>
 </code>
         <input type="text" value={inputText} onChange={(e)=>{
             setInputText(e.target.value);

@@ -243,7 +243,7 @@ console.log(c); // 30`}
                     <pre>
 {`const arr = [1];
 
-const [x, y = 100] = arr;
+const [x, y = 100] = arr;  //y default 100 get replaced by incoming value if any
 
 console.log(x); // 1
 console.log(y); // 100`}
@@ -310,9 +310,9 @@ console.log(rest);  // [2,3,4,5]`}
 
 const { name, age, city } = user;
 
-console.log(name);
-console.log(age);
-console.log(city);`}
+console.log(name);  //sai
+console.log(age);   //22
+console.log(city);  //warangal `}
                     </pre>
                 </code>
 
@@ -337,8 +337,8 @@ const {
     age: userAge
 } = user;
 
-console.log(userName);
-console.log(userAge);`}
+console.log(userName); //sai
+console.log(userAge);  //22`}
                     </pre>
                 </code>
 
@@ -393,8 +393,8 @@ const {
     }
 } = employee;
 
-console.log(state);
-console.log(pincode);`}
+console.log(state);   //telangana
+console.log(pincode); //506002`}
                     </pre>
                 </code>
 
@@ -410,13 +410,13 @@ console.log(pincode);`}
                 <code style={{textAlign:'left', minWidth: '500px'}}>
                     <pre>
 {`function printUser({ name, age }) {
-    console.log(name);
-    console.log(age);
+    console.log(name);   //praveen
+    console.log(age); //22
 }
 
 printUser({
     name: 'Praveen',
-    age: 25
+    age: 22
 })`}
                     </pre>
                 </code>
@@ -443,7 +443,7 @@ const {
     data: { users }
 } = response;
 
-console.log(users);`}
+console.log(users);  //['A','B','C']`}
                     </pre>
                 </code>
 
@@ -458,13 +458,9 @@ console.log(users);`}
 
                 <code style={{textAlign:'left', minWidth: '500px'}}>
                     <pre>
-{`Arrays  -> []
+{`Arrays  -> []                 Objects -> {}
 
-Objects -> {}
-
-Array destructuring is POSITION based
-
-Object destructuring is PROPERTY NAME based`}
+Array destructuring is POSITION based &  Object destructuring is PROPERTY NAME based`}
                     </pre>
                 </code>
 
