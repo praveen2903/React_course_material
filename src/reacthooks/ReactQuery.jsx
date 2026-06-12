@@ -155,7 +155,7 @@ function UsersList() {
   return (
     <div style={{...containerStyle, textAlign:'left'}}>
 
-      <h2>🔥 React Query Complete Demo</h2>
+      <h2>🔥 React Query Complete Demo  -- mainly used with graphql</h2>
 
       <div style={cardStyle}>
 

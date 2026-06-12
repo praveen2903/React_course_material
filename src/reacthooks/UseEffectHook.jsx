@@ -11,20 +11,12 @@ export default function UseEffectCompleteGuide() {
      ========================================================= */
 
   const [count, setCount] = useState(0);
-
   const [show, setShow] = useState(true);
-
   const [text, setText] = useState("");
+  const [debounced, setDebounced] = useState("");
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  const [debounced, setDebounced] =
-    useState("");
-
-  const [windowWidth, setWindowWidth] =
-    useState(window.innerWidth);
-
-  const [seconds, setSeconds] =
-    useState(0);
-
+  const [seconds, setSeconds] = useState(0);
   const intervalRef = useRef(null);
 
 
@@ -47,10 +39,7 @@ export default function UseEffectCompleteGuide() {
 
   });
 
-
-
-
-  /* =========================================================
+ /* =========================================================
      🔥 2️⃣ COMPONENT DID MOUNT
      ========================================================= */
 
@@ -61,22 +50,10 @@ export default function UseEffectCompleteGuide() {
   */
 
   useEffect(() => {
-
-    console.log(
-      "✅ Component Mounted"
-    );
-
-    return () => {
-
-      console.log(
-        "❌ Component Unmounted"
-      );
-
-    };
+    console.log("✅ Component Mounted");
+    return () => {console.log("❌ Component Unmounted");};
 
   }, []);
-
-
 
 
   /* =========================================================
@@ -88,35 +65,18 @@ export default function UseEffectCompleteGuide() {
   */
 
   useEffect(() => {
-
-    console.log(
-      "📌 Count Updated:",
-      count
-    );
-
+    console.log("📌 Count Updated:",count);
   }, [count]);
-
-
-
 
   /* =========================================================
      🔥 4️⃣ SEARCH API EXAMPLE
      ========================================================= */
 
   useEffect(() => {
-
     if (text) {
-
-      console.log(
-        "🔍 Searching API for:",
-        text
-      );
-
+      console.log("🔍 Searching API for:", text);
     }
-
   }, [text]);
-
-
 
 
   /* =========================================================
@@ -130,22 +90,11 @@ export default function UseEffectCompleteGuide() {
   */
 
   useEffect(() => {
-
     const id = setTimeout(() => {
-
       setDebounced(text);
-
     }, 800);
-
-    return () => {
-
-      clearTimeout(id);
-
-    };
-
+    return () => {clearTimeout(id);};
   }, [text]);
-
-
 
 
   /* =========================================================
@@ -157,31 +106,14 @@ export default function UseEffectCompleteGuide() {
   */
 
   useEffect(() => {
-
-    const handleResize = () => {
-
-      setWindowWidth(
-        window.innerWidth
-      );
-
+    const handleResize = (event) => {
+      setWindowWidth(window.innerWidth);
     };
-
-    window.addEventListener(
-      "resize",
-      handleResize
-    );
-
+    window.addEventListener("resize", handleResize);
     return () => {
-
-      window.removeEventListener(
-        "resize",
-        handleResize
-      );
-
+      window.removeEventListener("resize", handleResize);
     };
-
   }, []);
-
 
 
 
@@ -191,27 +123,15 @@ export default function UseEffectCompleteGuide() {
 
   useEffect(() => {
 
-    intervalRef.current =
-      setInterval(() => {
-
+    intervalRef.current = setInterval(() => {
         setSeconds((prev) => prev + 1);
-
       }, 1000);
-
     return () => {
-
-      clearInterval(
-        intervalRef.current
-      );
-
+      clearInterval(intervalRef.current);
     };
-
   }, []);
 
-
-
-
-  /* =========================================================
+ /* =========================================================
      🔥 8️⃣ STALE CLOSURE TRAP
      ========================================================= */
 
@@ -220,20 +140,11 @@ export default function UseEffectCompleteGuide() {
   */
 
   useEffect(() => {
-
     const id = setInterval(() => {
-
-      console.log(
-        "❌ stale closure:",
-        count
-      );
-
+      console.log("❌ stale closure:", count);
     }, 5000);
-
     return () => clearInterval(id);
-
   }, []);
-
 
 
 
@@ -242,18 +153,12 @@ export default function UseEffectCompleteGuide() {
      ========================================================= */
 
   useEffect(() => {
-
     const id = setInterval(() => {
-
-      setCount((prev) => prev);
-
+      setCount((prev) => prev+1);         //fix to setcount(count+1)
     }, 5000);
 
     return () => clearInterval(id);
-
   }, []);
-
-
 
 
   /* =========================================================
@@ -261,25 +166,17 @@ export default function UseEffectCompleteGuide() {
      ========================================================= */
 
   if (!show) {
-
     return (
       <div style={containerStyle}>
-
         <div style={cardStyle}>
-
           <h2>
             ❌ Component Removed
           </h2>
 
-          <button
-            style={buttonStyle}
-            onClick={() => setShow(true)}
-          >
+          <button style={buttonStyle} onClick={() => setShow(true)}>
             Mount Again
           </button>
-
         </div>
-
       </div>
     );
   }
@@ -310,14 +207,39 @@ export default function UseEffectCompleteGuide() {
           ✅ What is useEffect?
         </h2>
         <p>
-| Dependency Array    | Initial Render | Dependency Change |
+<pre>
+  {`| Dependency Array    | Initial Render | Dependency Change |
 | ------------------- | -------------- | ----------------- |
-| `[]`                | ✅ Yes          | ❌ No              |
-| `[val]`             | ✅ Yes          | ✅ Yes             |
+| \`[]\`                | ✅ Yes          | ❌ No              |
+| \`[val]\`             | ✅ Yes          | ✅ Yes             |
 | No dependency array | ✅ Yes          | ✅ Every render    |
-
+`}
+</pre>
         </p>
+<pre>
+{`--> No dependency array: Runs after EVERY render (mounting + everytime the DOM element changes (controlled elements)
 
+useEffect(() => {
+  console.log("🔁 Runs on every render");
+});
+
+ /* =========================================================
+     🔥 2️⃣ COMPONENT DIDMOUNT-- only at page loads (mounting)
+     ========================================================= */
+ --> Empty dependency array:  Runs only ONCE after mount
+
+  useEffect(() => {
+    console.log("✅ Component Mounted");
+    return () => {console.log("❌ Component Unmounted");};
+  }, []);
+
+  /* =========================================================
+     🔥 3️⃣ COMPONENT DID UPDATE -- Initial Render at page loads (mounting) + everytime dependency chanages
+     ========================================================= */
+  useEffect(() => {
+    console.log("📌 Count Updated:",count);
+  }, [count]);`}
+</pre>
         <p>
           useEffect handles
           <strong>
@@ -350,15 +272,10 @@ export default function UseEffectCompleteGuide() {
 
         <pre style={codeStyle}>
 {`useEffect(()=>{
-
   // side effect
-
   return ()=>{
-
     // cleanup
-
   }
-
 },[dependencies])`}
         </pre>
 
@@ -494,11 +411,8 @@ export default function UseEffectCompleteGuide() {
 
         <pre style={codeStyle}>
 {`useEffect(()=>{
-
  console.log(count)
-
 },[count])
-
 
 Runs ONLY when count changes`}
         </pre>
@@ -542,17 +456,12 @@ Runs ONLY when count changes`}
 
         <pre style={codeStyle}>
 {`useEffect(()=>{
-
- const id = setTimeout(()=>{
-
-   setDebounced(text)
-
- },500)
+  const id = setTimeout(()=>{
+    setDebounced(text)
+  },500)
 
  return ()=>clearTimeout(id)
-
 },[text])
-
 
 WHY CLEANUP?
 --------------
@@ -579,18 +488,14 @@ Prevents old timeouts`}
         </h2>
 
         <pre style={codeStyle}>
-{`useEffect(()=>{
+{` Here Ref is uncontrolled component change of it doesn't rerenders
 
- const id = setInterval(()=>{
-
-   setSeconds(prev=>prev+1)
-
- },1000)
-
- return ()=>clearInterval(id)
-
-},[])
-
+useEffect(() => {
+    intervalRef.current = setInterval(() => {
+        setSeconds((prev) => prev + 1);
+      }, 1000);
+    return () => {clearInterval(intervalRef.current);};
+  }, []);
 
 IMPORTANT:
 -------------
@@ -619,19 +524,15 @@ Always cleanup intervals`}
         </h3>
 
         <pre style={codeStyle}>
-{`window.addEventListener(
- "resize",
- handleResize
-)
-
-return ()=>{
-
- window.removeEventListener(
-   "resize",
-   handleResize
- )
-
-}`}</pre>
+{`useEffect(() => {
+  const handleResize = (event) => {
+    setWindowWidth(window.innerWidth);
+  };
+  window.addEventListener("resize", handleResize);
+  return () => {
+    window.removeEventListener("resize", handleResize);
+  };
+}, []);`}</pre>
 
       </div>
 
@@ -649,18 +550,16 @@ return ()=>{
         </h2>
 
         <pre style={codeStyle}>
-{`return ()=>{
+{`Why component need to be unMounted?
 
+return ()=>{
  // cleanup here
-
 }
-
 
 Cleanup runs:
 ---------------
 ✅ before next effect
 ✅ on unmount
-
 
 Used For:
 -----------
@@ -730,12 +629,11 @@ Used For:
 {`❌ BAD
 ---------
 useEffect(()=>{
-
  setCount(count+1)
-
 },[count])
 
 
+Instead we use the handlers onChange/onClick
 WHY?
 ------
 count updates

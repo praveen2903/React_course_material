@@ -158,38 +158,128 @@ function UseRefHook() {
         Stop Timer
       </button>
 
-      {/* =====================================================
-          THEORY
-         ===================================================== */}
-<div style={{textAlign: 'left'}}>
-      <h3>🔥 useRef Rules</h3>
+<pre>
+{`
+REAL INDUSTRY USE CASE
 
-      <ul>
-        <li>useRef persists value across renders</li>
-        <li>Updating ref does NOT trigger re-render</li>
-        <li>Accessible via .current</li>
-        <li>Useful for DOM access and mutable values</li>
-      </ul>
-  
-      <h3>🔥 Common Interview Traps</h3>
+Amazon Search
+      ↓
+User Opens Search Modal
+      ↓
+Automatically Focus Search Input
 
-      <ul>
-        <li>❌ Changing ref does not update UI</li>
-        <li>❌ Mutating object inside ref won't re-render</li>
-        <li>❌ Accessing ref before mount may be null</li>
-        <li>❌ useRef is NOT reactive like state</li>
-      </ul>
+const searchRef = useRef(null);
 
-      <h3>💼 Real Use Cases</h3>
+useEffect(() => {
+  searchRef.current.focus();
+}, []);
 
-      <ul>
-        <li>Focus input fields</li>
-        <li>Store timer/interval IDs</li>
-        <li>Track previous values</li>
-        <li>Avoid re-render for mutable values</li>
-        <li>Access DOM elements directly</li>
-      </ul>
-    </div>
+WHY useRef?
+
+Need direct DOM access.
+No re-render required.
+`}
+</pre>
+<pre>
+{`Stock Price Dashboard
+
+Previous Price: 100
+Current Price : 120
+
+Need comparison:
+120 > 100
+
+const prevPriceRef = useRef();
+useEffect(() => {
+  prevPriceRef.current = price;  // the price value gets updated but the rerender doesn't paint
+}, [price]);
+
+WHY useRef?
+Store previous value without creating another state variable.`}
+</pre>
+
+<pre>
+{`API Retry Logic
+Attempt 1
+Attempt 2
+Attempt 3
+
+const retryRef = useRef(0);
+retryRef.current++;
+
+WHY useRef?
+Count changes internally. UI does not need re-render. Avoid unnecessary renders.`}
+</pre>
+
+<pre>
+{`OTP Countdown
+
+Send OTP
+     ↓
+Start Timer
+     ↓
+Resend Enabled After 30 sec
+
+const timerRef = useRef(null);
+timerRef.current = setInterval(...);
+
+WHY useRef?
+Store interval id. Survives re-renders.
+`}
+</pre>
+<pre>
+{`REAL INDUSTRY USE CASE: 
+Click Custom Upload Button
+          ↓
+Open Hidden Input
+
+const fileRef = useRef(null);
+fileRef.current.click();
+
+WHY useRef?
+Trigger DOM methods directly.`}
+</pre>
+
+<pre>
+{`
+useState                     useRef
+
+Update Value                Update Value
+     ↓                            ↓
+Re-render                    No Re-render
+     ↓                            ↓
+Update UI                    Internal Storage
+
+Examples                     Examples
+Theme                        Timer ID
+Counter                      Previous Value
+User Data                    WebSocket
+Cart Count                   DOM Elements
+`}
+</pre>
+<pre>
+{`useRef: 
+Purpose: Persist mutable values across renders.
+
+Stores:
+- DOM Elements
+- Timer IDs
+- Previous Values
+- WebSocket Instances
+- Retry Counters
+- Debounce Timers
+
+Important Rule:
+
+ref.current changes
+        ↓
+NO RE-RENDER
+
+state changes
+        ↓
+RE-RENDER
+`}
+</pre>
     </div>
   );
 }

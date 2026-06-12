@@ -454,8 +454,7 @@ Always gets latest value. Fixes stale closure issue`}
         </h2>
 <code>
   <pre>
-    {`
-useEffect(()=>{
+    {`useEffect(()=>{
   if(!isRunning) return;
   intervalRef.current = setInterval(()=> setSeconds((prev)=> prev+1),1000)
   
@@ -514,7 +513,9 @@ const startTimer = () => {   //here no useEffect used this is a way too but usin
         </h2>
 <code>
   <pre>
-    {`useEffect(() => {
+    {`  const [search, setSearch] = useState("");
+
+  useEffect(() => {
     timeoutRef.current = setTimeout(() => {
       setDebounced(search);
     }, 700);
@@ -536,7 +537,8 @@ const startTimer = () => {   //here no useEffect used this is a way too but usin
     }, 1000);
     return () => clearTimeout(id);
   }, [search]);
-`}
+
+return (<input value={search} onChange={(e) =>setSearch(e.target.value)})  name='search' id='search' />  -- event(e) has e.target.value/ e.target.name/ e.target.id`}
   </pre>
 </code>
         <input
@@ -610,7 +612,6 @@ Used In:
 
         <pre style={codeStyle}>
 {`setTimeout(fn,1000)
-
 DOES NOT mean:
 ---------------
 Exactly after 1000ms
@@ -700,9 +701,7 @@ const poll = async()=>{
  await fetch()
  setTimeout(poll,2000)
 }
-
 poll()
-
 
 BENEFITS
 ----------

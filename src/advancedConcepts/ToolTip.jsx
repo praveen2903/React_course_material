@@ -167,8 +167,7 @@ export default function ToolTip() {
   const [activeTooltip, setActiveTooltip] = useState(null);
 
   // ONLY 5 CONTENT TYPES
-  const tooltipContents = useMemo(
-    () => [
+  const tooltipContents = useMemo(() => [
       {
         type: "maximum",
         data: `
@@ -221,9 +220,7 @@ This is normal tooltip.
         type: "less",
         data: `Small tooltip.`,
       },
-    ],
-    []
-  );
+    ], []);
 
   // MEMOIZED DATA => NO RE-CREATION ON RE-RENDER  -- when no useMemo
   const data = useMemo(() => {

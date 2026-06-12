@@ -197,7 +197,6 @@ const routeUsage = `
 ══════════════════════════════════════════════════════════════
 3. Route
 ══════════════════════════════════════════════════════════════
-
 Definition
 -----------
 Maps URL → Component.
@@ -208,8 +207,21 @@ Tells React which component to render.
 
 Usage
 -----------
-<Route path="/" element={<Home/>}/>
+<Route path="/" element={<Home/>}/>         //baseRoute
 <Route path="/about" element={<About/>}/>
+<Route path="/roomBooking/:id" element={<Booking/>} /> -- dynamic Route
+
+<Route path="*" element={<Navigate to='/' eplace />} />  -- wrong path navigate to /  (* path is for not found, like not any above defined paths)
+
+____________________________________________________________________________________________
+Immediate Action: It redirects the moment the component mounts.
+
+replace attribute: Adding replace (as shown above) swaps the current URL in the history stack so the user won't get stuck in a loop when clicking the browser's "Back" button.
+
+state attribute: You can pass data to the new page, like the page they were trying to visit.
+jsx:
+<Navigate to="/login" state={{ from: '/dashboard' }} /> 
+_______________________________________________________________________________________________
 
 Flow
 -----------
@@ -218,42 +230,8 @@ Flow
 Route Match
    ↓
 About Component`
-  const navigateRouting = `
-═══════════════════════════════════════════════
-3. useNavigate() - event navigation like post login, form submit
-═══════════════════════════════════════════════
-Purpose
---------
-Navigate using JavaScript. This is useful when javascript event commonly used.
 
-Real Usage
---------
-Login Success
-Logout
-Form Submit
-Payment Success
-
-Example
---------
-const navigate = useNavigate();
-const login = () => {
-  navigate("/dashboard");
-};
-
-Example
---------
-navigate("/profile");
-navigate(-1);
-navigate(1);
-
-navigate("/",{replace:true });
-
-Interview
---------
-Programmatic Navigation.
-`;
-
-  const dynamicRouting = `
+ const dynamicRouting = `
 ═══════════════════════════════════════════════
 4. DYNAMIC ROUTING -- add params to routes
 ═══════════════════════════════════════════════
@@ -284,6 +262,45 @@ GET /products/3
 Interview
 --------
 :id creates dynamic parameter.`;
+
+  const navigateRouting = `
+═══════════════════════════════════════════════
+3. useNavigate() - event navigation like post login, form submit
+═══════════════════════════════════════════════
+Purpose
+--------
+Navigate using JavaScript. This is useful when javascript event commonly used.
+
+Real Usage
+--------
+Login Success
+Logout
+Form Submit
+Payment Success
+
+Example
+--------
+const navigate = useNavigate();   -- routing useNavigate() hook
+
+const login = (user) => {
+  navigate("/dashboard");
+  navigate(\`/profile/\${user.name}\`);  -- logins and goes to profile of userName sent to backend
+};
+
+Example
+--------
+navigate("/profile");
+navigate(-1);
+navigate(1);
+navigate(\`/roomBooking/\${user.id}\`);   -- giving params in navigate dynamicRouting
+navigate("/",{replace:true });
+
+navigate(\`/users/\${id}\`)
+
+Interview
+--------
+Programmatic Navigation.
+`;
 
   const nestedRouting = `
 ═══════════════════════════════════════════════
@@ -514,6 +531,17 @@ Flow
 /home
 redirects
 /
+
+Navigate Things you look in the tag 
+________________________________________________________________________________________
+Immediate Action: It redirects the moment the component mounts. <Navigate to='/' />
+
+replace attribute: Adding replace (as shown above) swaps the current URL in the history stack so the user won't get stuck in a loop when clicking the browser's "Back" button.
+
+state attribute: You can pass data to the new page, like the page they were trying to visit.
+jsx:
+<Navigate to="/login" state={{ from: '/dashboard' }} /> 
+_______________________________________________________________________________________________
 `;
 
   const childRouting = `
@@ -690,6 +718,19 @@ const completeJsx = `<Routes>
   <Route path="/contact" element={<Contact />} />
   <Route path="/login" element={<Login />} />
   <Route path="/register" element={<Register />} />
+  <Route path="/project/:id" element={<Project/>} />  -- dynamic Route
+  <Route path="*" element={<Navigate to="/login" replace />;} />  -- Redirect path like if other/wrong path given go to this / (home component)
+
+
+____________________________________________________________________________________________
+Immediate Action: It redirects the moment the component mounts.  <Navigate to='/' />
+
+replace attribute: Adding replace (as shown above) swaps the current URL in the history stack so the user won't get stuck in a loop when clicking the browser's "Back" button.
+
+state attribute: You can pass data to the new page, like the page they were trying to visit.
+jsx:
+<Navigate to="/login" state={{ from: '/dashboard' }} /> 
+_______________________________________________________________________________________________
 ========================================================
 Nested Routing  - most nested routes are child routes
 ========================================================
@@ -701,11 +742,13 @@ DashboardLayout
 Sidebar
 Navbar
 <Outlet />
+
 -----------------------
 URL: /dashboard/profile
 Rendered:
 Sidebar
 Navbar
+
 Profile Page
 -----------------------
 URL: /dashboard/settings
@@ -714,6 +757,7 @@ Sidebar
 Navbar
 Settings Page
 -----------------------
+
 Meaning:
 ---------
 Same Layout Different Content
@@ -780,7 +824,7 @@ Nested Routing → Shared Layout + Outlet Rendering.
 Most Nested Routes are also Child Routes.
 
   {/* 404 */}
-  <Route path="*" element={<NotFound />} />
+  <Route path="*" element={<NotFound />} /> or you could use to redirect by <Navigate> tag
 
 </Routes>
 

@@ -33,51 +33,36 @@ const UseContextTraps = () => {
 
             {/* ------------------- THEORY ------------------- */}
 
-            <p><b>1. Unnecessary Re-renders:</b><br/>
-            Even if a component uses only <code style={{textAlign:'left', minWidth: '500px'}}>user</code>, it re-renders when <code style={{textAlign:'left', minWidth: '500px'}}>theme</code> changes.<br/>
+            <pre>{`
+1. Unnecessary Re-renders: Even if a component uses only <code style={{textAlign:'left', minWidth: '500px'}}>user</code>, it re-renders when <code style={{textAlign:'left', minWidth: '500px'}}>theme</code> changes.<br/>
             👉 Reason: Context value object changes → React triggers all consumers.
-            </p>
 
-            <p><b>2. Object Reference Trap:</b><br/>
-            <code style={{textAlign:'left', minWidth: '500px'}}>{`value={{user, theme}}`}</code> creates a new object each render.<br/>
+2. Object Reference Trap: value={{user, theme}} creates a new object each render.<br/>
             👉 React compares by reference, not deep equality.
-            </p>
 
-            <p><b>3. Overusing Context:</b><br/>
-            Context is NOT a replacement for all state.<br/>
+
+3. Overusing Context: Context is NOT a replacement for all state.<br/>
             👉 Frequent updates = performance issues.
-            </p>
 
-            <p><b>4. Large Context Problem:</b><br/>
-            Putting everything in one context = all components re-render.<br/>
+4. Large Context Problem: Putting everything in one context = all components re-render.<br/>
             👉 Better: split contexts (UserContext, ThemeContext).
-            </p>
 
-            <p><b>5. useContext ≠ selective subscription:</b><br/>
-            You cannot subscribe to only part of context.<br/>
+5. useContext ≠ selective subscription: You cannot subscribe to only part of context.
             👉 Entire value triggers updates.
-            </p>
 
-            <p><b>6. Inline Functions Trap:</b><br/>
-            Passing functions inside context without memoization causes re-renders.
-            </p>
+6. Inline Functions Trap: Passing functions inside context without memoization causes re-renders.
 
-            <p><b>7. Debugging Difficulty:</b><br/>
-            Hard to trace which component re-rendered due to context updates.
-            </p>
+7. Debugging Difficulty: Hard to trace which component re-rendered due to context updates.
 
-            <p><b>8. Testing Complexity:</b><br/>
-            Components using context need wrapping with Provider in tests.
-            </p>
 
-            <p><b>9. Nested Providers Hell:</b><br/>
-            Too many providers → messy tree.
-            </p>
+8. Testing Complexity: Components using context need wrapping with Provider in tests.
 
-            <p><b>10. Better Alternatives:</b><br/>
-            👉 Props (for small trees)<br/>
-            👉 Zustand / Redux (for frequent updates)
-            </p>
+9. Nested Providers Hell: Too many providers → messy tree.
+
+10. Better Alternatives:
+            👉 Props (for small trees)
+            👉 Zustand / Redux (for frequent updates)           
+`}</pre>
 
             {/* ------------------- CONTEXT ------------------- */}
 
@@ -99,15 +84,14 @@ const UseContextTraps = () => {
 
             <div style={{textAlign:'left'}}>
                 <h3>🔥 Interview Summary:</h3>
-            <ul style={{textAlign: 'left'}}>
-                <li>Context causes re-render when value reference changes</li>
-                <li>Memoize provider value using useMemo: instead of passing object pass the memoized object</li>
-                <li>Split contexts for performance optimization (AppContextlike <code style={{textAlign:'left', minWidth: '500px'}}>{`value={{user, theme}}`}</code>) cause extra rerenders, split as
-                    userContext and themeContext
-                </li>
-                <li>Context is NOT for frequently changing state -- for frequent updates need to use Redux</li>
-                <li>No partial subscription → all consumers update: Like when value object in provider changes then all consumers using that context rerenders</li>
-            </ul>
+<pre>
+{`1. Context causes re-render when value reference changes
+2. Memoize provider value using useMemo: instead of passing object pass the memoized object          
+3. Split contexts for performance optimization (AppContextlike value={{user, theme}}) cause extra rerenders, split as userContext and themeContext
+4. Context is NOT for frequently changing state -- for frequent updates need to use Redux
+5. No partial subscription → all consumers update: Like when value object in provider changes then all consumers using that context rerenders
+`}
+</pre>
             </div>
         </div>
     );
