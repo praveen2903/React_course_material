@@ -1,5 +1,32 @@
-//Higher order functions--A function that takes another function as an argument OR returns a function
+import React from 'react'
 
+const TypeCohersion = () => {
+  return (
+    <div>TypeCohersion
+        <code>
+            <pre>
+                {`console.log([] ==! []);  //true
+console.log([] === []);  //false
+console.log([]==[]);   //false
+
+console.log([] =![]);   //true
+
+
+console.log([]==[])    //true
+
+
+console.log(Boolean([]));      // true
+console.log(Boolean({}));      // true
+console.log(Boolean(""));      // false
+console.log(Boolean(" "));     // true
+console.log(Boolean(0));       // false
+console.log(Boolean(1));       // true
+console.log(Boolean(null));    // false
+console.log(Boolean(undefined)); // false
+console.log(Boolean(NaN));     // false
+
+Higher order functions--A function that takes another function as an argument OR returns a function
+------------------------------------------------------------------------------------------------
 function greet(name) {
   return "Hello " + name;
 }
@@ -36,7 +63,6 @@ for (let i = 0; i < arr.length; i++) {}
 
 // ✅ HOF
 arr.map(...)
-
 
 
 3. ✅ Abstraction
@@ -91,4 +117,11 @@ Can return:
 acc = result built so far
 curr = current item
 
-reduce is powerful can do map and filter best used for building custom result can look in useReducer()
+reduce is powerful can do map and filter best used for building custom result can look in useReducer()`}
+            </pre>
+        </code>
+    </div>
+  )
+}
+
+export default TypeCohersion

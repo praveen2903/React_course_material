@@ -2,7 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 
 const ReactDomCheatSheet = () => {
   const [hovered, setHovered] = useState(false);
-
+  const [focusDragRef, setFocusDragRef] = useState(null);
+   const [targetInfo, setTargetInfo] = useState(null);
+  const [currentTargetInfo, setCurrentTargetInfo] = useState(null);
   const [mouse, setMouse] = useState({
     clientX: 0,
     clientY: 0,
@@ -58,14 +60,14 @@ const ReactDomCheatSheet = () => {
   }, []);
 
   const handleDrop = (dropIndex) => {
+    const {index, element}= dragRef.current;
     const copy = [...dragItems];
-
-    const dragged = copy[dragRef.current];
-
-    copy.splice(dragRef.current, 1);
-
+    const dragged = copy[index];
+    copy.splice(index, 1);
     copy.splice(dropIndex, 0, dragged);
-
+    setTimeout(()=>{
+      element?.focus();
+    }, 0)
     setDragItems(copy);
   };
 
@@ -113,6 +115,20 @@ const ReactDomCheatSheet = () => {
     whiteSpace: "pre-wrap",
     marginTop: "16px",
   };
+
+  const eventTargetStyle = {
+  background: "#111827",
+  color: "#00ff95",
+  padding: "16px",
+  borderRadius: "12px",
+  fontSize: "14px",
+  marginTop: "16px",
+  width: "100%",
+  maxWidth: "400px",
+  whiteSpace: "pre",
+  overflowX: "auto",
+  overflowY: "auto",
+};
 
   const demoStyle = {
     border: "2px dashed #bbb",
@@ -170,109 +186,6 @@ const ReactDomCheatSheet = () => {
         Interactive visual handbook for React DOM events, browser APIs,
         measurements, drag-drop, bubbling, refs and scrolling concepts.
       </p>
-            {/* ===================================================== */}
-      {/* SLICE VS SPLICE */}
-      {/* ===================================================== */}
-
-      <section style={sectionStyle}>
-        <h2 style={headingStyle}>✅ slice vs splice ** importa</h2>
-
-        <div style={descBox}>
-          <ul>
-            <li>slice() → non mutating</li>
-            <li>splice() → mutates original array</li>
-          </ul>
-
-          <div style={warningBox}>
-            ❌ Avoid mutating React state directly.
-          </div>
-        </div>
-
-        <div style={gridStyle}>
-          <div style={cardStyle}>
-            <h3>slice()  - pagination to data</h3>
-
-            <pre style={codeStyle}>
-{`const arr=[1,2,3,4]
-arr.slice(1,3)        // [2,3]
-console.log(arr) //[1,2,3,4]-- doesn't mutate original array
-
-Pagination Example:
-
-const totalPages = Math.ceil(data.length / pagesize ) //how many splits of data
-const pagesStartIndex = (currentPage - 1)* pagesize;  // like initial page number is 1, next 2,..., so indexes are 0,5,10... if page size is 5
-const splitData = data.slice(pageStartIndex, pageStartIndex+pageSize)`}
-            </pre>
-          </div>
-
-          <div style={cardStyle}>
-            <h3>splice()</h3>
-
-            <pre style={codeStyle}>
-{`const arr=[1,2,3,4]
-arr.splice(1,2)    //[1,4]  // mutates original
-console.log(arr)  //[1,4]
-
-copy.splice(dragIndex (deleteBeginIndex),1 (no.of items to delete from begin index));  
-// a   b   d   e   f     ---- Removed it from it's position
-
-copy.splice(dropIndex (deleteBeginIndex),0 (no.of items to delete from begin index),
-                                                    draggedItem (adding indexes at deleteBeginIndex));       
-// a   b   d   c   f   e ---- appended it where it is required
-
-Drag and drop example of splice:-
-
-const handleDrop = (dropIndex)=>{
-  -- if focus reqired useRef else dragIndex is in state accessable in handleDrop
-    if(dragRef.current===null) return;
-    const {dragIndex, element} = dragRef.current; 
-
-    const copy=[...taskList]; 
-
-    const draggedItem = copy[dragIndex]; 
-
-    copy.splice(dragIndex,1);
-    copy.splice(dropIndex,0,draggedItem);
-
-    setTaskList(copy);
-    setDragIndex(null);
-
-    //giving focus to the dom elements focus is added so onFocus and onBlur can be managed
-    setTimeout(() => {
-            element.focus();
-        }, 0);
-    
-}
- -- no focus on dragging item required use this, it is if focus need use ref
-return (
-  <div key={index} draggable 
-      onDragStart={()=>setDragIndex(index)}
-      onDragOver={(e)=>e.preventDefault()}
-      onDrop={()=>handleDrop(index)}
-      style={{display:"flex", gap:'30px', cursor:'grab', background: '#f1f1f1'}}
-  >
-
-
-  -- if focus required it is best to use ref as the drag managed by DOM giving state variable to it gives error
-
-  <div key={index} draggable tabIndex={0}
-          onDragStart={(event) => {dragRef.current = {dragIndex: index, element: event.currentTarget}; }}
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={() => handleDrop(index)}
-          onFocus={() => setFocusedIndex(index)}
-          onBlur={() => setFocusedIndex(null)}
-          style={{
-              height: '90px',
-              fontSize: '28px',
-              cursor: 'grab',
-              background: focusedIndex === index? 'lightblue': '#ddd'
-          }}
-      >
-`}
-            </pre>
-          </div>
-        </div>
-      </section>
       {/* ===================================================== */}
       {/* MOUSE EVENTS */}
       {/* ===================================================== */}
@@ -344,15 +257,69 @@ return (
  onMouseLeave={handleLeave}
 />`}
             </pre>
+              <pre style={codeStyle}>
+{`onMouseMove={(e)=>{
+  const rect = e.currentTarget.getBoundingClientRect();
+  console.log(rect.left);
+  console.log(rect.top);
+  console.log(rect.width);
+  console.log(rect.height);
+}}`}
+  </pre>
+  
+<code>
+  <pre>
+    {`Difference: Property	Meaning
+
+clientX	Mouse X position relative to viewport
+clientY	Mouse Y position relative to viewport
+offsetX	Mouse X position inside the element
+offsetY	Mouse Y position inside the element
+-------------------------------------
+rect.left	Distance from viewport left edge to box
+rect.top	Distance from viewport top edge to box
+rect.right	Right edge position of box
+rect.bottom	Bottom edge position of box
+rect.width	Width of box
+rect.height	Height of box
+
+Suppose:
+Browser Window
+─────────────────────────────
+          Box
+     ┌───────────────┐
+     │       ●       │
+     └───────────────┘
+left = 100
+top = 200
+width = 300
+height = 220
+
+Mouse on box center:
+clientX = 250
+clientY = 300
+offsetX = 150
+offsetY = 100
+
+Relationship:
+offsetX = clientX - rect.left;
+offsetY = clientY - rect.top;
+150 = 250 - 100
+100 = 300 - 200
+
+This is one of the most common React interview demos when explaining mouse events, drag-and-drop, drawing canvases, resizable panels, and custom tooltips.
+       `}
+  </pre>
+</code>
           </div>
 
 <div style={cardStyle}>
-  <h3>Mouse Coordinates + Bounding Client Rect</h3>
+  <h4>Mouse Coordinates + Bounding Client Rect</h4>
 
   <div
     style={{
       ...demoStyle,
-      height: "220px",
+      height: "700px",
     }}
     onMouseMove={(e) => {
       const boxRect = e.currentTarget.getBoundingClientRect();
@@ -375,88 +342,21 @@ return (
     }}
   >
     <p>Move mouse inside this box</p>
-
-    <h4>clientX: {mouse.clientX}</h4>
-    <h4>clientY: {mouse.clientY}</h4>
-
-    <h4>offsetX: {mouse.offsetX}</h4>
-    <h4>offsetY: {mouse.offsetY}</h4>
-
+    <h5>clientX: {mouse.clientX}</h5>
+    <h5>clientY: {mouse.clientY}</h5>
+    <h5>offsetX: {mouse.offsetX}</h5>
+    <h5>offsetY: {mouse.offsetY}</h5>
+    <p>Static events of getBoundingClientRect like layout of box</p>
+    <h5>left: {rect.left}</h5>
+    <h5>top: {rect.top}</h5>
+    <h5>right: {rect.right}</h5>
+    <h5>bottom: {rect.bottom}</h5>
+    <h5>width: {rect.width}</h5>
+    <h5>height: {rect.height}</h5>
     <hr />
 
-    <h4>left: {rect.left}</h4>
-    <h4>top: {rect.top}</h4>
-
-    <h4>right: {rect.right}</h4>
-    <h4>bottom: {rect.bottom}</h4>
-
-    <h4>width: {rect.width}</h4>
-    <h4>height: {rect.height}</h4>
   </div>
-
-  <pre style={codeStyle}>
-{`onMouseMove={(e)=>{
- const rect = e.currentTarget.getBoundingClientRect();
-
- console.log(rect.left);
- console.log(rect.top);
- console.log(rect.width);
- console.log(rect.height);
-}}`}
-  </pre>
 </div>
-
-<code>
-  <pre>
-    {`Difference
-Property	Meaning
-
-clientX	Mouse X position relative to viewport
-clientY	Mouse Y position relative to viewport
-offsetX	Mouse X position inside the element
-offsetY	Mouse Y position inside the element
-
--------------------------------------
-rect.left	Distance from viewport left edge to box
-rect.top	Distance from viewport top edge to box
-rect.right	Right edge position of box
-rect.bottom	Bottom edge position of box
-rect.width	Width of box
-rect.height	Height of box
-
-
-Suppose:
-
-Browser Window
-─────────────────────────────
-          Box
-     ┌───────────────┐
-     │       ●       │
-     └───────────────┘
-
-left = 100
-top = 200
-width = 300
-height = 220
-
-Mouse on box center:
-clientX = 250
-clientY = 300
-
-offsetX = 150
-offsetY = 100
-
-Relationship:
-
-offsetX = clientX - rect.left;
-offsetY = clientY - rect.top;
-150 = 250 - 100
-100 = 300 - 200
-
-This is one of the most common React interview demos when explaining mouse events, drag-and-drop, drawing canvases, resizable panels, and custom tooltips.
-       `}
-  </pre>
-</code>
  </div>
       </section>
 
@@ -513,11 +413,12 @@ This is one of the most common React interview demos when explaining mouse event
             </div>
 
             <pre style={codeStyle}>
-{`onKeyDown={(e)=>{
- if(e.key==="Enter"){
-   submit()
- }
-}}`}
+{`<input type="text" placeholder="Press Enter"
+  onKeyDown={(e) => {
+    if (e.key === "Enter") {
+      alert("Submitted");
+    }
+  }}/>`}
             </pre>
           </div>
 
@@ -634,9 +535,9 @@ return (
           </p>
 
           <ul>
-            <li>scrollTop → current scroll position</li>
-            <li>clientHeight → visible area</li>
-            <li>scrollHeight → full content height</li>
+            <li>scrollTop → current scroll position (in the whole loaded page)</li>
+            <li>clientHeight → visible area  (currently)</li>
+            <li>scrollHeight → full content height (total content loaded till bottom in page)</li>
           </ul>
 
           <div style={successBox}>
@@ -681,7 +582,7 @@ return (
             </h4>
 
             <pre style={codeStyle}>
-{`if( scrollTop + clientHeight >= scrollHeight ){
+{`if( scrollTop + clientHeight >= scrollHeight-5 ){
  loadMore()
 }`}
             </pre>
@@ -705,9 +606,9 @@ return (
           </p>
 
           <ul>
-            <li>onDragStart → store dragged item</li>
-            <li>onDragOver → allow dropping</li>
-            <li>onDrop → update items</li>
+            <li>onDragStart → store dragged item (Ref stores the index of the drag element)</li>
+            <li>onDragOver → allow dropping without browser events objecting (e.preventDefault())</li>
+            <li>onDrop → update items   (handle gives the drop index)</li>
           </ul>
 
           <div style={warningBox}>
@@ -721,18 +622,18 @@ return (
 
             <div style={demoStyle}>
               {dragItems.map((item, index) => (
-                <div
-                  key={item}
-                  draggable
-                  onDragStart={() => {
-                    dragRef.current = index;
-                  }}
+                <div key={item} draggable
+                  onDragStart={(e) => {
+                    dragRef.current = {index: index, element: e.target}
+                    }}
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={() => handleDrop(index)}
+                  onFocus={() => setFocusDragRef(index)}
+                  onBlur={() => setFocusDragRef(null)}
                   style={{
                     padding: "12px",
-                    background: "#2563eb",
-                    color: "white",
+                    background: focusDragRef === index ? "#27b10cff" : "#2563eb",
+                    color: focusDragRef === index ? "black" : "white",
                     marginBottom: "10px",
                     borderRadius: "10px",
                     cursor: "grab",
@@ -744,9 +645,67 @@ return (
             </div>
 
             <pre style={codeStyle}>
-{`copy.splice(dragRef.current,1)
-copy.splice(dropIndex,0,dragged)`
+{`const dragRef = useRef(null); 
+const handleDrop=(index) =>{
+  const {index, element}= dragRef.current;
+  const copy = [...dragItems];
+  const dragged = copy.splice(index,1);
+  copy.splice(index,0,dragged);
+  setTimeout(() => {
+    element?.focus();
+  }, 0);    //setting timeout to let drop finish and then set focus
+  setDragItems(copy);
 }
+return (
+  {dragItems.map((item, index) => (
+        <div key={item} draggable
+          onDragStart={(e) => {dragRef.current = {index: index, element: e.target}}}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={() => handleDrop(index)}
+          onFocus={() => setFocusDragRef(index)}
+          onBlur={() => setFocusDragRef(null)}
+          style={{
+            background: focusDragRef === index ? "#27b10cff" : "#2563eb",
+            color: focusDragRef === index ? "black" : "white",
+          }}>
+            {item}
+        </div>
+))}`}
+            </pre>
+<h2>Giving focus to the drag and drop</h2>
+            <pre style={codeStyle}>
+{`const dragRef = useRef(null); 
+const handleDrop=(column) =>{
+    const {fromColumn, index, element} = dragRef.current;
+    const item= data[fromColumn][index];
+    const newData = {...data};  //copy
+    newData[fromColumn].splice(index,1);
+    newData[column].push(item);
+    setData(newData)
+
+    setTimeout(() => {
+        element?.focus();
+    }, 0);
+}
+return (
+<>
+  {Object.keys(data).map((column)=>(  //iterating an object right 1st iterate keys
+    <div key={column} onDragOver={((e)=>e.preventDefault())} onDrop={()=>handleDrop(column)}>
+            <h4>{column}</h4>
+            {data[column].map((task,index)=>(   //now iterate the values of the key       
+                    <div key={index} draggable tabIndex={0}
+                        // onDragStart={()=>setDragItem({fromColumn:column, index: index})}
+                        onDragStart={ (e) => dragRef.current = {fromColumn:column, index: index, element:e.currentTarget}}
+                        onFocus={()=> setFocusedIndex(index)}
+                        onBlur={() => setFocusedIndex(null)}
+                        style={{padding:'20px', margin:'12px',background: focusedIndex === index ? 'lightblue': '#ddd', cursor:'grab'}}>
+                            {task}
+                    </div>
+            ))}
+        </div>
+    ))}
+</>
+)`}
             </pre>
           </div>
         </div>
@@ -968,31 +927,103 @@ button`}
             <li>e.target → actual clicked element</li>
             <li>e.currentTarget → attached listener element</li>
           </ul>
+          <pre>{`<div
+  onClick={(e) => {
+    setTargetInfo({
+      tagName: e.target.tagName,
+      id: e.target.id,
+      className: e.target.className,
+      text: e.target.innerText,
+      html: e.target.outerHTML,
+    });
+    setCurrentTargetInfo({
+      tagName: e.currentTarget.tagName,
+      id: e.currentTarget.id,
+      className: e.currentTarget.className,
+      text: e.currentTarget.innerText,
+      html: e.currentTarget.outerHTML,
+      boundValue: e.currentTarget.getBoundingClientRect()
+    });
+  }}>
+  DIV
+  <button id="btn1" className="primary-btn" style={{ display: "block", marginTop: "20px" }}>Click Me</button>
+</div>`}</pre>
+        </div>
+         <div style={cardStyle}>
+<div
+  onClick={(e) => {
+    setTargetInfo({
+      tagName: e.target.tagName,
+      id: e.target.id,
+      className: e.target.className,
+      text: e.target.innerText,
+      html: e.target.outerHTML,
+    });
+
+    setCurrentTargetInfo({
+      tagName: e.currentTarget.tagName,
+      id: e.currentTarget.id,
+      className: e.currentTarget.className,
+      text: e.currentTarget.innerText,
+      html: e.currentTarget.outerHTML,
+      boundValue: e.currentTarget.getBoundingClientRect()
+    });
+  }}
+  style={{
+    padding: "20px",
+    background: "#e0e7ff",
+  }}
+>
+  DIV
+
+  <button
+    id="btn1"
+    className="primary-btn"
+    style={{ display: "block", marginTop: "20px" }}
+  >
+    Click Me
+  </button>
+</div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "20px",
+          marginTop: "20px",
+        }}
+      >
+        <div
+          style={{
+            border: "1px solid #ccc",
+            padding: "10px",
+          }}
+        >
+          <h3>e.target</h3>
+
+          <pre style={eventTargetStyle}>
+            {targetInfo
+              ? JSON.stringify(targetInfo, null, 2)
+              : "Click something"}
+          </pre>
         </div>
 
-        <div style={cardStyle}>
-          <div
-            onClick={(e) => {
-              console.log(e.target);
-              console.log(e.currentTarget);
-            }}
-            style={{
-              ...demoStyle,
-              background: "#e0e7ff",
-            }}
-          >
-            DIV
+        <div
+          style={{
+            border: "1px solid #ccc",
+            padding: "10px",
+          }}
+        >
+          <h3>e.currentTarget</h3>
 
-            <button
-              style={{
-                display: "block",
-                marginTop: "20px",
-              }}
-            >
-              Click
-            </button>
-          </div>
+          <pre style={eventTargetStyle}>
+            {currentTargetInfo
+              ? JSON.stringify(currentTargetInfo, null, 2)
+              : "Click something"}
+          </pre>
         </div>
+        </div>
+    </div>
       </section>
 
       {/* ===================================================== */}
@@ -1088,13 +1119,37 @@ ref.current assigned`}
 
         <div style={cardStyle}>
           <pre style={codeStyle}>
-{`offsetWidth
-clientWidth
-scrollWidth
+{`const boxRef = useRef(null);
+const [measurements, setMeasurements] = useState({});
 
-offsetHeight
-clientHeight
-scrollHeight`}
+useEffect(() => {
+  const el = boxRef.current;
+
+  setMeasurements({
+    offsetWidth: el.offsetWidth,
+    clientWidth: el.clientWidth,
+    scrollWidth: el.scrollWidth,
+
+    offsetHeight: el.offsetHeight,
+    clientHeight: el.clientHeight,
+    scrollHeight: el.scrollHeight,
+  });
+}, []);
+
+<section style={sectionStyle}>
+  <h2 style={headingStyle}>📏 Layout Measurements</h2>
+
+  <div style={descBox}>
+    <ul>
+      <li><b>offsetWidth</b> → Content + Padding + Border</li>
+      <li><b>clientWidth</b> → Content + Padding</li>
+      <li><b>scrollWidth</b> → Total width including hidden overflow</li>
+      <li><b>offsetHeight</b> → Content + Padding + Border</li>
+      <li><b>clientHeight</b> → Content + Padding</li>
+      <li><b>scrollHeight</b> → Total height including hidden overflow</li>
+    </ul>
+  </div>
+</section>`}
           </pre>
         </div>
       </section>
@@ -1137,8 +1192,7 @@ scrollHeight`}
 
         <div style={cardStyle}>
           <pre style={codeStyle}>
-{`const observer =
-new ResizeObserver((entries)=>{
+{`const observer =new ResizeObserver((entries)=>{
  console.log(entries)
 })`}
           </pre>
@@ -1166,11 +1220,112 @@ new ResizeObserver((entries)=>{
         <div style={cardStyle}>
           <pre style={codeStyle}>
 {`const observer = new IntersectionObserver((entries)=>{
- console.log(
-  entries[0].isIntersecting
- )
+  console.log(entries[0].isIntersecting)
 })`}
           </pre>
+        </div>
+      </section>
+               {/* ===================================================== */}
+      {/* SLICE VS SPLICE */}
+      {/* ===================================================== */}
+
+      <section style={sectionStyle}>
+        <h2 style={headingStyle}>✅ slice vs splice ** important</h2>
+
+        <div style={descBox}>
+          <ul>
+            <li>slice() → non mutating</li>
+            <li>splice() → mutates original array</li>
+          </ul>
+
+          <div style={warningBox}>
+            ❌ Avoid mutating React state directly.
+          </div>
+        </div>
+
+        <div style={gridStyle}>
+          <div style={cardStyle}>
+            <h3>slice()  - pagination to data</h3>
+
+            <pre style={codeStyle}>
+{`const arr=[1,2,3,4]
+arr.slice(1,3)        // [2,3]
+console.log(arr) //[1,2,3,4]-- doesn't mutate original array
+
+Pagination Example:
+
+const totalPages = Math.ceil(data.length / pagesize ) //how many splits of data
+const pagesStartIndex = (currentPage - 1)* pagesize;  // like initial page number is 1, next 2,..., so indexes are 0,5,10... if page size is 5
+const splitData = data.slice(pageStartIndex, pageStartIndex+pageSize)`}
+            </pre>
+          </div>
+
+          <div style={cardStyle}>
+            <h3>splice()</h3>
+
+            <pre style={codeStyle}>
+{`const arr=[1,2,3,4]
+arr.splice(1,2)    //[1,4]  // mutates original
+console.log(arr)  //[1,4]
+
+copy.splice(dragIndex (deleteBeginIndex),1 (no.of items to delete from begin index));  
+// a   b   d   e   f     ---- Removed it from it's position
+
+copy.splice(dropIndex (deleteBeginIndex),0 (no.of items to delete from begin index),
+                                                    draggedItem (adding indexes at deleteBeginIndex));       
+// a   b   d   c   f   e ---- appended it where it is required
+
+Drag and drop example of splice:-
+
+const handleDrop = (dropIndex)=>{
+  -- if focus reqired useRef else dragIndex is in state accessable in handleDrop
+    if(dragRef.current===null) return;
+    const {dragIndex, element} = dragRef.current; 
+
+    const copy=[...taskList]; 
+
+    const draggedItem = copy[dragIndex]; 
+
+    copy.splice(dragIndex,1);
+    copy.splice(dropIndex,0,draggedItem);
+
+    setTaskList(copy);
+    setDragIndex(null);
+
+    //giving focus to the dom elements focus is added so onFocus and onBlur can be managed
+    setTimeout(() => {
+            element.focus();
+        }, 0);
+    
+}
+ -- no focus on dragging item required use this, it is if focus need use ref
+return (
+  <div key={index} draggable 
+      onDragStart={()=>setDragIndex(index)}
+      onDragOver={(e)=>e.preventDefault()}
+      onDrop={()=>handleDrop(index)}
+      style={{display:"flex", gap:'30px', cursor:'grab', background: '#f1f1f1'}}
+  >
+
+
+  -- if focus required it is best to use ref as the drag managed by DOM giving state variable to it gives error
+
+  <div key={index} draggable tabIndex={0}
+          onDragStart={(event) => {dragRef.current = {dragIndex: index, element: event.currentTarget}; }}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={() => handleDrop(index)}
+          onFocus={() => setFocusedIndex(index)}
+          onBlur={() => setFocusedIndex(null)}
+          style={{
+              height: '90px',
+              fontSize: '28px',
+              cursor: 'grab',
+              background: focusedIndex === index? 'lightblue': '#ddd'
+          }}
+      >
+`}
+            </pre>
+          </div>
         </div>
       </section>
     </div>

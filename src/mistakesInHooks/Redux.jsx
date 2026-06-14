@@ -827,9 +827,9 @@ Redux toolkit helps to view the pending/fulfiled/rejected the request in extra r
 <table border="1" cellpadding="10" cellspacing="0" width="100%">
   <thead>
     <tr>
-      <th>Concept</th>
-      <th>Definition</th>
-      <th>Purpose / Usage</th>
+      <th width='15%'>Concept</th>
+      <th width='40%'>Definition</th>
+      <th width='45%'>Purpose / Usage</th>
     </tr>
   </thead>
 
@@ -882,7 +882,7 @@ Redux toolkit helps to view the pending/fulfiled/rejected the request in extra r
     <tr>
       <td><b>Middleware</b></td>
       <td>
-        Function that runs between dispatch and reducer.
+        Function that runs between dispatch and reducer. Every dispatch to reducer passes through this if it appiles execute or passed to next middleware 
       </td>
       <td>
         Used for logging, API calls (this is asyncronous thing handled using createAsyncThunk & extraReducers), authentication,

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import DropDownAccordin from './arraycomponentsandRef/DropDownAccordin.jsx'
 import ModalPopup from './arraycomponentsandRef/ModalPopup.jsx'
@@ -17,6 +17,7 @@ import PaginationAndSorting from './paginationandprogressbar/PaginationAndSortin
 import DebouncedSearch from './optimisatonConcepts/DebouncedSearch.jsx'
 import ThrottleSearch from './optimisatonConcepts/ThrottleSearch.jsx'
 import RateLimitingSearch from './optimisatonConcepts/RateLimitingSearch.jsx'
+import TypeCohersion from './javascriptConcepts/TypeCohersion'
 import StopWatch from './UseRefComponents/StopWatch.jsx'
 import DigitalClock from './UseRefComponents/DigitalClock.jsx'
 import TrafficLightsWithRef from './arraycomponentsandRef/TrafficLightsWithRef.jsx'
@@ -90,9 +91,25 @@ import CloudConcepts from './interview/CloudConcepts'
 import RoutingExample from './routingConcepts/RoutingExample'
 import TemporalDeadZone from './javascriptConcepts/TemporalDeadZone'
 
+function SectionWrapper({ id, title, children }) {
+  return (
+    <div id={id} className="section-wrapper" data-section-title={title}>
+      <div className="section-wrapper-header">
+        <h3 className="section-wrapper-title">{title}</h3>
+      </div>
+      <div className="section-wrapper-content">
+        {children}
+      </div>
+    </div>
+  );
+}
+
 function App() {
 
   const [tabs, setTabs] = useState('pagination')
+  const [sections, setSections] = useState([])
+  const [showScrollTop, setShowScrollTop] = useState(false)
+
   const readableTabs = new Set([
     'jwt',
     'kubernetes',
@@ -125,6 +142,40 @@ function App() {
   "routing"
 ];
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const sectionElements = document.querySelectorAll('[data-section-title]');
+      const parsedSections = Array.from(sectionElements).map(el => ({
+        id: el.id,
+        title: el.getAttribute('data-section-title')
+      }));
+      setSections(parsedSections);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [tabs]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <div className={`app-shell ${readableTabs.has(tabs) ? 'readable-page' : ''}`}>
@@ -144,6 +195,26 @@ function App() {
     </button>
   ))}
 </div>
+
+{sections.length >= 2 && (
+  <div className="toc-container">
+    <div className="toc-header">
+      <span className="toc-icon">📋</span>
+      <span className="toc-title">Jump to Section</span>
+    </div>
+    <div className="toc-list">
+      {sections.map(sec => (
+        <button
+          key={sec.id}
+          className="toc-chip"
+          onClick={() => scrollToSection(sec.id)}
+        >
+          {sec.title}
+        </button>
+      ))}
+    </div>
+  </div>
+)}
     {
       tabs==='kubernetes' && (
         <>
@@ -197,15 +268,25 @@ function App() {
         <>
         <h2>asyncronous codes demo</h2>
           <div className="section-divider" />
-          <EventLoops/>
+          <SectionWrapper id="event-loops" title="Event Loops">
+            <EventLoops/>
+          </SectionWrapper>
           <div className="section-divider" />
-          <Callbacks/>
+          <SectionWrapper id="callbacks" title="Callbacks">
+            <Callbacks/>
+          </SectionWrapper>
           <div className="section-divider" />
-          <Promises/>
+          <SectionWrapper id="promises-demo" title="Promises">
+            <Promises/>
+          </SectionWrapper>
           <div className="section-divider" />
-          <AsyncAwait/>
+          <SectionWrapper id="async-await" title="Async/Await">
+            <AsyncAwait/>
+          </SectionWrapper>
           <div className='section-divider' />
-          <SliceVsSpliceGuide/>
+          <SectionWrapper id="slice-vs-splice" title="Slice vs Splice Guide">
+            <SliceVsSpliceGuide/>
+          </SectionWrapper>
         </>
       )
     }
@@ -234,27 +315,49 @@ function App() {
         tabs==='advanced' && (
           <>
           <div className="section-divider" />
-          <DebounceUndoRedo/>
-           <div className="section-divider" />
-           <ToolTip/>
-           <div className="section-divider" />
-          <InfiniteScrollRef/>           
+          <SectionWrapper id="debounce-undo-redo" title="Debounce Undo Redo">
+            <DebounceUndoRedo/>
+          </SectionWrapper>
           <div className="section-divider" />
-          <KeyboardEventListener/>
+          <SectionWrapper id="tooltip" title="Tooltip">
+            <ToolTip/>
+          </SectionWrapper>
           <div className="section-divider" />
-          <KanbanBoard/>
+          <SectionWrapper id="infinite-scroll-ref" title="Infinite Scroll (Ref)">
+            <InfiniteScrollRef/>
+          </SectionWrapper>
           <div className="section-divider" />
-          <TicTacToe/>
+          <SectionWrapper id="keyboard-event-listener" title="Keyboard Events">
+            <KeyboardEventListener/>
+          </SectionWrapper>
           <div className="section-divider" />
-          <GameMove/>
+          <SectionWrapper id="kanban-board" title="Kanban Board">
+            <KanbanBoard/>
+          </SectionWrapper>
           <div className="section-divider" />
-          <DraggingGameMove/>
+          <SectionWrapper id="tic-tac-toe" title="Tic Tac Toe">
+            <TicTacToe/>
+          </SectionWrapper>
           <div className="section-divider" />
-          <MovingTicTacToe/>
+          <SectionWrapper id="game-move" title="Game Move">
+            <GameMove/>
+          </SectionWrapper>
           <div className="section-divider" />
-          <ConnectFourGame/>
+          <SectionWrapper id="dragging-game-move" title="Dragging Game Move">
+            <DraggingGameMove/>
+          </SectionWrapper>
           <div className="section-divider" />
-          <BirthYearHistogram/>
+          <SectionWrapper id="moving-tic-tac-toe" title="Moving Tic Tac Toe">
+            <MovingTicTacToe/>
+          </SectionWrapper>
+          <div className="section-divider" />
+          <SectionWrapper id="connect-four" title="Connect Four Game">
+            <ConnectFourGame/>
+          </SectionWrapper>
+          <div className="section-divider" />
+          <SectionWrapper id="birth-year-histogram" title="Birth Year Histogram">
+            <BirthYearHistogram/>
+          </SectionWrapper>
           </>
         )
       }
@@ -262,19 +365,28 @@ function App() {
         tabs==='All Events' && (
           <>
             <div className="section-divider" />
-            <UseRefMistakes/>
+            <SectionWrapper id="use-ref-mistakes" title="UseRef Mistakes">
+              <UseRefMistakes/>
+            </SectionWrapper>
             {/* <div className="section-divider" />
             <ReactHooksInterviewNotes/> */}
             <div className="section-divider" />
-            <ReactDomCheatSheet/>
+            <SectionWrapper id="react-dom-cheatsheet" title="React DOM Cheat Sheet">
+              <ReactDomCheatSheet/>
+            </SectionWrapper>
           </>
         )
       }
       {
         tabs =='interview' && (
           <>
-          <RefUsageConcepts/>
-          <CloudConcepts/>
+          <SectionWrapper id="ref-usage-concepts" title="Ref Usage Concepts">
+            <RefUsageConcepts/>
+          </SectionWrapper>
+          <div className="section-divider" />
+          <SectionWrapper id="cloud-concepts" title="Cloud Concepts">
+            <CloudConcepts/>
+          </SectionWrapper>
           </>
         )
       }
@@ -394,28 +506,49 @@ Uncontrolled → React knows only when asked.`}</pre>
 
 
             <div className="section-divider" />
-            <TimeoutvsInterval/>
+            <SectionWrapper id="timeout-vs-interval" title="Timeout vs Interval">
+              <TimeoutvsInterval/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <UseStateHook/>
+            <SectionWrapper id="use-state-hook" title="useState Hook">
+              <UseStateHook/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <UseEffectHook/>   
+            <SectionWrapper id="use-effect-hook" title="useEffect Hook">
+              <UseEffectHook/>
+            </SectionWrapper>
             <div className="section-divider" />
-             <ReactQueryCompleteGuide/>         
+            <SectionWrapper id="react-query" title="React Query Complete Guide">
+              <ReactQueryCompleteGuide/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <UseContextHook/>
-            <UseContextTraps/>
+            <SectionWrapper id="use-context-hook" title="useContext Hook">
+              <UseContextHook/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <UseMemoHook/>
-   <div className="section-divider" />
-            <UseCallbackHook/>
-            <UseCallbackAndMemo/>
+            <SectionWrapper id="use-context-traps" title="useContext Traps">
+              <UseContextTraps/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <UseRefHook/>
+            <SectionWrapper id="use-memo-hook" title="useMemo Hook">
+              <UseMemoHook/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <UseReducerHook/>
-
-
-
+            <SectionWrapper id="use-callback-hook" title="useCallback Hook">
+              <UseCallbackHook/>
+            </SectionWrapper>
+            <div className="section-divider" />
+            <SectionWrapper id="use-callback-and-memo" title="useCallback & useMemo">
+              <UseCallbackAndMemo/>
+            </SectionWrapper>
+            <div className="section-divider" />
+            <SectionWrapper id="use-ref-hook" title="useRef Hook">
+              <UseRefHook/>
+            </SectionWrapper>
+            <div className="section-divider" />
+            <SectionWrapper id="use-reducer-hook" title="useReducer Hook">
+              <UseReducerHook/>
+            </SectionWrapper>
           </>
         )
       }
@@ -824,24 +957,49 @@ test();   //x=1 will not be carried to function
 </pre>
           </div>
           <div className="section-divider" />
-          <EventLoop/>
+          <SectionWrapper id="event-loop" title="Event Loop">
+            <EventLoop/>
+          </SectionWrapper>
           <div className="section-divider" />
-          <BindUsage/>
-          <CallBindApply/>
+          <SectionWrapper id="bind-usage" title="Bind Usage">
+            <BindUsage/>
+          </SectionWrapper>
           <div className="section-divider" />
-          <DestructuringUsage/>
+          <SectionWrapper id="call-bind-apply" title="Call, Bind, Apply">
+            <CallBindApply/>
+          </SectionWrapper>
           <div className="section-divider" />
-          <CurryingAndPrototype/>
+          <SectionWrapper id="destructuring-usage" title="Destructuring Usage">
+            <DestructuringUsage/>
+          <div className='section-divider' />
+          <SectionWrapper id="type-cohersion" title="Type Cohersion">
+            <TypeCohersion/>
+          </SectionWrapper>
+          </SectionWrapper>
           <div className="section-divider" />
+          <SectionWrapper id="currying-prototype" title="Currying and Prototype">
+            <CurryingAndPrototype/>
+          </SectionWrapper>
+          <div className="section-divider" />
+          <SectionWrapper id="event-delegation" title="Event Delegation">
             <EventDelegation/>
-            <div className="section-divider" />
+          </SectionWrapper>
+          <div className="section-divider" />
+          <SectionWrapper id="event-queue" title="Event Queue">
             <EventQueue/>
-           <div className="section-divider" />
-           <EventBubbling/>
-           <div className="section-divider" />
-           <EventCapturing/>
-           <div className="section-divider" />
-           <TemporalDeadZone/>
+          </SectionWrapper>
+          <div className="section-divider" />
+          <SectionWrapper id="event-bubbling" title="Event Bubbling">
+            <EventBubbling/>
+          </SectionWrapper>
+          <div className="section-divider" />
+          <SectionWrapper id="event-capturing" title="Event Capturing">
+            <EventCapturing/>
+          </SectionWrapper>
+          <div className="section-divider" />
+          <SectionWrapper id="temporal-dead-zone" title="Temporal Dead Zone">
+            <TemporalDeadZone/>
+          </SectionWrapper>
           </>
         )
       }
@@ -849,21 +1007,37 @@ test();   //x=1 will not be carried to function
         tabs==='pagination' && (
           <>
             <div className="section-divider" />
-            <PaginationAndSorting/>
+            <SectionWrapper id="pagination-sorting" title="Pagination and Sorting">
+              <PaginationAndSorting/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <DynamicArrayPagination/>
+            <SectionWrapper id="dynamic-array-pagination" title="Dynamic Array Pagination">
+              <DynamicArrayPagination/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <PaginationAndFilter/>  
+            <SectionWrapper id="pagination-filter" title="Pagination and Filter">
+              <PaginationAndFilter/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <ConcurrentProgressBars/>
+            <SectionWrapper id="concurrent-progress-bars" title="Concurrent Progress Bars">
+              <ConcurrentProgressBars/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <SequentialProgressBarRef/>
+            <SectionWrapper id="sequential-progressbar-ref" title="Sequential Progress Bar (Ref)">
+              <SequentialProgressBarRef/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <SequentialProgressBarsWithState/>
+            <SectionWrapper id="sequential-progressbars-state" title="Sequential Progress Bars (State)">
+              <SequentialProgressBarsWithState/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <SequentialProgressBarsWithoutRef/>
+            <SectionWrapper id="sequential-progressbars-without-ref" title="Sequential Progress Bars (No Ref)">
+              <SequentialProgressBarsWithoutRef/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <ProgressBar/>
+            <SectionWrapper id="progress-bar" title="Progress Bar">
+              <ProgressBar/>
+            </SectionWrapper>
           </>
         )
       }  
@@ -871,31 +1045,54 @@ test();   //x=1 will not be carried to function
         
         tabs === 'array' && (
           <> 
-          <div className="section-divider" />   
-            <StarRatingFractions/>
             <div className="section-divider" />   
-            <StarRating/>
-          <div className="section-divider" />   
-          <DragBallWithHandlers/>
-        <div className="section-divider" />
-            <DragBallWithRef/>
+            <SectionWrapper id="star-rating-fractions" title="Star Rating Fractions">
+              <StarRatingFractions/>
+            </SectionWrapper>
             <div className="section-divider" />   
-            <GridLights/>
+            <SectionWrapper id="star-rating" title="Star Rating">
+              <StarRating/>
+            </SectionWrapper>
+            <div className="section-divider" />   
+            <SectionWrapper id="drag-ball-handlers" title="Drag Ball with Handlers">
+              <DragBallWithHandlers/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <OtpEnter/>
+            <SectionWrapper id="drag-ball-ref" title="Drag Ball with Ref">
+              <DragBallWithRef/>
+            </SectionWrapper>
+            <div className="section-divider" />   
+            <SectionWrapper id="grid-lights" title="Grid Lights">
+              <GridLights/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <TrafficLights/>
+            <SectionWrapper id="otp-enter" title="OTP Enter">
+              <OtpEnter/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <TrafficLightsWithRef/>
+            <SectionWrapper id="traffic-lights" title="Traffic Lights">
+              <TrafficLights/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <DropDownAccordin/>
+            <SectionWrapper id="traffic-lights-ref" title="Traffic Lights with Ref">
+              <TrafficLightsWithRef/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <TodoListIndexing/>
+            <SectionWrapper id="dropdown-accordion" title="Dropdown Accordion">
+              <DropDownAccordin/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <ToDoListWithoutIndex/>
+            <SectionWrapper id="todolist-indexing" title="Todo List with Indexing">
+              <TodoListIndexing/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <ModalPopup/>
-                
+            <SectionWrapper id="todolist-noindex" title="Todo List Without Index">
+              <ToDoListWithoutIndex/>
+            </SectionWrapper>
+            <div className="section-divider" />
+            <SectionWrapper id="modal-popup" title="Modal Popup">
+              <ModalPopup/>
+            </SectionWrapper>
           </>
         )
       }  
@@ -903,17 +1100,29 @@ test();   //x=1 will not be carried to function
         tabs==='optimization' && (
           <>
             <div className="section-divider" />
-            <DebouncedSearch/>
+            <SectionWrapper id="debounced-search" title="Debounced Search">
+              <DebouncedSearch/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <DebouncedSearchWithRef/>
+            <SectionWrapper id="debounced-search-ref" title="Debounced Search with Ref">
+              <DebouncedSearchWithRef/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <RefDebouncedSearch/>
+            <SectionWrapper id="ref-debounced-search" title="Ref Debounced Search">
+              <RefDebouncedSearch/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <ThrottleSearch/>
+            <SectionWrapper id="throttle-search" title="Throttle Search">
+              <ThrottleSearch/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <RateLimitingSearch/>
+            <SectionWrapper id="rate-limiting-search" title="Rate Limiting Search">
+              <RateLimitingSearch/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <AbortControllerDemo/>
+            <SectionWrapper id="abort-controller" title="Abort Controller Demo">
+              <AbortControllerDemo/>
+            </SectionWrapper>
           </>
         )
       }
@@ -966,30 +1175,54 @@ return ( <button onClick = {handleClick}>fetch</button>)
           </div>
          </div>
           <div className="section-divider" />
-          <RefTypes/>
+          <SectionWrapper id="ref-types" title="Ref Types">
+            <RefTypes/>
+          </SectionWrapper>
           <div className="section-divider" />
-          <StorePreviousValue/>
+          <SectionWrapper id="store-previous-value" title="Store Previous Value">
+            <StorePreviousValue/>
+          </SectionWrapper>
           <div className="section-divider" />
+          <SectionWrapper id="focus-input" title="Focus Input">
             <FocusInput/>
-            <div className="section-divider" />
+          </SectionWrapper>
+          <div className="section-divider" />
+          <SectionWrapper id="count-renders" title="Count Renders">
             <CountRenders/>
+          </SectionWrapper>
           <div className="section-divider" />
+          <SectionWrapper id="undo-redo" title="Undo / Redo">
             <UndoRedo/>
-            <div className="section-divider" />
-            <InfiniteScroll/>
-            <div className="section-divider" />
-            <ModalRefs/>
+          </SectionWrapper>
           <div className="section-divider" />
-           <DragAndDropTodo/>
-           <div className="section-divider" />
-           <StopWatch/>
-           <div className="section-divider" />
-           <LightsRef/>
+          <SectionWrapper id="infinite-scroll" title="Infinite Scroll">
+            <InfiniteScroll/>
+          </SectionWrapper>
+          <div className="section-divider" />
+          <SectionWrapper id="modal-refs" title="Modal Refs">
+            <ModalRefs/>
+          </SectionWrapper>
+          <div className="section-divider" />
+          <SectionWrapper id="drag-drop-todo" title="Drag and Drop Todo">
+            <DragAndDropTodo/>
+          </SectionWrapper>
+          <div className="section-divider" />
+          <SectionWrapper id="stopwatch" title="Stopwatch">
+            <StopWatch/>
+          </SectionWrapper>
+          <div className="section-divider" />
+          <SectionWrapper id="lights-ref" title="Lights (Ref)">
+            <LightsRef/>
+          </SectionWrapper>
 
             <div className="section-divider" />
-            <DigitalClock/>
+            <SectionWrapper id="digital-clock" title="Digital Clock">
+              <DigitalClock/>
+            </SectionWrapper>
             <div className="section-divider" />
-            <OTPEntry/>
+            <SectionWrapper id="otp-entry" title="OTP Entry">
+              <OTPEntry/>
+            </SectionWrapper>
           </>
         )
       }
@@ -1001,6 +1234,11 @@ return ( <button onClick = {handleClick}>fetch</button>)
           </>
         )
       }
+      {showScrollTop && (
+        <button className="scroll-to-top-btn" onClick={scrollToTop} title="Scroll to top">
+          ↑
+        </button>
+      )}
     </div>
     
   )
