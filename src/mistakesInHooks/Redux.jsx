@@ -988,8 +988,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 `}
     </pre>
   </div>
-
-  {/* =========================================================
+</div>
+<div style={{display:'grid', gridTemplateColumns: "1fr 1fr"}}>
+   {/* =========================================================
       SLICE
   ========================================================= */}
 
@@ -1105,7 +1106,7 @@ const ReduxExample = () => {
 READ STATE -- useSelector(
   (state)=> state.reducerName.variableName
 )
-reducerName :- reducerName: slice.reducer (or) slice (if exported);
+store reducerName :- reducerName: slice.reducer (or) slice (if exported);
 Note variableName-- must be in initialState of that reducer
 ================================================================
   const count = useSelector((state) => state.counter.count);

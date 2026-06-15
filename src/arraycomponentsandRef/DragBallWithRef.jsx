@@ -107,7 +107,7 @@ return (
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
       style={{
-        width: "100vw",
+        width: "60vw",
         height: "100vh",
         background: "black",
         position: "relative",

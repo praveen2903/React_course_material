@@ -287,6 +287,230 @@ Usage
 
 </div>
 
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(3,1fr)",
+    gap: "15px",
+    alignItems: "start",
+  }}
+>
+
+{/* POLLING */}
+
+<div style={styles.noteCard}>
+<h3>Polling</h3>
+
+<pre>
+{`
+CLIENT (React) -- polling every 5 seconds
+
+useEffect(() => {
+  const interval = setInterval(async () => {
+      const res = await fetch("/messages");
+      const data = await res.json();
+      console.log(data);
+    },5000);
+
+  return () => {
+    clearInterval(interval);
+  };
+}, []);
+
+────────────────────────
+SERVER (Node)
+
+app.get("/messages", (req,res) => {
+    res.json(["Hello", "New Message"]);
+  }
+);
+
+────────────────────────
+
+FLOW
+
+Client
+   ↓
+GET /messages
+   ↓
+Response
+   ↓
+Wait 5 Seconds
+   ↓
+GET Again
+   ↓
+Response
+
+────────────────────────
+
+Pros
+
+✔ Easy
+✔ HTTP Only
+✔ No Extra Setup
+
+Cons
+
+✖ Waste Requests
+✖ Delay Updates
+✖ Not Realtime
+
+────────────────────────
+
+Best For
+
+✔ Dashboards
+✔ Reports
+✔ Analytics
+✔ Rare Updates
+`}
+</pre>
+</div>
+
+{/* WEBSOCKET */}
+
+<div style={styles.noteCard}>
+<h3>WebSocket</h3>
+
+<pre>
+{`CLIENT  -- create socket and open connection to server
+
+const socket = new WebSocket("ws://localhost:5000");
+socket.onopen = () => {
+  socket.send("Hello Server");
+};
+socket.onmessage = (event) => {
+  console.log(event.data);
+};
+
+────────────────────────
+SERVER
+
+const WebSocket = require("ws");
+const wss = new WebSocket.Server({port:5000});
+
+wss.on("connection", (socket) => {
+    console.log("Connected");
+    socket.on("message", (msg) => {
+        console.log(msg);
+        socket.send("Hello Client");
+      }
+    );
+  }
+);
+
+────────────────────────
+FLOW:
+
+Client
+   ↓
+Handshake
+   ↓
+Connection Open
+   ↓
+Send Message
+   ↓
+Receive Message
+   ↓
+Connection Stays Open
+────────────────────────
+Pros
+
+✔ Realtime
+✔ Fast
+✔ Low Latency
+
+Cons
+
+✖ Manual Reconnect
+✖ Manual Rooms
+✖ More Boilerplate
+
+────────────────────────
+Best For
+
+✔ Trading Apps
+✔ Gaming
+✔ Live Tracking
+✔ Realtime Data
+`}
+</pre>
+</div>
+
+{/* SOCKET.IO */}
+
+<div style={styles.noteCard}>
+<h3>Socket.IO</h3>
+
+<pre>
+{`CLIENT -- install socket.io-client
+
+import { io } from "socket.io-client";
+
+const socket =io("http://localhost:5000");
+socket.emit("message", "Hello Server");
+socket.on("message", (msg) => {
+    console.log(msg);
+  }
+);
+
+────────────────────────
+SERVER
+
+const express = require("express");
+const http = require("http");
+const {Server} = require("socket.io");
+
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
+
+io.on("connection", (socket) => {
+    console.log("Connected");
+    socket.on("message",(msg) => {
+        io.emit("message",msg);
+      }
+    );
+  }
+);
+server.listen(5000);
+────────────────────────
+FLOW
+
+socket.emit()
+      ↓
+socket.on()
+      ↓
+room.emit()
+      ↓
+broadcast()
+      ↓
+all clients
+────────────────────────
+Pros
+✔ Auto Reconnect
+✔ Rooms
+✔ Broadcast
+✔ Acknowledgements
+✔ Production Ready
+
+Cons
+✖ Extra Library
+✖ Slight Overhead
+
+────────────────────────
+Best For
+✔ Chat Apps
+✔ Slack Clone
+✔ Teams Clone
+✔ Notifications
+✔ Group Chat
+✔ Production Realtime Apps`}
+</pre>
+</div>
+
+</div>
+
 {/* ================================================= */}
 
 <div
@@ -300,7 +524,16 @@ Usage
 >
 
 <pre>
-{`
+{`┌─────────────┬──────────────┬───────────────┐
+│ Feature     │ WebSocket    │ Socket.IO     │
+├─────────────┼──────────────┼───────────────┤
+│ Protocol    │ Native WS    │ Built on WS   │
+│ Reconnect   │ Manual       │ Automatic     │
+│ Rooms       │ Manual       │ Built In      │
+│ Broadcast   │ Manual       │ Built In      │
+│ Events      │ Limited      │ Rich Events   │
+│ Setup       │ More Code    │ Easier        │
+└─────────────┴──────────────┴───────────────┘
 INTERVIEW FLOW
 ==============
 

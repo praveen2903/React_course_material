@@ -84,7 +84,7 @@ const DragBallWithHandlers = () => {
       onDrop={handleDrop}
       onDragOver={(e)=>e.preventDefault()}
       style={{
-        width: "100vw",
+        width: "60vw",
         height: "100vh",
         background: "black",
         position: "relative",
