@@ -108,6 +108,37 @@ const styles = {
     lineHeight: "1.8",
   },
 };
+  const tableStyle = {
+    width: "100%",
+    borderCollapse: "collapse",
+    marginTop: "10px",
+  };
+
+  const thtd = {
+    border: "1px solid #ccc",
+    padding: "10px",
+    textAlign: "left",
+  };
+
+  const sectionStyle = {
+    background: "#fff",
+    padding: "20px",
+    borderRadius: "10px",
+    marginBottom: "25px",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+  };
+  const headingStyle = {
+    color: "#1976d2",
+    marginBottom: "15px",
+  };
+
+  const codeStyle = {
+    background: "#272822",
+    color: "#fff",
+    padding: "12px",
+    borderRadius: "6px",
+    overflowX: "auto",
+  };
 
 const JwtTokens = () => {
   return (
@@ -116,6 +147,422 @@ const JwtTokens = () => {
       <h3 style={styles.title}>
         🔐 JWT (Access Tokens + Refresh Tokens) + HTTPOnly Cookies (CSRF) + Redis (caching) + PostgreSQL(what is pool and how connect with pgsqlserver)
       </h3>
+      <section style={sectionStyle}>
+  <h2 style={headingStyle}>🔐 JWT (JSON Web Token)</h2>
+
+  <p>
+    JWT is a compact token used for Authentication and Authorization.
+    It contains three parts:
+  </p>
+
+  <pre style={codeStyle}>
+{`xxxxx.yyyyy.zzzzz
+
+Header.Payload.Signature`}
+  </pre>
+
+  <h3>JWT Structure</h3>
+
+  <table style={tableStyle}>
+    <thead>
+      <tr>
+        <th style={thtd}>Part</th>
+        <th style={thtd}>Purpose</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td style={thtd}>Header</td>
+        <td style={thtd}>
+          Contains token type and encryption algorithm.
+        </td>
+      </tr>
+
+      <tr>
+        <td style={thtd}>Payload</td>
+        <td style={thtd}>
+          Contains user information (claims).
+        </td>
+      </tr>
+
+      <tr>
+        <td style={thtd}>Signature</td>
+        <td style={thtd}>
+          Verifies token integrity and prevents tampering.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Example JWT</h3>
+
+  <pre style={codeStyle}>
+{`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+.
+eyJpZCI6MSwibmFtZSI6IkpvaG4iLCJyb2xlIjoiQURNSU4ifQ
+.
+abc123xyz456signature`}
+  </pre>
+</section>
+<section style={sectionStyle}>
+  <h3>📋 Header</h3>
+
+  <p>
+    Header tells the receiver:
+  </p>
+
+  <ul>
+    <li>What type of token is this?</li>
+    <li>Which algorithm created the signature?</li>
+  </ul>
+
+  <pre style={codeStyle}>
+{`{
+  "alg": "HS256",
+  "typ": "JWT"
+}`}
+  </pre>
+
+  <table style={tableStyle}>
+    <tbody>
+      <tr>
+        <td style={thtd}>alg</td>
+        <td style={thtd}>Hashing Algorithm</td>
+      </tr>
+
+      <tr>
+        <td style={thtd}>typ</td>
+        <td style={thtd}>Token Type</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>Why is alg required?</h4>
+
+  <p>
+    When backend receives a token, it needs to know which
+    algorithm was used to create the signature so it can
+    verify it correctly.
+  </p>
+</section>
+<section style={sectionStyle}>
+  <h3>📦 Payload **  -- contains the claims for user important</h3>
+  <p>
+    Payload contains Claims.
+  </p>
+
+  <p>
+    Claims are simply pieces of information about the user.
+  </p>
+
+  <pre style={codeStyle}>
+{`{
+  "id": 101,
+  "username": "john",
+  "email": "john@gmail.com",
+  "role": "ADMIN"
+}`}
+  </pre>
+
+  <h4>Where does this data come from?  -- developer calls db and attaches info to payload</h4>
+
+  <pre style={codeStyle}>
+{`Users Table   -- calls this db and attaches it to payload
+
+id | username | role
+---------------------
+101| john     | ADMIN`}
+  </pre>
+
+  <p>
+    During login, backend fetches user information from
+    database and places important details inside payload.
+  </p>
+
+  <h3>🏷️ Standard Claims - always fetched to the payload by jwt itself without need of DB.</h3>
+
+  <pre style={codeStyle}>
+{`{
+  "sub": "101",
+  "iat": 1716000000,
+  "exp": 1716003600,
+  "iss": "my-api"
+}`}
+  </pre>
+
+  <table style={tableStyle}>
+    <thead>
+      <tr>
+        <th style={thtd}>Claim</th>
+        <th style={thtd}>Meaning</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td style={thtd}>sub</td>
+        <td style={thtd}>Subject (User Id)</td>
+      </tr>
+
+      <tr>
+        <td style={thtd}>iat</td>
+        <td style={thtd}>Issued At</td>
+      </tr>
+
+      <tr>
+        <td style={thtd}>exp</td>
+        <td style={thtd}>Expiration Time</td>
+      </tr>
+
+      <tr>
+        <td style={thtd}>iss</td>
+        <td style={thtd}>Issuer</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>👮 How Role Gets Into JWT</h3>
+
+  <pre style={codeStyle}>
+{`const user = {
+  id: 101,
+  username: "john",
+  role: "ADMIN"
+};`}
+  </pre>
+
+  <pre style={codeStyle}>
+{`jwt.sign({ id: user.id, role: user.role }, SECRET_KEY);`}
+  </pre>
+
+  <p>
+    Role comes directly from the database record.
+  </p>
+  <p>
+    JWT does not create roles. Backend chooses what goes into payload.
+  </p>
+
+  <h3>⚠️ Can Users See Payload?</h3>
+
+  <p>
+    YES.
+  </p>
+  <p>
+    JWT payload is Base64 encoded.
+  </p>
+  <p>
+    Base64 is NOT encryption.
+  </p>
+
+  <pre style={codeStyle}>
+{`{
+  "id": 101,
+  "role": "ADMIN"
+}`}
+  </pre>
+
+  <p>
+    Anyone can decode and read it.
+  </p>
+
+  <p>
+    Therefore never store:
+  </p>
+
+  <ul>
+    <li>Password</li>
+    <li>Credit Card Number</li>
+    <li>Bank Details</li>
+    <li>Sensitive Information</li>
+  </ul>
+</section>
+<section style={sectionStyle}>
+  <h3>✍️ Signature</h3>
+
+  <p>
+    Signature protects Header and Payload from modification.
+  </p>
+
+  <pre style={codeStyle}>
+{`Signature = HMACSHA256(Base64(Header) + "." + Base64(Payload), SECRET_KEY)`}
+  </pre>
+</section>
+<section style={sectionStyle}>
+  <h3>⚙️ How Signature Is Generated</h3>
+
+  <pre style={codeStyle}>
+{`Header                             Payload
+{                              {
+  "alg"   :"HS256",       +          "id" : 101,          +   Secret Key used for JWT = Signature
+  "typ"   :"JWT"                     "role" :"ADMIN"
+}                              }
+`}
+  </pre>
+
+  <p>
+    Backend combines:
+  </p>
+
+  <pre style={codeStyle}>
+{`Base64(Header)+"."+Base64(Payload)`}
+  </pre>
+
+  <p>
+    Then hashes it using the secret key.
+  </p>
+
+  <pre style={codeStyle}>
+{`Header.Payload + Secret Key 
+      ↓
+Generated Signature`}
+  </pre>
+</section>
+<section style={sectionStyle}>
+  <h3>🚫 Why User Cannot Become ADMIN</h3>
+
+  <p>
+    Suppose original payload:
+  </p>
+
+  <pre style={codeStyle}>
+{`{
+  "id":101,
+  "role":"USER"
+}`}
+  </pre>
+
+  <p>
+    User edits it to:
+  </p>
+
+  <pre style={codeStyle}>
+{`{
+  "id":101,
+  "role":"ADMIN"
+}`}
+  </pre>
+
+  <p>
+    Payload changes.
+  </p>
+
+  <p>
+    Signature was generated using old payload.
+  </p>
+
+  <p>
+    Therefore signature becomes invalid.
+  </p>
+
+  <pre style={codeStyle}>
+{`Old Payload + Secret
+      ↓
+Old Signature
+
+New Payload + Secret
+      ↓
+Different Signature`}
+  </pre>
+
+  <p>
+    Backend detects mismatch and rejects token.
+  </p>
+</section>
+<section style={sectionStyle}>
+  <h3>🔄 How Backend Verifies JWT</h3>
+
+  <pre style={codeStyle}>
+{`1. Receive Token
+      ↓
+2. Decode Header
+      ↓
+3. Read Algorithm
+      ↓
+4. Decode Payload
+      ↓
+5. Recalculate Signature (Header + Payload + Secret)
+      ↓
+6. Compare Signatures
+      ↓
+  Match ?
+    |
+    YES
+    |
+  Access Granted
+
+    NO
+    |
+  Invalid Token`}
+  </pre>
+</section>
+<section style={sectionStyle}>
+  <h3>🎯 Interview Trap Question</h3>
+
+  <h4>
+    If payload is visible, why is JWT secure?
+  </h4>
+
+  <p>
+    Because JWT security comes from the Signature, not from hiding the Payload. Even if payload changes the signature verification rejects the trespassing.
+  </p>
+
+  <p>
+    Payload can be read.
+  </p>
+
+  <p>
+    Payload cannot be modified without invalidating the Signature. As payload is verified with the signature. Payload is in basic BASE64 encryption can be validated by frontend and read and stored in cookies.
+  </p>
+  <p> So the detailes like roles and username can be there post login. This is how JWT is useful for the role based authentication.</p>
+</section>
+<section style={sectionStyle}>
+  <h3>🛡️ Why Signature Protects Payload</h3>
+  <p>
+    Imagine a hacker changes payload:
+  </p>
+  <pre style={codeStyle}>
+{`Original:
+{
+  "id":101,
+  "role":"USER"
+}`}
+  </pre>
+  <pre style={codeStyle}>
+{`Tampered:
+{
+  "id":101,
+  "role":"ADMIN"
+}`}
+  </pre>
+
+  <p>
+    Signature is calculated using:
+  </p>
+
+  <pre style={codeStyle}>
+{`Base64(Header) + "."  + Base64(Payload)`}
+  </pre>
+
+  <p>
+    When payload changes, the combined string also changes:
+  </p>
+
+  <pre style={codeStyle}>
+{`Old String → Old Signature
+
+New String → New Signature`}
+  </pre>
+
+  <p>
+    Backend computes new signature and compares.
+  </p>
+
+  <p>
+    Mismatch → Invalid Token
+  </p>
+</section>
+      {/* =====================localStorage vs sessionStorage vs Cookies vs HttpOnly Cookies ==================== */}
       <section
   style={{
     padding: "20px",

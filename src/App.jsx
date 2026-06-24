@@ -91,6 +91,7 @@ import RefUsageConcepts from './interview/RefUsageConcepts'
 import CloudConcepts from './interview/CloudConcepts'
 import RoutingExample from './routingConcepts/RoutingExample'
 import TemporalDeadZone from './javascriptConcepts/TemporalDeadZone'
+import Regex from './interview/Regex'
 
 function SectionWrapper({ id, title, children }) {
   return (
@@ -140,7 +141,8 @@ function App() {
   "jwt",
   "sockets",
   "interview",
-  "routing"
+  "routing",
+  "regex & basics"
 ];
 
   useEffect(() => {
@@ -216,6 +218,14 @@ function App() {
     </div>
   </div>
 )}
+{
+  tabs==='regex & basics' && (
+    <>
+    <div className="section-divider" />
+    <Regex/>
+    </>
+  )
+}
     {
       tabs==='kubernetes' && (
         <>
