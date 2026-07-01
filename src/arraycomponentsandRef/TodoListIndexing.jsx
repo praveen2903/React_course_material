@@ -86,7 +86,39 @@ copy.splice(dropIndex (deleteBeginIndex),0 (no.of items to delete from begin ind
 
     setTaskList(copy);
     setDragIndex(null);
-}`}
+}
+
+return (
+    <>
+        <div>
+            <input type="text" value={inputText} onChange={(e)=> setInputText(e.target.value)} onKeyDown ={(e)=> {e.key=="Enter" && addTask()}} />
+            <button onClick={addTask}>+</button>
+        </div>
+        <div>
+            {
+                taskList.map((availableTask, index)=>(  
+                    // if map/filter/reduce/foreach use () as 1st div must be key right later like here at conditons use {}
+                    <div key={index} style={{ display: 'flex', gap:'16px'}}>
+
+                    {updateIndex === index ? (
+                     <>
+                        <input type="text" value={updateValue} onChange={(e)=> setUpdateValue(e.target.value)} />                        
+                        <button onClick={updateTask}>update</button>
+                     </>
+                   ): (
+                     <div key={index} draggable onDragStart={()=>setDragIndex(index)} onDragOver={(e)=>e.preventDefault()} onDrop={()=>handleDrop(index)}>
+                        <p>{availableTask}</p>                            
+                        <button onClick={()=>{setUpdateIndex(index); setUpdateValue(availableTask)}}>Edit</button>
+                        <button onClick={()=>removeTask(index)}>delete</button>
+                    </div>
+                   )
+                }
+                </div>
+                ))
+            }
+        </div>
+    </>
+)`}
 </pre>
 </code>
         <div style={{ display: 'flex', gap:'16px', marginBottom:"20px"}}>

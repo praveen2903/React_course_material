@@ -92,6 +92,7 @@ import CloudConcepts from './interview/CloudConcepts'
 import RoutingExample from './routingConcepts/RoutingExample'
 import TemporalDeadZone from './javascriptConcepts/TemporalDeadZone'
 import Regex from './interview/Regex'
+import DragAndDropTodoDemo from './arraycomponentsandRef/DragAndDropTodoDemo'
 
 function SectionWrapper({ id, title, children }) {
   return (
@@ -1069,12 +1070,8 @@ test();   //x=1 will not be carried to function
               <StarRating/>
             </SectionWrapper>
             <div className="section-divider" />   
-            <SectionWrapper id="drag-ball-handlers" title="Drag Ball with Handlers">
-              <DragBallWithHandlers/>
-            </SectionWrapper>
-            <div className="section-divider" />
-            <SectionWrapper id="drag-ball-ref" title="Drag Ball with Ref">
-              <DragBallWithRef/>
+            <SectionWrapper id="drag-drop-demo" title="drag drop demo">
+              <DragAndDropTodoDemo/>
             </SectionWrapper>
             <div className="section-divider" />   
             <SectionWrapper id="grid-lights" title="Grid Lights">
@@ -1107,6 +1104,14 @@ test();   //x=1 will not be carried to function
             <div className="section-divider" />
             <SectionWrapper id="modal-popup" title="Modal Popup">
               <ModalPopup/>
+            </SectionWrapper>
+            <div className="section-divider" />   
+            <SectionWrapper id="drag-ball-handlers" title="Drag Ball with Handlers">
+              <DragBallWithHandlers/>
+            </SectionWrapper>
+            <div className="section-divider" />
+            <SectionWrapper id="drag-ball-ref" title="Drag Ball with Ref">
+              <DragBallWithRef/>
             </SectionWrapper>
           </>
         )
