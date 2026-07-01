@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 
 function DragAndDropTodoDemo() {
     const [task, setTask] = useState('');
-    const [taskList, setTaskList] = useState([]);
+    const [taskList, setTaskList] = useState(['Angular', 'React', 'Python']);
     const dragRef = useRef(null);
     const [updateValue, setUpdateValue] = useState('');
     const [updateIndex, setUpdateIndex] = useState(null);
