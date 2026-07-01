@@ -93,6 +93,8 @@ import RoutingExample from './routingConcepts/RoutingExample'
 import TemporalDeadZone from './javascriptConcepts/TemporalDeadZone'
 import Regex from './interview/Regex'
 import DragAndDropTodoDemo from './arraycomponentsandRef/DragAndDropTodoDemo'
+import JsCopy from './javascriptAsyncronous/JsCopy'
+import ArrowFunction from './javascriptConcepts/ArrowFunction'
 
 function SectionWrapper({ id, title, children }) {
   return (
@@ -279,6 +281,9 @@ function App() {
       tabs==='promises' && (
         <>
         <h2>asyncronous codes demo</h2>
+        <SectionWrapper id="JS-copy" title="JS-copy">
+          <JsCopy/>
+        </SectionWrapper>
           <div className="section-divider" />
           <SectionWrapper id="event-loops" title="Event Loops">
             <EventLoops/>
@@ -977,6 +982,10 @@ test();   //x=1 will not be carried to function
             <EventLoop/>
           </SectionWrapper>
           <div className="section-divider" />
+          <SectionWrapper id="arrow-function" title="Arrow Function">
+            <ArrowFunction/>
+          </SectionWrapper>
+          <div className='section-divider'/>
           <SectionWrapper id="bind-usage" title="Bind Usage">
             <BindUsage/>
           </SectionWrapper>

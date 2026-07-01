@@ -82,12 +82,12 @@ function Component() {
     <code><pre>
       {`const inputRef = useRef<HTMLInputElement | null>(null);
 useEffect(()=>{
-        inputRef.current.focus();
+        inputRef.current.focus();  // scrolled here when page loads
 },[]);
 
 return(
 <>
-  <input ref={inputRef} placeholder='enter data.....'
+  <input ref={(element)=>{inputRef.current = element}}  // ref={inputRef}placeholder='enter data.....'   //element is the actual, native HTML DOM element that is currently rendering in the browser
     onFocus={(e)=>{
         e.target.style.border= '1px solid #0c5376e7';
         e.target.style.boxShadow = '0 0 10px #97ceeae7'

@@ -82,9 +82,8 @@ return (
     <>
         <input key={index} value={digit} maxLength={1}
 
-            ref={(element)=> (focusRef.current[index]= element)}  
-            // attaching the htmlInputElement to ref or you could send e.currentTarget
-
+            ref={(element)=> (focusRef.current[index]= element)}  // attaching the htmlInputElement to ref so that the DOM element reference is saved
+            
             onChange={(e)=> handleChange(e.target.value, index)}
             onKeyDown={(e)=> handleKeyDown(e, index)}
             onPaste={handlePaste}

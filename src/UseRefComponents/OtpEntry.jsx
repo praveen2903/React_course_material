@@ -90,7 +90,7 @@ return (
         <>
         <input key={index} value={digit} maxLength={1}
 
-            ref={(element)=> (focusRef.current[index]= element)}  // attaching the htmlInputElement to ref
+            ref={(element)=> (focusRef.current[index]= element)}  // attaching the htmlInputElement to ref the index reference of DOM is stored
 
             onChange={(e)=> handleChange(e.target.value, index)}
             onKeyDown={(e)=> handleKeyDown(e, index)}

@@ -1,4 +1,7 @@
-// Use arrow when:
+export default function ArrowFunction() {
+  return (
+    <>
+    <pre>{`// Use arrow when:
 // ✔ you want lexical this
 
 // Avoid arrow when:
@@ -141,3 +144,7 @@ function bankAccount(){
 const account=  new backAccount();
 account.deposit(100);  //1100
 account.withdraw(300);  //800
+`}</pre>
+    </>
+  )
+}
